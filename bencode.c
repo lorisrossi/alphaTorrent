@@ -31,7 +31,7 @@
 #include "bencode.h"
 
 #ifndef BE_DEBUG
-#define BE_DEBUG 2
+#define BE_DEBUG 0
 #endif
 
 #define DBG(fmt, args...) do { if (BE_DEBUG > 1) printf(fmt, ## args); } while (0)
