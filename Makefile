@@ -3,8 +3,8 @@ ODIR=build
 
 CC=gcc
 CXX=g++
-CFLAGS=-Wall -g -fsanitize=address -Wextra -W -DBE_DEBUG=0
-CXXFLAGS=-Wall -g -std=c++11 -fsanitize=address -Wextra -W -I$(LDIR)
+CFLAGS=-Wall -Wextra -fsanitize=address -DBE_DEBUG=0
+CXXFLAGS= -std=c++11 -Wall -Wextra -fsanitize=address -I$(LDIR)
 
 LIBS=-lcurl
 

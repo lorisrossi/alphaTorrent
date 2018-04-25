@@ -4,11 +4,13 @@
 
 using namespace std;
 
+// Struct to store information of a file inside a torrent
 typedef struct {
   string path;
   long int length;
 } TorrentFile;
 
+// Struct to store all the information of a torrent
 typedef struct {
   string tracker_url;
   string name;
