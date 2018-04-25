@@ -1,5 +1,2 @@
-# Object files
-*.o
-
 # Main executable
 atorrent-cli
