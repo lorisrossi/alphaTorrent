@@ -1,3 +1,6 @@
+#ifndef TORRENTPARSER_H
+#define TORRENTPARSER_H
+
 #include <string>
 #include <vector>
 #include "bencode.h"
@@ -21,3 +24,5 @@ typedef struct {
 
 void parse_torrent(be_node *node, Torrent &new_torrent);
 void print_torrent(Torrent torrent);
+
+#endif
