@@ -3,7 +3,11 @@
 
 #include <string>
 #include <vector>
+#include <assert.h>
 #include "bencode.h"
+
+
+#include <openssl/sha.h>
 
 using namespace std;
 
@@ -24,5 +28,5 @@ typedef struct {
 
 void parse_torrent(be_node *node, Torrent &new_torrent);
 void print_torrent(Torrent torrent);
-
+unsigned char *get_info_node_hash(string *file);
 #endif

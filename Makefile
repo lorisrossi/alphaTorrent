@@ -3,10 +3,10 @@ ODIR=build
 
 CC=gcc
 CXX=g++
-CFLAGS=-Wall -Wextra -fsanitize=address -DBE_DEBUG=0
+CFLAGS=-Wall -Wextra -g -fsanitize=address -DBE_DEBUG=0
 CXXFLAGS= -std=c++11 -Wall -Wextra -fsanitize=address -I$(LDIR)
 
-LIBS=-lcurl
+LIBS=-lssl -lcrypto -lcurl 
 
 _DEPS=bencode.h tracker.h torrentparser.h
 DEPS=$(patsubst %,$(LDIR)/%,$(_DEPS))

@@ -4,6 +4,10 @@
 #include <iomanip>
 #include "torrentparser.h"
 
+
+#define DICT_NOT_FOUND -5;
+#define DEFAULT_BUFF_LEN 1024
+
 using namespace std;
 
 /**
@@ -84,6 +88,42 @@ void parse_torrent(be_node *node, Torrent &new_torrent) {
   }
 }
 
+
+/**
+ *  This function extract the bencoded dictionary from the metainfo file and hash (with SHA1)
+ *  the content
+ * 
+ *  @param *file :  a string that cointaining the entire file
+ * 
+ *  @return the uchar array of the hash
+ */
+unsigned char *get_info_node_hash(string *file){
+  string info_key;
+  unsigned char *info_hash;;
+
+  std::size_t found = file->find("info");
+
+  if(found != string::npos){
+    found += 4; //Si posiziona nel primo carattere della parola trovata, quindi aumento di 4 per passare "nfo"
+    info_key = file->substr(found);
+
+    //cout << endl << info_key << endl;
+    info_hash=(unsigned char*)malloc(sizeof(unsigned char)* SHA_DIGEST_LENGTH);
+    if(!info_hash){
+      cerr << "Cannot allocate memory" << endl;
+      return 0;
+    }
+
+    SHA1((unsigned char*)(info_key.c_str()), info_key.length(), info_hash);
+
+    return info_hash;
+
+  }else{
+    cerr << "Malformed torrent file : no info dictionaries" << endl;
+    return 0;
+  }
+
+}
 /**
  * Print path and length of a file in a torrent.
  *
