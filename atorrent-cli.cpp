@@ -14,8 +14,8 @@ void get_peer_id(string *id){
   /**
    *  Trovare un nuovo modo per generare il peer. Idee
    *  1) Usare il mac address della macchina (Iterare attraverso i file )
-   * 
-   * 
+   *
+   *
    */
 
   *id = string("-ALPHA-AAAAAAAAAAAAA");   //Soluzione Temporanea
@@ -57,13 +57,13 @@ int main(int argc, char* argv[]) {
       print_torrent(mytorrent);
 
 
-      info_hash = get_info_node_hash(&torrent_str);
+      info_hash = get_info_node_hash(&torrent_str, &mytorrent.pieces);
       string track_url = mytorrent.tracker_url;
       string peer_id;
       get_peer_id(&peer_id);
       start_tracker_request(&track_url, info_hash, peer_id.c_str());
 
-      
+
 
 
       free(info_hash);
