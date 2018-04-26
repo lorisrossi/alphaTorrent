@@ -5,11 +5,11 @@ using namespace std;
 
 /**
  *  Function that start the communication with the tracker
- * 
+ *
  *  @param *url         : the url of the tracker (without parameters)
  *  @param info_hash    : the SHA1 of the info key in the metainfo file
  *  @param peer_id      : the client generated id
- * 
+ *
  */
 int start_tracker_request(string *url, unsigned char *info_hash_param, const char* peer_id){
 
@@ -29,7 +29,7 @@ int start_tracker_request(string *url, unsigned char *info_hash_param, const cha
     cout << endl << "URL : " << *enc_url << endl;
     cout << "Is Valid? : " << check_url(enc_url) << endl;
 
-    tracker_send_request(url);
+    tracker_send_request(enc_url);
 
     delete enc_url;
 
@@ -43,11 +43,11 @@ int start_tracker_request(string *url, unsigned char *info_hash_param, const cha
 
 /**
  * Questa funzione prende il puntatore alla struttura dei parametri e ne modifica quelli che devono
- * essere codificati mediante "urlencode" 
- * 
+ * essere codificati mediante "urlencode"
+ *
  * @param *param    puntatore a struttura dei parametri
  * @param *curl     (Opzionale) istanza della libreria curl
- * 
+ *
  * @return 0 in caso di successo, < 0 se fallisce
  **/
 
@@ -57,7 +57,7 @@ int urlencode_paramenter(struct TrackerParameter *param, CURL *curl){
     char* enc_info_hash_curl;
     char* enc_peer_id_curl;
     bool curl_passed=true;;
- 
+
     if(curl == NULL){
         curl_passed=false;
         curl = curl_easy_init();
@@ -95,21 +95,21 @@ int urlencode_paramenter(struct TrackerParameter *param, CURL *curl){
 }
 
 /**
- *  Funzione che passato l'url del tracker ed i parametri costruisce l'url per effettuare 
- *  la richiesta GET al tracker 
- * 
+ *  Funzione che passato l'url del tracker ed i parametri costruisce l'url per effettuare
+ *  la richiesta GET al tracker
+ *
  *  @param tracker_url      : url del tracker
  *  @param param            : parametri da inviare al tracker
  *  @param curl             : (Opzionale) istanza della libreria curl
  *  @param tls              : (Opzionale) specifica se usare l'https, default = false
- * 
+ *
  *  @return Un puntatore ad una stringa contenente l'url
 */
 
 string *url_builder(string tracker_url, struct TrackerParameter param, CURL *curl, bool tls){
 
     bool curl_passed=true;;
- 
+
     if(curl == NULL){
         curl_passed=false;
         curl = curl_easy_init();
@@ -126,7 +126,7 @@ string *url_builder(string tracker_url, struct TrackerParameter param, CURL *cur
     else
         *url_req = "http://";
     */
-    
+
     //TODO Check if "tracker_url" is a proper url by validating it with regex
 
     *url_req += tracker_url;
@@ -169,10 +169,10 @@ size_t writeFunction(void *ptr, size_t size, size_t nmemb, std::string* data) {
 
 /**
  * Execute the http(s) request and print the response
- * 
+ *
  * @param *url : the url to contact (with the GET parameter)
  * @param curl : (Optional) the instance of the curl lib
- * 
+ *
  * @return 0 if it's a success, <0 otherwise;
  */
 
@@ -180,7 +180,7 @@ int tracker_send_request(string *url, CURL *curl){
 
     CURLcode code;
     bool curl_passed=true;;
- 
+
     if(curl == NULL){
         curl_passed=false;
         curl = curl_easy_init();
@@ -194,7 +194,7 @@ int tracker_send_request(string *url, CURL *curl){
         }
         /*
         *   Varie opzioni da aggiungere opzionalmente nel file di configurazione
-        
+
         curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
         curl_easy_setopt(curl, CURLOPT_USERPWD, "user:pass");
         curl_easy_setopt(curl, CURLOPT_USERAGENT, "curl/7.42.0");
@@ -204,18 +204,18 @@ int tracker_send_request(string *url, CURL *curl){
 
         string response_string;
         string header_string;
-        //Setto la funzione che andrà a scrivere e i rispettivi parametri 
+        //Setto la funzione che andrà a scrivere e i rispettivi parametri
         code = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeFunction);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_string);
         curl_easy_setopt(curl, CURLOPT_HEADERDATA, &header_string);
-        
+
         char* url_eff;
         long response_code;
         double elapsed;
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
         curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &elapsed);
         curl_easy_getinfo(curl, CURLINFO_EFFECTIVE_URL, &url_eff);
-        
+
         code = curl_easy_perform(curl);
         if(code != CURLE_OK){
             cerr << endl << "Errore nella richiesta al tracker" << endl;
@@ -223,11 +223,11 @@ int tracker_send_request(string *url, CURL *curl){
         }
 
         cout << endl << "Risposta : " << response_string << endl << endl << header_string << endl << endl;
-    
+
         if(!curl_passed){
             curl_easy_cleanup(curl);
         }
-    
+
     }
 
     return 0;
@@ -236,12 +236,12 @@ int tracker_send_request(string *url, CURL *curl){
 
 /**
  * Funzione che verifica che un'url è valido
- * 
+ *
  *  @param *url     : URL da verificare
  *  @param *curl    : (Opzionale) istanza della libreria curl
- * 
+ *
  *  @return (true) se è valido, altrimenti (false)
- */ 
+ */
 bool check_url(string *url, CURL *curl)
 {
     CURLcode response;
@@ -268,10 +268,3 @@ bool check_url(string *url, CURL *curl)
 
     return (response == CURLE_OK) ? true : false;
 }
-
-
-
-
-
-
-
