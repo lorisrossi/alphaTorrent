@@ -29,5 +29,5 @@ typedef struct {
 
 void parse_torrent(be_node *node, Torrent &new_torrent);
 void print_torrent(Torrent torrent);
-unsigned char *get_info_node_hash(string *file, string *pieces_string);
+char *get_info_node_hash(string *file, string *pieces_string);
 #endif

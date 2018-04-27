@@ -18,7 +18,7 @@ void get_peer_id(string *id){
    *
    */
 
-  *id = string("-ALPHA-AAAAAAAAAAAAA");   //Soluzione Temporanea
+  *id = string("-TR2920-l4hhlgfijdyl");   //Soluzione Temporanea
 
   assert(strnlen(id->c_str(), 20) == 20);
 
@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
   }
   curl_global_init(CURL_GLOBAL_DEFAULT);
 
-  unsigned char *info_hash; //è un pò brutto messo qui
+  char *info_hash; //è un pò brutto messo qui
 
 
   ifstream myfile(argv[1]);
@@ -55,7 +55,6 @@ int main(int argc, char* argv[]) {
       parse_torrent(node, mytorrent);
       be_free(node);
       print_torrent(mytorrent);
-
 
       info_hash = get_info_node_hash(&torrent_str, &mytorrent.pieces);
       string track_url = mytorrent.tracker_url;
