@@ -6,6 +6,7 @@
 #include "bencode.h"
 #include "torrentparser.h"
 #include "tracker.h"
+#include "filehandler.h"
 
 using namespace std;
 
@@ -23,7 +24,6 @@ void get_peer_id(string *id){
   assert(strnlen(id->c_str(), 20) == 20);
 
 }
-
 
 int main(int argc, char* argv[]) {
 
