@@ -23,7 +23,7 @@ brew install boost
 
 ### Troubleshooting
 
-For OS X users have this error:
+For OS X users who have this error:
 > fatal error: ‘openssl/sha.h’ file not found
 
 please install the OpenSSL library as showed above
