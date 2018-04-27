@@ -65,8 +65,11 @@ void parse_info_dict(be_node *info_node, Torrent &new_torrent) {
         new_torrent.files.push_back(parse_file_dict(temp_node->val.l[j]));
     }
   }
-  if (new_torrent.files.size() == 1 && new_torrent.files[0].path == "") // single file torrent
+  if (new_torrent.files.size() == 1 && new_torrent.files[0].path == "") {
+    // single file torrent
+    new_torrent.is_single = true;
     new_torrent.files[0].path = new_torrent.name;
+  }
 }
 
 /**
@@ -155,6 +158,7 @@ void print_torrent(Torrent torrent) {
   cout << "Tracker: " << torrent.tracker_url << endl;
   cout << "Piece length: " << torrent.piece_length / 1024 << " KB" << endl;
   cout << "Pieces: " << torrent.pieces.size() << endl;
+  cout << "Single file: " << (torrent.is_single ? "Yes" : "No") << endl;
   cout << "Files:" << endl;
   for (TorrentFile file : torrent.files)
     print_file(file);

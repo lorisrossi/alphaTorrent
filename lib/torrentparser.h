@@ -24,6 +24,7 @@ typedef struct {
   int piece_length;
   string pieces;
   vector<TorrentFile> files;
+  bool is_single = false; // true if single file torrent
 } Torrent;
 
 void parse_torrent(be_node *node, Torrent &new_torrent);
