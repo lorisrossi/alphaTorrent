@@ -1,5 +1,11 @@
 #include "tracker.h"
 #include <iostream>
+#include <sstream>
+#include <algorithm>    //Lower String
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 using namespace std;
 
@@ -11,7 +17,7 @@ using namespace std;
  *  @param peer_id      : the client generated id
  *
  */
-int start_tracker_request(string *url, unsigned char *info_hash_param, const char* peer_id){
+int start_tracker_request(string *url, char *info_hash_param, const char* peer_id){
 
     struct TrackerParameter test;
 
@@ -23,19 +29,19 @@ int start_tracker_request(string *url, unsigned char *info_hash_param, const cha
     test.info_hash_raw = info_hash_param;
 
     string *enc_url;
+    string response = "";
 
     enc_url = url_builder(url->c_str(), test);
 
     cout << endl << "URL : " << *enc_url << endl;
     cout << "Is Valid? : " << check_url(enc_url) << endl;
 
-    tracker_send_request(enc_url);
+    tracker_send_request(enc_url, &response);
+
+    process_tracker_response(&response);
+
 
     delete enc_url;
-
-
-
-
 
 }
 
@@ -67,9 +73,10 @@ int urlencode_paramenter(struct TrackerParameter *param, CURL *curl){
         return CURL_NOT_INIT;
 
     //I campi "info_hash" e "peer_id" devono essere codificati tramite "urlencoding"
-
-    enc_info_hash_curl = curl_easy_escape(curl, (char*)param->info_hash_raw, 20);
+    enc_info_hash_curl = curl_easy_escape(curl, (char*)param->info_hash_raw, strnlen(param->info_hash_raw, 20*2 +1));   //Inserire SHA_DIGEST
     enc_peer_id_curl = curl_easy_escape(curl, param->peer_id.c_str(),param->peer_id.length());
+    
+    string enc_info_hash = string(enc_info_hash_curl);
 
     if(!enc_info_hash_curl || !enc_peer_id_curl){ //Se fallisco l'escape
         return CURL_ESCAPE_ERROR;
@@ -129,7 +136,7 @@ string *url_builder(string tracker_url, struct TrackerParameter param, CURL *cur
 
     //TODO Check if "tracker_url" is a proper url by validating it with regex
 
-    *url_req += tracker_url;
+    *url_req += tracker_url + "?";
 
     //codifico i parmametri tramite urlencode
 
@@ -137,15 +144,21 @@ string *url_builder(string tracker_url, struct TrackerParameter param, CURL *cur
         return url_req; //Mando la stringa vuota così da generare errore
     }
 
-    *url_req += "?info_hash=" + param.info_hash;
-    *url_req += "?peer_id=" + param.peer_id;
+    //Covert to lowercase
+    std::transform(param.info_hash.begin(), param.info_hash.end(), param.info_hash.begin(), ::tolower);
+
+    *url_req += "info_hash=" + param.info_hash;
+    *url_req += "&peer_id=" + param.peer_id;
 
     assert(param.port <= 65535); //TODO Sostituire con un gestore dell'errore
 
 
-    *url_req += "?port=" + to_string(param.port);
-    *url_req += "?uploaded=" + to_string(param.uploaded);
-    *url_req += "?downloaded=" + to_string(param.downloaded);
+    *url_req += "&port=" + to_string(param.port);
+    *url_req += "&uploaded=" + to_string(param.uploaded);
+    *url_req += "&downloaded=" + to_string(param.downloaded);
+    *url_req += "&left=" + to_string(1624211456);
+    *url_req += "&event=started";
+
 
 
 
@@ -176,7 +189,7 @@ size_t writeFunction(void *ptr, size_t size, size_t nmemb, std::string* data) {
  * @return 0 if it's a success, <0 otherwise;
  */
 
-int tracker_send_request(string *url, CURL *curl){
+int tracker_send_request(string *url, string *response, CURL *curl){
 
     CURLcode code;
     bool curl_passed=true;;
@@ -202,11 +215,11 @@ int tracker_send_request(string *url, CURL *curl){
         curl_easy_setopt(curl, CURLOPT_TCP_KEEPALIVE, 1L);
         */
 
-        string response_string;
+        //string response_string;
         string header_string;
         //Setto la funzione che andrà a scrivere e i rispettivi parametri
         code = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeFunction);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_string);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, response);
         curl_easy_setopt(curl, CURLOPT_HEADERDATA, &header_string);
 
         char* url_eff;
@@ -222,7 +235,8 @@ int tracker_send_request(string *url, CURL *curl){
             return -1;
         }
 
-        cout << endl << "Risposta : " << response_string << endl << endl << header_string << endl << endl;
+        cout << endl << "Risposta : " << *response << endl << endl << header_string << endl << endl;
+
 
         if(!curl_passed){
             curl_easy_cleanup(curl);
@@ -267,4 +281,23 @@ bool check_url(string *url, CURL *curl)
     }
 
     return (response == CURLE_OK) ? true : false;
+}
+
+
+
+int process_tracker_response(string *response){
+
+    be_node *node;
+    string key; 
+    node = be_decoden(response->c_str(), response->length());
+    if(node){
+        for (int i=0; node->val.d[i].val; i++) {
+            key = node->val.d[i].key;
+            if(key == "failure reason"){
+                cout << endl << "Error : " << node->val.d[i].val->val.s << endl;
+                be_free(node);
+                return -1;
+            }
+        }
+    }
 }

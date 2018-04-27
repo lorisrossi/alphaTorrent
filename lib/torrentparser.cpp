@@ -5,6 +5,10 @@
 #include "torrentparser.h"
 
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
 #define DICT_NOT_FOUND -5;
 #define DEFAULT_BUFF_LEN 1024
 
@@ -97,9 +101,11 @@ void parse_torrent(be_node *node, Torrent &new_torrent) {
  *
  *  @return the uchar array of the hash
  */
-unsigned char *get_info_node_hash(string *file, string *pieces_string){
+char *get_info_node_hash(string *file, string *pieces_string){
   string info_key;
-  unsigned char *info_hash;
+  unsigned char digest[SHA_DIGEST_LENGTH];
+  char *info_hash;
+
 
   // info_hash string begins at the "d" after "info"
   size_t start = file->find("4:infod") + 6;
@@ -112,16 +118,18 @@ unsigned char *get_info_node_hash(string *file, string *pieces_string){
   // add the remaining part <num_of_pieces>:<byte_string_of_pieces>e
   info_key = info_key + to_string(pieces_string->size()) + ':' + *pieces_string + 'e';
 
-  cout <<"\ninfo_key length\t"<< info_key.length() << endl
-    << "info_key.c_str() length\t" << string(info_key.c_str()).length() << endl;
 
-  info_hash=(unsigned char*)malloc(sizeof(unsigned char)* SHA_DIGEST_LENGTH);
+
+  info_hash=(char*)malloc(sizeof(char)* (SHA_DIGEST_LENGTH+1)); //+1 is for the \0 string terminator
   if(!info_hash){
     cerr << "Cannot allocate memory" << endl;
     return 0;
   }
 
-  SHA1((unsigned char*)(info_key.c_str()), info_key.length(), info_hash);
+  SHA1((unsigned char*)(info_key.c_str()), info_key.length(), digest);
+
+  bzero(info_hash, sizeof(char)* (SHA_DIGEST_LENGTH+ 1)); //Need to change just the last byte to 0
+  memcpy(info_hash, digest, SHA_DIGEST_LENGTH);
 
   return info_hash;
 
