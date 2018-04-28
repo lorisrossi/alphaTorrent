@@ -12,6 +12,8 @@
 using namespace std;
 
 // Struct to store information of a file inside a torrent
+// The element of path with highest index is the file.
+// The other elements (if any) are subfolders
 typedef struct {
   vector<string> path;
   long int length;
