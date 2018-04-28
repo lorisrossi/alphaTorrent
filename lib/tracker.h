@@ -17,11 +17,13 @@ using namespace std;
 //Struttura di riferimento che contiene tutti i parametri del tracker
 
 struct TrackerParameter{
+    string tracker_url;
     string info_hash;
     string peer_id;
     uint port;
     uint uploaded;
     uint downloaded;
+    uint left;
     char* info_hash_raw;
 };
 
@@ -54,5 +56,5 @@ int tracker_send_request(string *url, string  *response, CURL *curl = NULL);
 bool check_url(string *url, CURL *curl=NULL);
 string *url_builder(string tracker_url, struct TrackerParameter param,CURL *curl=NULL,  bool tls = false);
 int urlencode_paramenter(struct TrackerParameter *param, CURL *curl = NULL);
-int start_tracker_request(string *url,char *info_hash_param, const char* peer_id);
+int start_tracker_request(TrackerParameter *param);
 int process_tracker_response(string *response);
