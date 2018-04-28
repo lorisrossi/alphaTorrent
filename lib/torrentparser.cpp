@@ -2,12 +2,11 @@
 
 #include <iostream>
 #include <iomanip>
-#include "torrentparser.h"
-
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+#include "torrentparser.hpp"
 
 #define DICT_NOT_FOUND -5;
 #define DEFAULT_BUFF_LEN 1024
@@ -24,11 +23,11 @@ using namespace std;
 TorrentFile parse_file_dict(be_node *file_node) {
   string key;
   TorrentFile new_file;
-  for (int i=0; file_node->val.d[i].val; i++) {
+  for (int i=0; file_node->val.d[i].val; ++i) {
     key = file_node->val.d[i].key;
     if (key == "path") {
       be_node *list_node = file_node->val.d[i].val;
-      for (int j=0; list_node->val.l[j]; j++)
+      for (int j=0; list_node->val.l[j]; ++j)
         new_file.path.push_back(list_node->val.l[j]->val.s);
     }
     else if (key == "length")
@@ -49,7 +48,7 @@ TorrentFile parse_file_dict(be_node *file_node) {
  */
 void parse_info_dict(be_node *info_node, Torrent &new_torrent) {
   string key;
-  for (int i=0; info_node->val.d[i].val; i++) {
+  for (int i=0; info_node->val.d[i].val; ++i) {
     key = info_node->val.d[i].key;
     if (key == "name")
       new_torrent.name = info_node->val.d[i].val->val.s;
@@ -69,7 +68,7 @@ void parse_info_dict(be_node *info_node, Torrent &new_torrent) {
     }
     else if (key == "files") {
       be_node *temp_node = info_node->val.d[i].val;
-      for (int j=0; temp_node->val.l[j]; j++)
+      for (int j=0; temp_node->val.l[j]; ++j)
         new_torrent.files.push_back(parse_file_dict(temp_node->val.l[j]));
     }
   }
@@ -87,7 +86,7 @@ void parse_info_dict(be_node *info_node, Torrent &new_torrent) {
  */
 void parse_torrent(be_node *node, Torrent &new_torrent) {
   string key;
-  for (int i=0; node->val.d[i].val; i++) {
+  for (int i=0; node->val.d[i].val; ++i) {
     key = node->val.d[i].key;
     if (key == "announce")
       new_torrent.tracker_url = node->val.d[i].val->val.s;
@@ -151,14 +150,14 @@ char *get_info_node_hash(string *file, string *pieces_string){
  */
 void print_file(TorrentFile torrent_file) {
   cout << "\tPath: ";
-  for (int i=0; i < torrent_file.path.size(); i++) {
+  for (size_t i=0; i < torrent_file.path.size(); ++i) {
     cout << torrent_file.path[i];
     if (i != torrent_file.path.size() - 1)
       cout << '/';
   }
   cout << endl;
   cout << "\tLength: " << fixed << setprecision(2)
-    << torrent_file.length / (float)(1024*1024) << " MB" << endl << endl;
+    << torrent_file.length / static_cast<float>(1024*1024) << " MB" << endl << endl;
 }
 
 /**

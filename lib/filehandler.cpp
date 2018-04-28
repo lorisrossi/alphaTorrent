@@ -1,6 +1,8 @@
 #include <boost/filesystem.hpp>
 #include <iostream>
-#include "filehandler.h"
+#include "filehandler.hpp"
+
+using namespace std;
 
 /**
  * Make a new file in the filesystem (create subfolders, if any).
@@ -13,7 +15,7 @@
 void make_file(const string &main_folder, TorrentFile tfile) {
   string temp_path = main_folder;
   // create subfolders
-  for (int i=0; i < tfile.path.size() - 1; i++) {
+  for (size_t i=0; i < tfile.path.size() - 1; ++i) {
     temp_path += '/' + tfile.path[i];
     boost::filesystem::create_directory(temp_path);
   }
@@ -43,7 +45,12 @@ void check_files(Torrent torrent) {
     else {
       cout << "Folder exists, check of downloaded pieces" << endl;
     }
-    for (int i=0; i<torrent.files.size(); i++)
+    for (size_t i=0; i<torrent.files.size(); ++i)
       make_file(torrent.name, torrent.files[i]);
   }
+}
+
+
+void get_bitfield() {
+  // check with sha1
 }

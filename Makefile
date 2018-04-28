@@ -8,7 +8,7 @@ CXXFLAGS= -std=c++11 -Wall -Wextra -fsanitize=address -I$(LDIR)
 
 LIBS=-lssl -lcrypto -lcurl -lboost_filesystem -lboost_system
 
-_DEPS=bencode.h tracker.h torrentparser.h filehandler.h
+_DEPS=bencode.h tracker.h torrentparser.hpp filehandler.hpp
 DEPS=$(patsubst %,$(LDIR)/%,$(_DEPS))
 
 _OBJ=bencode.o tracker.o torrentparser.o atorrent-cli.o filehandler.o

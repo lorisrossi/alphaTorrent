@@ -4,9 +4,9 @@
 #include <string.h>
 
 #include "bencode.h"
-#include "torrentparser.h"
+#include "torrentparser.hpp"
 #include "tracker.h"
-#include "filehandler.h"
+#include "filehandler.hpp"
 
 using namespace std;
 
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
 
       param.left = mytorrent.piece_length * mytorrent.pieces.size();
       get_peer_id(&param.peer_id);
-      
+
       start_tracker_request(&param);
 
       free(param.info_hash_raw);

@@ -4,32 +4,30 @@
 #include <string>
 #include <vector>
 #include <assert.h>
-#include "bencode.h"
-
-
 #include <openssl/sha.h>
 
-using namespace std;
+#include "bencode.h"
 
 // Struct to store information of a file inside a torrent
 // The element of path with highest index is the file.
 // The other elements (if any) are subfolders
 typedef struct {
-  vector<string> path;
+  std::vector<std::string> path;
   long int length;
 } TorrentFile;
 
 // Struct to store all the information of a torrent
 typedef struct {
-  string tracker_url;
-  string name;
+  std::string tracker_url;
+  std::string name;
   int piece_length;
-  string pieces;
-  vector<TorrentFile> files;
+  std::string pieces;
+  std::vector<TorrentFile> files;
   bool is_single = false; // true if single file torrent
 } Torrent;
 
 void parse_torrent(be_node *node, Torrent &new_torrent);
 void print_torrent(Torrent torrent);
-char *get_info_node_hash(string *file, string *pieces_string);
+char *get_info_node_hash(std::string *file, std::string *pieces_string);
+
 #endif

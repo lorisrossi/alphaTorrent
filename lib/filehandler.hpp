@@ -1,7 +1,7 @@
 #ifndef FILEHANDLER_H
 #define FILEHANDLER_H
 
-#include "torrentparser.h"
+#include "torrentparser.hpp"
 
 void check_files(Torrent torrent);
 
