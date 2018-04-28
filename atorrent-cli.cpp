@@ -33,9 +33,6 @@ int main(int argc, char* argv[]) {
   }
   curl_global_init(CURL_GLOBAL_DEFAULT);
 
-  char *info_hash; //è un pò brutto messo qui
-
-
   ifstream myfile(argv[1]);
   if (myfile.is_open()) {
     // parsing .torrent file as a string
@@ -56,16 +53,17 @@ int main(int argc, char* argv[]) {
       be_free(node);
       print_torrent(mytorrent);
 
-      info_hash = get_info_node_hash(&torrent_str, &mytorrent.pieces);
-      string track_url = mytorrent.tracker_url;
-      string peer_id;
-      get_peer_id(&peer_id);
-      start_tracker_request(&track_url, info_hash, peer_id.c_str());
+      TrackerParameter param;
 
+      param.info_hash_raw = get_info_node_hash(&torrent_str, &mytorrent.pieces);
+      param.tracker_url = mytorrent.tracker_url;
 
+      param.left = mytorrent.piece_length * mytorrent.pieces.size();
+      get_peer_id(&param.peer_id);
+      
+      start_tracker_request(&param);
 
-
-      free(info_hash);
+      free(param.info_hash_raw);
     }
     else
       cout << "Parsing of " << argv[1] << " failed!" << endl;

@@ -1,6 +1,5 @@
 #include "tracker.h"
 #include <iostream>
-#include <sstream>
 #include <algorithm>    //Lower String
 
 #include <stdlib.h>
@@ -17,21 +16,18 @@ using namespace std;
  *  @param peer_id      : the client generated id
  *
  */
-int start_tracker_request(string *url, char *info_hash_param, const char* peer_id){
+int start_tracker_request(TrackerParameter *param){
 
-    struct TrackerParameter test;
 
-    test.info_hash = "";
-    test.peer_id = string(peer_id);
-    test.port = 6969;
-    test.uploaded = 0;
-    test.downloaded = 0;
-    test.info_hash_raw = info_hash_param;
+    param->info_hash = "";
+    param->port = 6969;
+    param->uploaded = 0;
+    param->downloaded = 0;
 
     string *enc_url;
     string response = "";
 
-    enc_url = url_builder(url->c_str(), test);
+    enc_url = url_builder(param->tracker_url.c_str(), *param);
 
     cout << endl << "URL : " << *enc_url << endl;
     cout << "Is Valid? : " << check_url(enc_url) << endl;
@@ -156,7 +152,7 @@ string *url_builder(string tracker_url, struct TrackerParameter param, CURL *cur
     *url_req += "&port=" + to_string(param.port);
     *url_req += "&uploaded=" + to_string(param.uploaded);
     *url_req += "&downloaded=" + to_string(param.downloaded);
-    *url_req += "&left=" + to_string(1624211456);
+    *url_req += "&left=" + to_string(param.left);
     *url_req += "&event=started";
 
 
@@ -210,7 +206,9 @@ int tracker_send_request(string *url, string *response, CURL *curl){
 
         curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
         curl_easy_setopt(curl, CURLOPT_USERPWD, "user:pass");
-        curl_easy_setopt(curl, CURLOPT_USERAGENT, "curl/7.42.0");
+        */
+        curl_easy_setopt(curl, CURLOPT_USERAGENT, "Transmission/2.92\r\n");
+        /*
         curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 50L);
         curl_easy_setopt(curl, CURLOPT_TCP_KEEPALIVE, 1L);
         */
@@ -293,11 +291,17 @@ int process_tracker_response(string *response){
     if(node){
         for (int i=0; node->val.d[i].val; i++) {
             key = node->val.d[i].key;
-            if(key == "failure reason"){
+
+            //According to the protocol, if "failure reason" is present,no other keys may be present, so simply return 
+            if(key == "failure reason"){    
                 cout << endl << "Error : " << node->val.d[i].val->val.s << endl;
                 be_free(node);
                 return -1;
             }
+
+
+
+
         }
     }
 }
