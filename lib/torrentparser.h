@@ -13,7 +13,7 @@ using namespace std;
 
 // Struct to store information of a file inside a torrent
 typedef struct {
-  string path;
+  vector<string> path;
   long int length;
 } TorrentFile;
 

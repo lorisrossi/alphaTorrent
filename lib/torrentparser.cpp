@@ -26,8 +26,11 @@ TorrentFile parse_file_dict(be_node *file_node) {
   TorrentFile new_file;
   for (int i=0; file_node->val.d[i].val; i++) {
     key = file_node->val.d[i].key;
-    if (key == "path")
-      new_file.path = file_node->val.d[i].val->val.l[0]->val.s;
+    if (key == "path") {
+      be_node *list_node = file_node->val.d[i].val;
+      for (int j=0; list_node->val.l[j]; j++)
+        new_file.path.push_back(list_node->val.l[j]->val.s);
+    }
     else if (key == "length")
       new_file.length = file_node->val.d[i].val->val.i;
   }
@@ -59,6 +62,7 @@ void parse_info_dict(be_node *info_node, Torrent &new_torrent) {
       assert(new_torrent.pieces.size() % 20 == 0); // TODO: handle error
     }
     else if (key == "length") { // single file torrent
+      new_torrent.is_single = true;
       TorrentFile single_file;
       single_file.length = info_node->val.d[i].val->val.i;
       new_torrent.files.push_back(single_file);
@@ -69,11 +73,8 @@ void parse_info_dict(be_node *info_node, Torrent &new_torrent) {
         new_torrent.files.push_back(parse_file_dict(temp_node->val.l[j]));
     }
   }
-  if (new_torrent.files.size() == 1 && new_torrent.files[0].path == "") {
-    // single file torrent
-    new_torrent.is_single = true;
-    new_torrent.files[0].path = new_torrent.name;
-  }
+  if (new_torrent.is_single)
+    new_torrent.files[0].path.push_back(new_torrent.name);
 }
 
 /**
@@ -149,7 +150,13 @@ char *get_info_node_hash(string *file, string *pieces_string){
  * @param torrent_file  File parsed with parse_file_dict
  */
 void print_file(TorrentFile torrent_file) {
-  cout << "\tPath: " << torrent_file.path << endl;
+  cout << "\tPath: ";
+  for (int i=0; i < torrent_file.path.size(); i++) {
+    cout << torrent_file.path[i];
+    if (i != torrent_file.path.size() - 1)
+      cout << '/';
+  }
+  cout << endl;
   cout << "\tLength: " << fixed << setprecision(2)
     << torrent_file.length / (float)(1024*1024) << " MB" << endl << endl;
 }
