@@ -7,7 +7,7 @@ void make_file(string &path, long int size) {
   new_file.close();
   boost::filesystem::resize_file(path, size);
 }
-
+/*
 void check_files(Torrent torrent) {
   if (torrent.is_single) {
     // check for file
@@ -16,7 +16,7 @@ void check_files(Torrent torrent) {
     }
     else {
       cout << "New torrent, make new file and allocate memory" << endl;
-      make_file(torrent.files[0].path, torrent.files[0].length);
+      //make_file(torrent.files[0].path, torrent.files[0].length);
     }
   }
   else {
@@ -27,4 +27,6 @@ void check_files(Torrent torrent) {
     else
       cout << "Folder exists, check of downloaded pieces" << endl;
   }
+  
 }
+*/

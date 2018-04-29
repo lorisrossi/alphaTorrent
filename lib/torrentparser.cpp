@@ -89,9 +89,10 @@ void parse_torrent(be_node *node, Torrent &new_torrent) {
   string key;
   for (int i=0; node->val.d[i].val; i++) {
     key = node->val.d[i].key;
-    if (key == "announce")
-      new_torrent.tracker_url = node->val.d[i].val->val.s;
-    else if (key == "info")
+    cout << endl << key << endl;
+    if (key == "announce"){
+      new_torrent.tracker_urls.push_back(node->val.d[i].val->val.s);
+    }else if (key == "info")
       parse_info_dict(node->val.d[i].val, new_torrent);
   }
 }
@@ -105,7 +106,7 @@ void parse_torrent(be_node *node, Torrent &new_torrent) {
  *
  *  @return the uchar array of the hash
  */
-char *get_info_node_hash(string *file, string *pieces_string){
+char *get_info_node_hash(const string *file, const string *pieces_string){
   string info_key;
   unsigned char digest[SHA_DIGEST_LENGTH];
   char *info_hash;
@@ -170,7 +171,9 @@ void print_torrent(Torrent torrent) {
   string separator = "--------------------------";
   cout << separator << endl;
   cout << "Torrent name: " << torrent.name << endl;
-  cout << "Tracker: " << torrent.tracker_url << endl;
+  for(int i=0; i<torrent.tracker_urls.size();++i){
+    cout << "Tracker " << i << " : " << torrent.tracker_urls[i] << endl;
+  }
   cout << "Piece length: " << torrent.piece_length / 1024 << " KB" << endl;
   cout << "Pieces: " << torrent.pieces.size() << endl;
   cout << "Single file: " << (torrent.is_single ? "Yes" : "No") << endl;

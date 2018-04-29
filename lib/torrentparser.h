@@ -19,7 +19,7 @@ typedef struct {
 
 // Struct to store all the information of a torrent
 typedef struct {
-  string tracker_url;
+  vector<string> tracker_urls;
   string name;
   int piece_length;
   string pieces;
@@ -29,5 +29,5 @@ typedef struct {
 
 void parse_torrent(be_node *node, Torrent &new_torrent);
 void print_torrent(Torrent torrent);
-char *get_info_node_hash(string *file, string *pieces_string);
+char *get_info_node_hash(const string *file, const string *pieces_string);
 #endif

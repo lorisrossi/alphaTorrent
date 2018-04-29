@@ -1,12 +1,15 @@
-#include "tracker.h"
 #include <iostream>
 #include <algorithm>    //Lower String
+#include "tracker.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-using namespace std;
+
+
+
+//using namespace std;
 
 /**
  *  Function that start the communication with the tracker
@@ -18,26 +21,25 @@ using namespace std;
  */
 int start_tracker_request(TrackerParameter *param){
 
-
+    //TODO Read this info from config files
     param->info_hash = "";
-    param->port = 6969;
+    param->port = 6889;
     param->uploaded = 0;
     param->downloaded = 0;
-
-    string *enc_url;
+    shared_ptr<string> enc_url;
     string response = "";
 
-    enc_url = url_builder(param->tracker_url.c_str(), *param);
+    for(int i=0; i<param->tracker_urls.size(); i++){
+        enc_url = url_builder(param->tracker_urls[i].c_str(), *param, STOPPED);
 
-    cout << endl << "URL : " << *enc_url << endl;
-    cout << "Is Valid? : " << check_url(enc_url) << endl;
+        cout << endl << "URL : " << *enc_url << endl;
+        cout << "Is Valid? : " << check_url(*enc_url) << endl;
 
-    tracker_send_request(enc_url, &response);
+        tracker_send_request(enc_url, &response);
 
-    process_tracker_response(&response);
+        process_tracker_response(&response);
+    }
 
-
-    delete enc_url;
 
 }
 
@@ -109,8 +111,11 @@ int urlencode_paramenter(struct TrackerParameter *param, CURL *curl){
  *  @return Un puntatore ad una stringa contenente l'url
 */
 
-string *url_builder(string tracker_url, struct TrackerParameter param, CURL *curl, bool tls){
+shared_ptr<string> url_builder(const string &tracker_url, const struct TrackerParameter &t_param, event_type event, CURL *curl, bool tls){
 
+    /*
+    *   TODO : Improve this function parmeters, since trakcer_url is already inside TrackerParameter
+    */
     bool curl_passed=true;;
 
     if(curl == NULL){
@@ -122,16 +127,12 @@ string *url_builder(string tracker_url, struct TrackerParameter param, CURL *cur
         return NULL;
 
 
-    string *url_req = new string("");
-    /*
-    if(tls)
-        *url_req = "https://";
-    else
-        *url_req = "http://";
-    */
+    struct TrackerParameter param = t_param;
+
+    shared_ptr<string> url_req(new string(""));
 
     //TODO Check if "tracker_url" is a proper url by validating it with regex
-
+    *url_req = "";
     *url_req += tracker_url + "?";
 
     //codifico i parmametri tramite urlencode
@@ -152,11 +153,15 @@ string *url_builder(string tracker_url, struct TrackerParameter param, CURL *cur
     *url_req += "&port=" + to_string(param.port);
     *url_req += "&uploaded=" + to_string(param.uploaded);
     *url_req += "&downloaded=" + to_string(param.downloaded);
-    *url_req += "&left=" + to_string(param.left);
-    *url_req += "&event=started";
-
-
-
+    *url_req += "&left=0" /*+ to_string(param.left)*/;
+    switch(event){
+        case STARTED:
+            *url_req += "&event=started";
+            break;
+        case STOPPED:
+            *url_req += "&event=stopped";
+            break;
+    }
 
     if(!curl_passed){
         curl_easy_cleanup(curl);
@@ -185,7 +190,7 @@ size_t writeFunction(void *ptr, size_t size, size_t nmemb, std::string* data) {
  * @return 0 if it's a success, <0 otherwise;
  */
 
-int tracker_send_request(string *url, string *response, CURL *curl){
+int tracker_send_request(shared_ptr<string> url, string *response, CURL *curl){
 
     CURLcode code;
     bool curl_passed=true;;
@@ -254,7 +259,7 @@ int tracker_send_request(string *url, string *response, CURL *curl){
  *
  *  @return (true) se è valido, altrimenti (false)
  */
-bool check_url(string *url, CURL *curl)
+bool check_url(const string &url, CURL *curl)
 {
     CURLcode response;
     bool curl_passed=true;;
@@ -265,7 +270,7 @@ bool check_url(string *url, CURL *curl)
     }
 
     if(curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, url->c_str());
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         /* don't write output to stdout */
         curl_easy_setopt(curl, CURLOPT_NOBODY, 1);
         /* Perform the request */
@@ -297,11 +302,76 @@ int process_tracker_response(string *response){
                 cout << endl << "Error : " << node->val.d[i].val->val.s << endl;
                 be_free(node);
                 return -1;
-            }
-
-
-
-
+            }else if(key == "complete"){
+                cout << endl << "There are " << node->val.d[i].val->val.i << " seeders" << endl;
+            }else if(key == "incomplete"){
+                cout << endl << "There are " << node->val.d[i].val->val.i << " leechers" << endl;
+            }else if(key == "interval"){
+                cout << endl << "Interval is " << node->val.d[i].val->val.i << endl;
+            }   
         }
     }
+
+    be_free(node);
+
+}
+
+
+int scrape_request(const string &url, const TrackerParameter &param, string *response, CURL *curl){
+    bool curl_passed=true;;
+
+    if(curl == NULL){
+        curl_passed=false;
+        curl = curl_easy_init();
+    }
+
+    shared_ptr<string> scrap_url = get_scrape_url(url);
+
+    if(scrap_url == nullptr)
+        return -1;
+    
+    shared_ptr<string> final_url = url_builder(*scrap_url, param, STARTED);
+
+    if(tracker_send_request(final_url, response) < 0){
+        cout << endl << "Error in Scraping Request" << endl;
+        return -1;
+    }
+
+    
+    //Se l'istanza non è stata passata allora pulisco
+    if(!curl_passed){
+        curl_easy_cleanup(curl);
+    }        
+    
+    return 0;
+}
+
+/**
+ *  Function that get the tracker url and return the scraped version of it
+ * 
+ *  @param url : the url(annouunce version) of the tracker 
+ * 
+ *  @return a pointer to the new url or nullptr if the tracker doesn't support scraping
+ */
+
+
+shared_ptr<string> get_scrape_url(const string &url){
+    shared_ptr<string> scrape_url (new string(url));
+
+    size_t old_found;
+    size_t found = 0 ;
+    do{
+        old_found = found;
+        found = url.find('/', found+1);
+    }while(found != string::npos);
+
+    if(old_found == string::npos)
+        return nullptr;
+    
+    if(url.substr(old_found+1, 9) != "announce")
+        return nullptr;
+    
+    scrape_url->replace(old_found+1, 9, "scrape");
+
+    return scrape_url;
 }
