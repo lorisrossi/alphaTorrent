@@ -171,7 +171,7 @@ void print_file(const TorrentFile &torrent_file) {
   }
   cout << endl;
   cout << "\tLength: " << fixed << setprecision(2)
-    << torrent_file.length / static_cast<float>(1024*1024) << " MB" << endl << endl;
+    << torrent_file.length / (1024*1024*1.0) << " MB" << endl << endl;
 }
 
 /**
@@ -195,7 +195,11 @@ void print_torrent(const Torrent &torrent) {
   }
 
   cout << "Piece length: " << torrent.piece_length / 1024 << " KB" << endl;
-  cout << "Pieces: " << torrent.pieces.size() << endl;
+  cout << "Pieces: " << torrent.pieces.size() / 20 << endl;
+  cout << "Total dimension: " << fixed << setprecision(2)
+    << torrent.piece_length * (torrent.pieces.size() / 20) / (1024*1024*1.0)
+    << " MB" << endl;
+    
   cout << "Single file: " << (torrent.is_single ? "Yes" : "No") << endl;
   cout << "Files:" << endl;
   for (size_t i=0; i < torrent.files.size() && i < FILES_LIMIT; ++i) {
