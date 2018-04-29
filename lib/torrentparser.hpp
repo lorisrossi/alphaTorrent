@@ -26,8 +26,8 @@ typedef struct {
   bool is_single = false; // true if single file torrent
 } Torrent;
 
-void parse_torrent(be_node *node, Torrent &new_torrent);
-void print_torrent(Torrent torrent);
+void parse_torrent(const be_node *node, Torrent &new_torrent);
+void print_torrent(const Torrent &torrent);
 char *get_info_node_hash(std::string *file, std::string *pieces_string);
 
 #endif

@@ -20,7 +20,7 @@ using namespace std;
  * @param  file_node  be_node dictionary corresponding to the file
  * @return            TorrentFile struct with path and length
  */
-TorrentFile parse_file_dict(be_node *file_node) {
+TorrentFile parse_file_dict(const be_node *file_node) {
   string key;
   TorrentFile new_file;
   for (int i=0; file_node->val.d[i].val; ++i) {
@@ -46,7 +46,7 @@ TorrentFile parse_file_dict(be_node *file_node) {
  * @param info_node   be_node dictionary corresponding to "info" key
  * @param new_torrent Torrent struct where to save the parsed info
  */
-void parse_info_dict(be_node *info_node, Torrent &new_torrent) {
+void parse_info_dict(const be_node *info_node, Torrent &new_torrent) {
   string key;
   for (int i=0; info_node->val.d[i].val; ++i) {
     key = info_node->val.d[i].key;
@@ -84,7 +84,7 @@ void parse_info_dict(be_node *info_node, Torrent &new_torrent) {
  * @param node         be_node dictionary corresponding to the torrent file
  * @param new_torrent  Torrent struct where to save the parsed info
  */
-void parse_torrent(be_node *node, Torrent &new_torrent) {
+void parse_torrent(const be_node *node, Torrent &new_torrent) {
   string key;
   for (int i=0; node->val.d[i].val; ++i) {
     key = node->val.d[i].key;
@@ -148,7 +148,7 @@ char *get_info_node_hash(string *file, string *pieces_string){
  *
  * @param torrent_file  File parsed with parse_file_dict
  */
-void print_file(TorrentFile torrent_file) {
+void print_file(const TorrentFile &torrent_file) {
   cout << "\tPath: ";
   for (size_t i=0; i < torrent_file.path.size(); ++i) {
     cout << torrent_file.path[i];
@@ -165,7 +165,7 @@ void print_file(TorrentFile torrent_file) {
  *
  * @param torrent  Torrent parsed with parse_torrent
  */
-void print_torrent(Torrent torrent) {
+void print_torrent(const Torrent &torrent) {
   string separator = "--------------------------";
   cout << separator << endl;
   cout << "Torrent name: " << torrent.name << endl;

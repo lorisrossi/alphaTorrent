@@ -12,7 +12,7 @@ using namespace std;
  *                     For current directory use ".".
  * @param tfile        TorrentFile struct with file information
  */
-void make_file(const string &main_folder, TorrentFile tfile) {
+void make_file(const string &main_folder, const TorrentFile &tfile) {
   string temp_path = main_folder;
   // create subfolders
   for (size_t i=0; i < tfile.path.size() - 1; ++i) {
@@ -26,7 +26,7 @@ void make_file(const string &main_folder, TorrentFile tfile) {
   boost::filesystem::resize_file(temp_path, tfile.length);
 }
 
-void check_files(Torrent torrent) {
+void check_files(const Torrent &torrent) {
   if (torrent.is_single) {
     // check for file
     if (boost::filesystem::exists(torrent.name)) {
