@@ -18,7 +18,7 @@ typedef struct {
 
 // Struct to store all the information of a torrent
 typedef struct {
-  std::string tracker_url;
+  std::vector<std::string> trackers;
   std::string name;
   int piece_length;
   std::string pieces;

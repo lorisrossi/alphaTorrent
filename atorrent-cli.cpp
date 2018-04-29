@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
       TrackerParameter param;
 
       param.info_hash_raw = get_info_node_hash(&torrent_str, &mytorrent.pieces);
-      param.tracker_url = mytorrent.tracker_url;
+      param.tracker_url = mytorrent.trackers[0];
 
       param.left = mytorrent.piece_length * mytorrent.pieces.size();
       get_peer_id(&param.peer_id);

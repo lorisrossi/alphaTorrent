@@ -8,9 +8,6 @@
 
 #include "torrentparser.hpp"
 
-#define DICT_NOT_FOUND -5;
-#define DEFAULT_BUFF_LEN 1024
-
 using namespace std;
 
 /**
@@ -78,7 +75,9 @@ void parse_info_dict(const be_node *info_node, Torrent &new_torrent) {
 
 /**
  * Parse a be_node dictionary corresponding to the decoded torrent file.
- * Parsed keys: announce, info.
+ * Parsed keys: announce, announce-list, info.
+ * The first element of "announce-list" is equal to "announce", but sometimes
+ * there is no "announce-list" key, so we must parse "announce" everytime.
  * Save all the information in a Torrent struct passed as a parameter.
  *
  * @param node         be_node dictionary corresponding to the torrent file
@@ -88,10 +87,24 @@ void parse_torrent(const be_node *node, Torrent &new_torrent) {
   string key;
   for (int i=0; node->val.d[i].val; ++i) {
     key = node->val.d[i].key;
-    if (key == "announce")
-      new_torrent.tracker_url = node->val.d[i].val->val.s;
-    else if (key == "info")
+    if (key == "announce") {
+      new_torrent.trackers.push_back(node->val.d[i].val->val.s);
+    }
+    else if (key == "announce-list") {
+      // val of "announce-list" is a list of lists of strings
+      be_node *list_node = node->val.d[i].val;
+      // start from j=1 because the first tracker in "announce-list"
+      // is equal to the tracker in "announce"
+      for (int j=1; list_node->val.l[j]; ++j) {
+        be_node *str_list_node = list_node->val.l[j];
+        for (int k=0; str_list_node ->val.l[k]; ++k) {
+          new_torrent.trackers.push_back(str_list_node->val.l[k]->val.s);
+        }
+      }
+    }
+    else if (key == "info") {
       parse_info_dict(node->val.d[i].val, new_torrent);
+    }
   }
 }
 
@@ -152,8 +165,9 @@ void print_file(const TorrentFile &torrent_file) {
   cout << "\tPath: ";
   for (size_t i=0; i < torrent_file.path.size(); ++i) {
     cout << torrent_file.path[i];
-    if (i != torrent_file.path.size() - 1)
+    if (i != torrent_file.path.size() - 1) {
       cout << '/';
+    }
   }
   cout << endl;
   cout << "\tLength: " << fixed << setprecision(2)
@@ -166,15 +180,30 @@ void print_file(const TorrentFile &torrent_file) {
  * @param torrent  Torrent parsed with parse_torrent
  */
 void print_torrent(const Torrent &torrent) {
+  const size_t TRACKERS_LIMIT = 10;
+  const size_t FILES_LIMIT = 10;
+
   string separator = "--------------------------";
   cout << separator << endl;
   cout << "Torrent name: " << torrent.name << endl;
-  cout << "Tracker: " << torrent.tracker_url << endl;
+  cout << "Trackers:" << endl;
+  for (size_t i=0; i < torrent.trackers.size() && i < TRACKERS_LIMIT; ++i) {
+    cout << '\t' << torrent.trackers[i] << endl;
+  }
+  if (torrent.trackers.size() > TRACKERS_LIMIT) {
+    cout << "\t[..." << torrent.trackers.size() - TRACKERS_LIMIT << " more trackers]" << endl;
+  }
+
   cout << "Piece length: " << torrent.piece_length / 1024 << " KB" << endl;
   cout << "Pieces: " << torrent.pieces.size() << endl;
   cout << "Single file: " << (torrent.is_single ? "Yes" : "No") << endl;
   cout << "Files:" << endl;
-  for (TorrentFile file : torrent.files)
-    print_file(file);
+  for (size_t i=0; i < torrent.files.size() && i < FILES_LIMIT; ++i) {
+    print_file(torrent.files[i]);
+  }
+  if (torrent.files.size() > FILES_LIMIT) {
+    cout << "\t[..." << torrent.files.size() - FILES_LIMIT << " more files]" << endl;
+  }
+
   cout << separator << endl;
 }
