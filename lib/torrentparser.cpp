@@ -2,15 +2,11 @@
 
 #include <iostream>
 #include <iomanip>
-#include "torrentparser.h"
-
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-#define DICT_NOT_FOUND -5;
-#define DEFAULT_BUFF_LEN 1024
+#include "torrentparser.hpp"
 
 using namespace std;
 
@@ -21,14 +17,14 @@ using namespace std;
  * @param  file_node  be_node dictionary corresponding to the file
  * @return            TorrentFile struct with path and length
  */
-TorrentFile parse_file_dict(be_node *file_node) {
+TorrentFile parse_file_dict(const be_node *file_node) {
   string key;
   TorrentFile new_file;
-  for (int i=0; file_node->val.d[i].val; i++) {
+  for (int i=0; file_node->val.d[i].val; ++i) {
     key = file_node->val.d[i].key;
     if (key == "path") {
       be_node *list_node = file_node->val.d[i].val;
-      for (int j=0; list_node->val.l[j]; j++)
+      for (int j=0; list_node->val.l[j]; ++j)
         new_file.path.push_back(list_node->val.l[j]->val.s);
     }
     else if (key == "length")
@@ -47,9 +43,9 @@ TorrentFile parse_file_dict(be_node *file_node) {
  * @param info_node   be_node dictionary corresponding to "info" key
  * @param new_torrent Torrent struct where to save the parsed info
  */
-void parse_info_dict(be_node *info_node, Torrent &new_torrent) {
+void parse_info_dict(const be_node *info_node, Torrent &new_torrent) {
   string key;
-  for (int i=0; info_node->val.d[i].val; i++) {
+  for (int i=0; info_node->val.d[i].val; ++i) {
     key = info_node->val.d[i].key;
     if (key == "name")
       new_torrent.name = info_node->val.d[i].val->val.s;
@@ -69,7 +65,7 @@ void parse_info_dict(be_node *info_node, Torrent &new_torrent) {
     }
     else if (key == "files") {
       be_node *temp_node = info_node->val.d[i].val;
-      for (int j=0; temp_node->val.l[j]; j++)
+      for (int j=0; temp_node->val.l[j]; ++j)
         new_torrent.files.push_back(parse_file_dict(temp_node->val.l[j]));
     }
   }
@@ -79,21 +75,36 @@ void parse_info_dict(be_node *info_node, Torrent &new_torrent) {
 
 /**
  * Parse a be_node dictionary corresponding to the decoded torrent file.
- * Parsed keys: announce, info.
+ * Parsed keys: announce, announce-list, info.
+ * The first element of "announce-list" is equal to "announce", but sometimes
+ * there is no "announce-list" key, so we must parse "announce" everytime.
  * Save all the information in a Torrent struct passed as a parameter.
  *
  * @param node         be_node dictionary corresponding to the torrent file
  * @param new_torrent  Torrent struct where to save the parsed info
  */
-void parse_torrent(be_node *node, Torrent &new_torrent) {
+void parse_torrent(const be_node *node, Torrent &new_torrent) {
   string key;
-  for (int i=0; node->val.d[i].val; i++) {
+  for (int i=0; node->val.d[i].val; ++i) {
     key = node->val.d[i].key;
-    cout << endl << key << endl;
-    if (key == "announce"){
-      new_torrent.tracker_urls.push_back(node->val.d[i].val->val.s);
-    }else if (key == "info")
+    if (key == "announce") {
+      new_torrent.trackers.push_back(node->val.d[i].val->val.s);
+    }
+    else if (key == "announce-list") {
+      // val of "announce-list" is a list of lists of strings
+      be_node *list_node = node->val.d[i].val;
+      // start from j=1 because the first tracker in "announce-list"
+      // is equal to the tracker in "announce"
+      for (int j=1; list_node->val.l[j]; ++j) {
+        be_node *str_list_node = list_node->val.l[j];
+        for (int k=0; str_list_node ->val.l[k]; ++k) {
+          new_torrent.trackers.push_back(str_list_node->val.l[k]->val.s);
+        }
+      }
+    }
+    else if (key == "info") {
       parse_info_dict(node->val.d[i].val, new_torrent);
+    }
   }
 }
 
@@ -150,16 +161,17 @@ char *get_info_node_hash(const string *file, const string *pieces_string){
  *
  * @param torrent_file  File parsed with parse_file_dict
  */
-void print_file(TorrentFile torrent_file) {
+void print_file(const TorrentFile &torrent_file) {
   cout << "\tPath: ";
-  for (int i=0; i < torrent_file.path.size(); i++) {
+  for (size_t i=0; i < torrent_file.path.size(); ++i) {
     cout << torrent_file.path[i];
-    if (i != torrent_file.path.size() - 1)
+    if (i != torrent_file.path.size() - 1) {
       cout << '/';
+    }
   }
   cout << endl;
   cout << "\tLength: " << fixed << setprecision(2)
-    << torrent_file.length / (float)(1024*1024) << " MB" << endl << endl;
+    << torrent_file.length / (1024*1024*1.0) << " MB" << endl << endl;
 }
 
 /**
@@ -167,18 +179,35 @@ void print_file(TorrentFile torrent_file) {
  *
  * @param torrent  Torrent parsed with parse_torrent
  */
-void print_torrent(Torrent torrent) {
+void print_torrent(const Torrent &torrent) {
+  const size_t TRACKERS_LIMIT = 10;
+  const size_t FILES_LIMIT = 10;
+
   string separator = "--------------------------";
   cout << separator << endl;
   cout << "Torrent name: " << torrent.name << endl;
-  for(int i=0; i<torrent.tracker_urls.size();++i){
-    cout << "Tracker " << i << " : " << torrent.tracker_urls[i] << endl;
+  cout << "Trackers:" << endl;
+  for (size_t i=0; i < torrent.trackers.size() && i < TRACKERS_LIMIT; ++i) {
+    cout << '\t' << torrent.trackers[i] << endl;
   }
+  if (torrent.trackers.size() > TRACKERS_LIMIT) {
+    cout << "\t[..." << torrent.trackers.size() - TRACKERS_LIMIT << " more trackers]" << endl;
+  }
+
   cout << "Piece length: " << torrent.piece_length / 1024 << " KB" << endl;
-  cout << "Pieces: " << torrent.pieces.size() << endl;
+  cout << "Pieces: " << torrent.pieces.size() / 20 << endl;
+  cout << "Total dimension: " << fixed << setprecision(2)
+    << torrent.piece_length * (torrent.pieces.size() / 20) / (1024*1024*1.0)
+    << " MB" << endl;
+    
   cout << "Single file: " << (torrent.is_single ? "Yes" : "No") << endl;
   cout << "Files:" << endl;
-  for (TorrentFile file : torrent.files)
-    print_file(file);
+  for (size_t i=0; i < torrent.files.size() && i < FILES_LIMIT; ++i) {
+    print_file(torrent.files[i]);
+  }
+  if (torrent.files.size() > FILES_LIMIT) {
+    cout << "\t[..." << torrent.files.size() - FILES_LIMIT << " more files]" << endl;
+  }
+
   cout << separator << endl;
 }
