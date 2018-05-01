@@ -3,6 +3,6 @@
 
 #include "torrentparser.hpp"
 
-void check_files(const Torrent &torrent);
+void check_files(Torrent &torrent);
 
 #endif

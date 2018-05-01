@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
+#include <openssl/sha.h>
 
 #include "torrentparser.hpp"
 
@@ -199,7 +201,7 @@ void print_torrent(const Torrent &torrent) {
   cout << "Total dimension: " << fixed << setprecision(2)
     << torrent.piece_length * (torrent.pieces.size() / 20) / (1024*1024*1.0)
     << " MB" << endl;
-    
+
   cout << "Single file: " << (torrent.is_single ? "Yes" : "No") << endl;
   cout << "Files:" << endl;
   for (size_t i=0; i < torrent.files.size() && i < FILES_LIMIT; ++i) {

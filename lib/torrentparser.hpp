@@ -3,8 +3,6 @@
 
 #include <string>
 #include <vector>
-#include <assert.h>
-#include <openssl/sha.h>
 
 #include "bencode.h"
 
@@ -23,6 +21,7 @@ typedef struct {
   int piece_length;
   std::string pieces;
   std::vector<TorrentFile> files;
+  std::string bitfield;
   bool is_single = false; // true if single file torrent
 } Torrent;
 
