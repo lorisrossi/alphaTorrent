@@ -70,7 +70,7 @@ void init_bitfield(Torrent &torrent) {
       // add spare bits at the end of bitfield
       if (num_pieces % 8 != 0) {
         for (size_t i = num_pieces; i < torrent.bitfield.size(); i++) {
-          torrent.bitfield.at(i) = 0;
+          torrent.bitfield.at(i) = '0';
         }
       }
 
