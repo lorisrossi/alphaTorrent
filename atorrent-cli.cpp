@@ -47,7 +47,6 @@ int main(int argc, char* argv[]) {
     long long len = torrent_str.length();
     node = be_decoden(torrent_str.c_str(), len);
     if (node) {
-      // be_dump(n); // BE_DEBUG must be greater than 0
       Torrent mytorrent;
       parse_torrent(node, mytorrent);
       be_free(node);

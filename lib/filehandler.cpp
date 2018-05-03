@@ -1,9 +1,11 @@
+// WARNING: as of now, only single file torrents can be used.
+// Multiple file torrents are not supported.
+
 #include <boost/filesystem.hpp>
 #include <iostream>
 #include <string>
+#include <algorithm> // min()
 #include <openssl/sha.h>
-
-#include <chrono>
 
 #include "filehandler.hpp"
 
@@ -35,17 +37,13 @@ void make_file(const string &main_folder, const TorrentFile &tfile) {
 void init_bitfield(Torrent &torrent) {
   if (torrent.is_single) {
     string path = torrent.name + ".part";
-    ifstream cur_file(path, ifstream::binary);
+    ifstream cur_file(path);
     if (cur_file.is_open()) {
 
       cur_file.seekg (0, cur_file.end);
-      // file_length = files[0].length
+      // file_length = torrent.files[0].length
       int file_length = cur_file.tellg();
       cur_file.seekg (0, cur_file.beg);
-
-      size_t num_pieces = torrent.pieces.size() / 20;
-      // bitfield size is multiple of 8
-      torrent.bitfield.resize(num_pieces + (8 - num_pieces%8));
 
       // variables used in for cycle
       string piece_hash;
@@ -53,7 +51,7 @@ void init_bitfield(Torrent &torrent) {
       unsigned char digest[20];
       int hashlength = torrent.piece_length;
 
-      for (size_t i=0; i < num_pieces - 1; ++i) {
+      for (size_t i=0; i < torrent.num_pieces - 1; ++i) {
         piece_hash = torrent.pieces.substr(i*20, 20);
         cur_file.read(file_hash, hashlength);
         cur_file.seekg((i+1)*hashlength);
@@ -62,21 +60,17 @@ void init_bitfield(Torrent &torrent) {
       }
       // last piece
       hashlength = file_length % torrent.piece_length;
-      piece_hash = torrent.pieces.substr((num_pieces - 1)*20, 20);
+      piece_hash = torrent.pieces.substr((torrent.num_pieces - 1)*20, 20);
       cur_file.read(file_hash, hashlength);
       SHA1((unsigned char*)(file_hash), hashlength, digest);
-      torrent.bitfield.at(num_pieces-1) = (memcmp(piece_hash.c_str(), digest, 20) == 0) ? '1' : '0';
-
-      // add spare bits at the end of bitfield
-      if (num_pieces % 8 != 0) {
-        for (size_t i = num_pieces; i < torrent.bitfield.size(); i++) {
-          torrent.bitfield.at(i) = '0';
-        }
-      }
+      torrent.bitfield.at(torrent.num_pieces-1) = (memcmp(piece_hash.c_str(), digest, 20) == 0) ? '1' : '0';
 
       cur_file.close();
       cout << "Bitfield: " << torrent.bitfield << endl;
     }
+  }
+  else {
+    cout << "Bitfield of multiple files torrent not supported" << endl;
   }
 }
 
@@ -84,7 +78,7 @@ void check_files(Torrent &torrent) {
   if (torrent.is_single) {
     // check for file
     if (boost::filesystem::exists(torrent.name)) {
-      cout << "File is completed." << endl;
+      cout << torrent.name << " is already completed" << endl;
     }
     else if (boost::filesystem::exists(torrent.name + ".part")) {
       cout << "File exists, initialize bitfield" << endl;
@@ -93,10 +87,11 @@ void check_files(Torrent &torrent) {
     else {
       cout << "New torrent, make new file and allocate memory" << endl;
       make_file(".", torrent.files.at(0));
+      init_bitfield(torrent);
     }
   }
   else {
-    cout << "check_files with multiple files torrent not implemented yet" << endl;
+    cout << "ERROR: multiple files torrent not supported" << endl;
   }
   // else {
   //   // check for folder, then for files
@@ -110,3 +105,104 @@ void check_files(Torrent &torrent) {
   //     make_file(torrent.name, torrent.files[i]);
   // }
 }
+
+bool check_bitfield_piece(Torrent &torrent, size_t piece_index) {
+  bool is_complete = false;
+  // single file torrent only
+  string path = torrent.files[0].path[0] + ".part";
+  ifstream source(path);
+  if (source.is_open()) {
+    int hashlength = torrent.piece_length;
+    // check if last piece
+    if (piece_index == (torrent.num_pieces - 1)) {
+      hashlength = torrent.files[0].length % torrent.piece_length;
+    }
+
+    string piece_hash = torrent.pieces.substr(piece_index*20, 20);
+    char file_hash[hashlength];
+    unsigned char digest[20];
+    source.seekg(piece_index * torrent.piece_length);
+    source.read(file_hash, hashlength);
+    SHA1((unsigned char*)(file_hash), hashlength, digest);
+
+    is_complete = memcmp(piece_hash.c_str(), digest, 20) == 0;
+    torrent.bitfield.at(piece_index) = is_complete ? '1' : '0';
+
+    if (is_complete) {
+      cout << "New piece completed! Piece index: " << piece_index << endl;
+    }
+  }
+  source.close();
+  return is_complete;
+}
+
+RequestMsg compose_request_msg(string &path, Torrent &torrent, size_t piece_index) {
+  RequestMsg request;
+  request.index = piece_index;
+  fstream source(path);
+  if (source.is_open()) {
+    int blocklength = torrent.piece_length;
+    // check if last piece
+    if (piece_index == (torrent.num_pieces - 1)) {
+      blocklength = torrent.files[0].length % torrent.piece_length;
+    }
+
+    char piece_str[blocklength];
+    source.seekg(request.index * torrent.piece_length);
+    source.read(piece_str, blocklength);
+    string str(piece_str, blocklength);
+    // we are assuming that the file doesn't have any NULL string...
+    request.begin = str.find("\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 0, 15);
+    if (request.begin != string::npos) {
+      // TODO: the 2nd value is hardcoded, improve it
+      request.length = min(blocklength - request.begin, (size_t)40000);
+
+      cout << "Requesting block, index: " << request.index << ", begin:"
+        << request.begin << ", length: " << request.length << endl;
+    }
+    else {
+      // nothing to request, maybe the piece is complete or it contains wrong data
+      if (!check_bitfield_piece(torrent, piece_index)) {
+        cout << "Data corrupted, deleting all the block" << endl;
+        source.seekp(request.index * torrent.piece_length);
+        char null_string[torrent.piece_length];
+        memset(null_string, '\0', blocklength);
+        source.write(null_string, blocklength);
+      }
+    }
+  }
+  source.close();
+  return request;
+}
+
+void get_block_from_request(string &path, Torrent &torrent, RequestMsg request, char *block) {
+  ifstream source(path);
+  if (source.is_open()) {
+    source.seekg(request.index * torrent.piece_length + request.begin);
+    source.read(block, request.length);
+  }
+  else {
+    cout << "Error opening " << path << endl;
+  }
+  source.close();
+}
+
+void save_block(char* blockdata, string path, RequestMsg request, Torrent &torrent) {
+  fstream dest(path);
+  if (dest.is_open()) {
+    cout << "Writing block,    index: " << request.index << ", begin:"
+      << request.begin << ", length: " << request.length << endl;
+    dest.seekp(request.index * torrent.piece_length + request.begin);
+    dest.write(blockdata, request.length);
+  }
+  dest.close();
+}
+
+void check_file_complete(Torrent &torrent) {
+  size_t found = torrent.bitfield.find_first_of('0');
+  if (found == string::npos) {
+    cout << torrent.name << " completed!" << endl;
+    boost::filesystem::rename(torrent.name + ".part", torrent.name);
+  }
+}
+

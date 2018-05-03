@@ -58,6 +58,8 @@ void parse_info_dict(const be_node *info_node, Torrent &new_torrent) {
       new_torrent.pieces.assign(info_node->val.d[i].val->val.s, len);
       // pieces length must be a multiple of 20, sequence of 20-byte SHA1 hash values
       assert(new_torrent.pieces.size() % 20 == 0); // TODO: handle error
+      new_torrent.num_pieces = new_torrent.pieces.size() / 20;
+      new_torrent.bitfield.resize(new_torrent.num_pieces);
     }
     else if (key == "length") { // single file torrent
       new_torrent.is_single = true;
@@ -197,9 +199,9 @@ void print_torrent(const Torrent &torrent) {
   }
 
   cout << "Piece length: " << torrent.piece_length / 1024 << " KB" << endl;
-  cout << "Pieces: " << torrent.pieces.size() / 20 << endl;
+  cout << "Pieces: " << torrent.num_pieces << endl;
   cout << "Total dimension: " << fixed << setprecision(2)
-    << torrent.piece_length * (torrent.pieces.size() / 20) / (1024*1024*1.0)
+    << torrent.piece_length * torrent.num_pieces / (1024*1024*1.0)
     << " MB" << endl;
 
   cout << "Single file: " << (torrent.is_single ? "Yes" : "No") << endl;
