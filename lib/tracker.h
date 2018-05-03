@@ -4,16 +4,21 @@
 #include <string.h>
 #include <memory>       //For shared_ptr
 #include <vector>
+#include <ctime>        //For generating tracker key
 
 #include <curl/curl.h>
 #include <curl/easy.h>
 #include "bencode.h"    //For processing response
+#include "peer.h"
+
+
 
 using namespace std;
 
 //Error Codes
 #define CURL_NOT_INIT -10
 #define CURL_ESCAPE_ERROR -11
+#define EMPTY_TRACKER -9
 
 //Constant
 #define MAX_TRACKER_URLS 10
@@ -68,5 +73,9 @@ shared_ptr<string> url_builder(const string &tracker_url, const struct TrackerPa
 int urlencode_paramenter(struct TrackerParameter *param, CURL *curl = NULL);
 int start_tracker_request(TrackerParameter *param);
 int process_tracker_response(string *response);
-int scrape_request(const string &url, string *response, CURL *curl = NULL);
+int scrape_request(string &url, string *response, CURL *curl = NULL);
 shared_ptr<string> get_scrape_url(const string &url);
+string create_tracker_key();
+int parse_dict_peer(be_node *node);
+int parse_binary_peers(char *str);
+bool is_compact_response(const string *response);
