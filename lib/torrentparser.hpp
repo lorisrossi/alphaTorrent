@@ -20,6 +20,7 @@ typedef struct {
   std::string name;
   int piece_length;
   std::string pieces;
+  size_t num_pieces;
   std::vector<TorrentFile> files;
   std::string bitfield;
   bool is_single = false; // true if single file torrent
