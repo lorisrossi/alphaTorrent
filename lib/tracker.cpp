@@ -5,42 +5,67 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <boost/endian/conversion.hpp>
+#include <cmath>
 
 
 
 
-//using namespace std;
+using namespace std;
 
 /**
  *  Function that start the communication with the tracker
  *
- *  @param *url         : the url of the tracker (without parameters)
- *  @param info_hash    : the SHA1 of the info key in the metainfo file
+ *  @param *param       : the struct containing the tracker parameter
  *  @param peer_id      : the client generated id
  *
  */
 int start_tracker_request(TrackerParameter *param){
 
+    int error_code;
+    bool second_trying = false;
+
+
     //TODO Read this info from config files
     param->info_hash = "";
-    param->port = 6889;
+    param->port = 8999;
     param->uploaded = 0;
     param->downloaded = 0;
     shared_ptr<string> enc_url;
     string response = "";
 
+    event_type event_status = STARTED;
+
+    //TODO Process udp:// urls
     for(int i=0; i<param->tracker_urls.size(); i++){
-        enc_url = url_builder(param->tracker_urls[i].c_str(), *param, STOPPED);
+        enc_url = url_builder(param->tracker_urls[i].c_str(), *param, event_status);
 
         cout << endl << "URL : " << *enc_url << endl;
-        cout << "Is Valid? : " << check_url(*enc_url) << endl;
-
         tracker_send_request(enc_url, &response);
 
-        process_tracker_response(&response);
+        error_code = process_tracker_response(&response);
+        response.clear();
+
+        if(error_code < 0){
+
+            if(!second_trying){
+                //Seeing this from qbitorrent
+                event_status = STOPPED;
+                second_trying = true;
+                i--;
+                continue;
+            }
+        }
+
+        //scrape_request(*enc_url, &response);
+
+
+        if(second_trying){
+            event_status = STARTED;
+            second_trying = false;
+        }
     }
-
-
+    return 0;
 }
 
 
@@ -142,7 +167,8 @@ shared_ptr<string> url_builder(const string &tracker_url, const struct TrackerPa
     }
 
     //Covert to lowercase
-    std::transform(param.info_hash.begin(), param.info_hash.end(), param.info_hash.begin(), ::tolower);
+    //TODO test if it's not lowecase it continue to work
+    //std::transform(param.info_hash.begin(), param.info_hash.end(), param.info_hash.begin(), ::tolower);
 
     *url_req += "info_hash=" + param.info_hash;
     *url_req += "&peer_id=" + param.peer_id;
@@ -153,7 +179,14 @@ shared_ptr<string> url_builder(const string &tracker_url, const struct TrackerPa
     *url_req += "&port=" + to_string(param.port);
     *url_req += "&uploaded=" + to_string(param.uploaded);
     *url_req += "&downloaded=" + to_string(param.downloaded);
-    *url_req += "&left=0" /*+ to_string(param.left)*/;
+    *url_req += "&left=" + to_string(param.left);
+    *url_req += "&compact=1";   //Always prefer the compact resonse
+    *url_req += "&no_peer_ids=1&supportcrypto=1&redundant=0";
+
+    //Optional
+    *url_req += "&numwant=50";
+    *url_req += "&key=" + create_tracker_key();
+
     switch(event){
         case STARTED:
             *url_req += "&event=started";
@@ -203,7 +236,9 @@ int tracker_send_request(shared_ptr<string> url, string *response, CURL *curl){
     if (curl) {
         code = curl_easy_setopt(curl, CURLOPT_URL, url->c_str());
         if(code != CURLE_OK){
-            cerr << "Errore nel settaggio dell'url" << endl;
+            cerr << "Error while setting the url" << endl;
+            curl_easy_cleanup(curl);
+
             return -1;
         }
         /*
@@ -234,11 +269,12 @@ int tracker_send_request(shared_ptr<string> url, string *response, CURL *curl){
 
         code = curl_easy_perform(curl);
         if(code != CURLE_OK){
-            cerr << endl << "Errore nella richiesta al tracker" << endl;
+            cerr << endl << "Error while contacting the tracker" << endl;
+            curl_easy_cleanup(curl);
             return -1;
         }
 
-        cout << endl << "Risposta : " << *response << endl << endl << header_string << endl << endl;
+        cout << endl << "Response : " << *response << endl << endl << header_string << endl << endl;
 
 
         if(!curl_passed){
@@ -290,9 +326,12 @@ bool check_url(const string &url, CURL *curl)
 
 int process_tracker_response(string *response){
 
+    int error_code;
     be_node *node;
     string key; 
+
     node = be_decoden(response->c_str(), response->length());
+
     if(node){
         for (int i=0; node->val.d[i].val; i++) {
             key = node->val.d[i].key;
@@ -308,16 +347,44 @@ int process_tracker_response(string *response){
                 cout << endl << "There are " << node->val.d[i].val->val.i << " leechers" << endl;
             }else if(key == "interval"){
                 cout << endl << "Interval is " << node->val.d[i].val->val.i << endl;
+            }else if(key == "peers"){
+                //Need to differentiate between dictionary rappresentation and binary rappresentation
+                
+                if(is_compact_response(response)){
+                    cout << "Compact Response" << endl;
+                    be_node *n = node->val.d[i].val;
+                    assert(n->type == BE_STR);
+
+                    cout << "String to parse : " << n->val.s;
+   
+                    parse_binary_peers(n->val.s);
+                }else{
+                    cout << "No compact response";
+                    if(node->type == BE_DICT){
+                        error_code = parse_dict_peer(node->val.d[i].val);
+                        if(error_code < 0){
+                            if(error_code == EMPTY_TRACKER){
+                                cout << endl << "Empty Tracker List";
+                                return EMPTY_TRACKER;
+                            }
+
+                        }
+
+                    }
+
+                }
+
             }   
         }
+        be_free(node);
     }
 
-    be_free(node);
+    
 
 }
 
 
-int scrape_request(const string &url, const TrackerParameter &param, string *response, CURL *curl){
+int scrape_request(string &url, const TrackerParameter &param, string *response, CURL *curl){
     bool curl_passed=true;;
 
     if(curl == NULL){
@@ -374,4 +441,104 @@ shared_ptr<string> get_scrape_url(const string &url){
     scrape_url->replace(old_found+1, 9, "scrape");
 
     return scrape_url;
+}
+
+string create_tracker_key(){
+
+    time_t time_key = time(0);
+    return string("XX" + to_string(time_key)).substr(0, 8);
+
+}
+
+/**
+ *  This function parse a non compact tracker's response according to the following protocol
+ * 
+ *  peers: (dictionary model) The value is a list of dictionaries, each with the following keys:
+ *  peer id: peer's self-selected ID, as described above for the tracker request (string)
+ *  ip: peer's IP address either IPv6 (hexed) or IPv4 (dotted quad) or DNS name (string)
+ *  port: peer's port number (integer)
+ * 
+ *  @param node     : the bencoded node containing the list of dictionaries
+ * 
+ *  @return         : 0 on success, < 0 otherwise
+ */
+
+int parse_dict_peer(be_node *node){
+
+    string key;
+
+    if(node->type != BE_LIST)  //Need to be a  list of dict
+        return -1;
+
+    for(int j=0; node->val.l[j]; ++j){
+        be_node *dict_node = node->val.l[j];
+        assert(dict_node->type == BE_DICT);     //TODO Better managment of the condition
+
+        for (int i=0; dict_node->val.d[i].val; ++i) {
+            key = dict_node->val.d[i].key;
+                if (key == "peer id"){
+                    assert(dict_node->val.d[i].val->type == BE_STR);
+                    cout << endl << "Peer ID : " << dict_node->val.d[i].val->val.s << endl;
+                }else if (key == "ip"){
+                    assert(dict_node->val.d[i].val->type == BE_STR);
+                    cout << endl << "IP : " << dict_node->val.d[i].val->val.s << endl;
+                }else if (key == "port"){
+                    assert(dict_node->val.d[i].val->type == BE_INT);
+                    cout << endl << "port : " << dict_node->val.d[i].val->val.i << endl;
+                }
+        }
+    }
+    return 0;
+}
+
+/**
+ * WORK IN PROGRESS!!!
+ * 
+ * This function parse a compact tracker's response according to the following protocol
+ * 
+ * peers: (binary model) Instead of using the dictionary model described above, the peers value may be a string consisting of multiples of 6 bytes. 
+ * First 4 bytes are the IP address and last 2 bytes are the port number. All in network (big endian) notation.
+ * 
+ * @param *str  : the string to parse
+ */
+
+int parse_binary_peers(char *str){
+    //No IPv6 support??
+
+    char *initial_str = str;
+
+    int len = strlen(str);
+
+    string t = string(str);
+
+    for(int i=0; i<len; i=i+6){
+
+        //Experimenting the correct parsing
+
+        cout << endl << (int)(t.at(i)) << "." << (int)t.at(i+1) << "." << (int)t[i+2] << "." << (int)t[i+3] << endl;
+
+        cout << endl << "IP[" << i << "] : " << boost::endian::endian_reverse((int)str[i]) << "." << boost::endian::endian_reverse((int)str[i+1]) << "." << boost::endian::endian_reverse((int)str[i+2]) << "." << boost::endian::endian_reverse((int)str[i+3])<< endl;
+
+    }
+
+}
+
+/**
+ *  This functionc check if a response is in a compact format
+ * 
+ *  @param *response    : the response to check
+ *  @return             : true if it's compact, otherwise false
+ */
+
+bool is_compact_response(const string *response){
+    //TODO da migliorare
+    std::size_t found = response->find("peers");
+    if (found!=std::string::npos){
+        if(response->at(found+5) == '0' || response->at(found+5) == 'l')
+            return false;
+        else
+            return true;
+    }
+    return false;
+
 }

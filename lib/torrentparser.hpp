@@ -27,6 +27,6 @@ typedef struct {
 
 void parse_torrent(const be_node *node, Torrent &new_torrent);
 void print_torrent(const Torrent &torrent);
-char *get_info_node_hash(std::string *file, std::string *pieces_string);
+char *get_info_node_hash(const std::string *file, const std::string *pieces_string);
 
 #endif
