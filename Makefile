@@ -4,7 +4,7 @@ ODIR=build
 CC=gcc
 CXX=g++
 CFLAGS=-Wall -Wextra -g -fsanitize=address -DBE_DEBUG=0
-CXXFLAGS= -std=c++11 -Wall -Wextra -fsanitize=address -I$(LDIR)
+CXXFLAGS= -std=c++11 -Wall -g -Wextra -fsanitize=address -I$(LDIR)
 
 LIBS=-lssl -lcrypto -lcurl -lboost_filesystem -lboost_system
 

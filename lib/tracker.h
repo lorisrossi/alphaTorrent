@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include <memory>       //For shared_ptr
+#include <vector>
 
 #include <curl/curl.h>
 #include <curl/easy.h>
@@ -13,11 +15,14 @@ using namespace std;
 #define CURL_NOT_INIT -10
 #define CURL_ESCAPE_ERROR -11
 
+//Constant
+#define MAX_TRACKER_URLS 10
+
 
 //Struttura di riferimento che contiene tutti i parametri del tracker
 
 struct TrackerParameter{
-    string tracker_url;
+    vector<string> tracker_urls;
     string info_hash;
     string peer_id;
     uint port;
@@ -27,6 +32,11 @@ struct TrackerParameter{
     char* info_hash_raw;
 };
 
+
+enum event_type{ 
+    STARTED,
+    STOPPED
+};
 
 
 /*****************************************************************************************
@@ -52,9 +62,11 @@ struct TrackerParameter{
  * **************************************************************************************/
 
 
-int tracker_send_request(string *url, string  *response, CURL *curl = NULL);
-bool check_url(string *url, CURL *curl=NULL);
-string *url_builder(string tracker_url, struct TrackerParameter param,CURL *curl=NULL,  bool tls = false);
+int tracker_send_request(shared_ptr<string> url, string  *response, CURL *curl = NULL);
+bool check_url(const string &url, CURL *curl=NULL);
+shared_ptr<string> url_builder(const string &tracker_url, const struct TrackerParameter &t_param, event_type event, CURL *curl=NULL,  bool tls = false);
 int urlencode_paramenter(struct TrackerParameter *param, CURL *curl = NULL);
 int start_tracker_request(TrackerParameter *param);
 int process_tracker_response(string *response);
+int scrape_request(const string &url, string *response, CURL *curl = NULL);
+shared_ptr<string> get_scrape_url(const string &url);

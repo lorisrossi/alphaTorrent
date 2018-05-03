@@ -19,7 +19,7 @@ void get_peer_id(string *id){
    *
    */
 
-  *id = string("-TR2920-l4hhlgfijdyl");   //Soluzione Temporanea
+  *id = string("-qB3370-aGANEG8-9a3r");   //Soluzione Temporanea
 
   assert(strnlen(id->c_str(), 20) == 20);
 
@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
       TrackerParameter param;
 
       param.info_hash_raw = get_info_node_hash(&torrent_str, &mytorrent.pieces);
-      param.tracker_url = mytorrent.trackers[0];
+      param.tracker_urls = mytorrent.tracker_urls;
 
       param.left = mytorrent.piece_length * mytorrent.pieces.size();
       get_peer_id(&param.peer_id);
