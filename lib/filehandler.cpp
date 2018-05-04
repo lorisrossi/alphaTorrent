@@ -2,6 +2,7 @@
 // Multiple file torrents are not supported.
 
 #include <boost/filesystem.hpp>
+#include <boost/dynamic_bitset.hpp>
 #include <iostream>
 #include <string>
 #include <algorithm> // min()
@@ -106,6 +107,22 @@ void check_files(Torrent &torrent) {
   // }
 }
 
+// return index of a piece that the peer can give to us
+// return -1 if the peer doesn't have any piece we need
+int compare_bitfields(string peer_bitfield, string own_bitfield) {
+  assert(peer_bitfield.size() == own_bitfield.size());
+  boost::dynamic_bitset<unsigned char> own(own_bitfield), peer(peer_bitfield);
+  boost::dynamic_bitset<unsigned char> temp = ~own & peer;
+  size_t block_index = temp.find_first();
+  if (block_index != boost::dynamic_bitset<>::npos) {
+    // find_first() start from the right, but bitfield has 0-index on the left,
+    // so we need to reverse the value
+    return own_bitfield.size() - 1 - block_index;
+  }
+  else return -1;
+}
+
+// check the value of the bitfield at index "piece_index"
 bool check_bitfield_piece(Torrent &torrent, size_t piece_index) {
   bool is_complete = false;
   // single file torrent only
