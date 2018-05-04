@@ -121,7 +121,7 @@ void parse_torrent(const be_node *node, Torrent &new_torrent) {
  *
  *  @return the uchar array of the hash
  */
-char *get_info_node_hash(string *file, string *pieces_string){
+char *get_info_node_hash(const string *file, const string *pieces_string){
   string info_key;
   unsigned char digest[SHA_DIGEST_LENGTH];
   char *info_hash;

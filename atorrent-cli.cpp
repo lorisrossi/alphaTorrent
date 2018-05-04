@@ -7,23 +7,10 @@
 #include "torrentparser.hpp"
 #include "tracker.h"
 #include "filehandler.hpp"
+#include "peer.h"
 
 using namespace std;
 
-void get_peer_id(string *id){
-
-  /**
-   *  Trovare un nuovo modo per generare il peer. Idee
-   *  1) Usare il mac address della macchina (Iterare attraverso i file )
-   *
-   *
-   */
-
-  *id = string("-TR2920-l4hhlgfijdyl");   //Soluzione Temporanea
-
-  assert(strnlen(id->c_str(), 20) == 20);
-
-}
 
 int main(int argc, char* argv[]) {
 
@@ -31,6 +18,9 @@ int main(int argc, char* argv[]) {
     cout << "Usage: pass a .torrent file as a parameter" << endl;
     return 1;
   }
+
+  google::InitGoogleLogging(argv[0]); //Initialize GLog with passed argument
+
   curl_global_init(CURL_GLOBAL_DEFAULT);
 
   ifstream myfile(argv[1]);
@@ -55,7 +45,7 @@ int main(int argc, char* argv[]) {
       TrackerParameter param;
 
       param.info_hash_raw = get_info_node_hash(&torrent_str, &mytorrent.pieces);
-      param.tracker_url = mytorrent.trackers[0];
+      param.tracker_urls = mytorrent.trackers;
 
       param.left = mytorrent.piece_length * mytorrent.pieces.size();
       get_peer_id(&param.peer_id);
