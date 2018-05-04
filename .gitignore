@@ -1,2 +1,5 @@
 # Main executable
 atorrent-cli
+
+# Visual Studio config files
+.vscode*
