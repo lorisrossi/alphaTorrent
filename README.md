@@ -5,14 +5,14 @@ Project for the Computer Networks course held by A. Mancini at Univpm
 
 ### Dependencies
 
-The client needs OpenSSL and Boost libraries.
+The client needs OpenSSL, Boost libraries and glog.
 
 **Mac OS X**
 
 OpenSSL
 ```bash
 brew install openssl
-cd /usr/local/include 
+cd /usr/local/include
 ln -s ../opt/openssl/include/openssl .
 ```
 
