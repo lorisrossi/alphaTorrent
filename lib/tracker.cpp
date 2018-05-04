@@ -8,6 +8,7 @@
 #include <boost/endian/conversion.hpp>
 #include <cmath>
 
+#include "peer.h"
 
 
 
@@ -24,29 +25,50 @@ int start_tracker_request(TrackerParameter *param){
 
     int error_code;
     bool second_trying = false;
-
+    std::shared_ptr<vector<pwp::peer>> peer_list; 
 
     //TODO Read this info from config files
     param->info_hash = "";
     param->port = 8999;
     param->uploaded = 0;
     param->downloaded = 0;
+
     shared_ptr<string> enc_url;
     string response = "";
 
     event_type event_status = STARTED;
 
     //TODO Process udp:// urls
-    for(int i=0; i<param->tracker_urls.size(); i++){
+    for(uint i=0; i<param->tracker_urls.size(); i++){
         enc_url = url_builder(param->tracker_urls[i].c_str(), *param, event_status);
 
-        cout << endl << "URL : " << *enc_url << endl;
+        LOG(INFO) << endl << "URL : " << *enc_url << endl;
+
         tracker_send_request(enc_url, &response);
 
-        error_code = process_tracker_response(&response);
+        error_code = process_tracker_response(&response, peer_list);    //TODO Use threads
+        assert(peer_list != nullptr);
         response.clear();
 
-        if(error_code < 0){
+        if(error_code >= 0){
+            //If everything is OK
+            LOG(INFO) << "Correct Response, intitiating PWP protocol with peers";
+
+            assert(peer_list != nullptr);
+
+            //Should I call this after all tracker request is completed?
+            manage_peer_connection(peer_list, param->info_hash_raw);
+
+        }else{  //Error Present
+
+            //Manage error here
+            switch(error_code){
+                case EMPTY_TRACKER:
+                    LOG(INFO) << "Tracker [" << param->tracker_urls[i] << "] returned an empty list";
+                    break;
+                default:
+                    LOG(ERROR) << "There was an error while parsing tracker response. Code : " << error_code;
+            }
 
             if(!second_trying){
                 //Seeing this from qbitorrent
@@ -71,13 +93,13 @@ int start_tracker_request(TrackerParameter *param){
 
 
 /**
- * Questa funzione prende il puntatore alla struttura dei parametri e ne modifica quelli che devono
- * essere codificati mediante "urlencode"
+ * This function take the tracker's param and urlencode the info_hash and the peer_id, the other parameters
+ * are left untouched
  *
- * @param *param    puntatore a struttura dei parametri
- * @param *curl     (Opzionale) istanza della libreria curl
+ * @param *param    pointer to a struct containing parameters
+ * @param *curl     (Optional) instance of curl library
  *
- * @return 0 in caso di successo, < 0 se fallisce
+ * @return 0 if success, < 0 otherwise
  **/
 
 int urlencode_paramenter(struct TrackerParameter *param, CURL *curl){
@@ -173,7 +195,7 @@ shared_ptr<string> url_builder(const string &tracker_url, const struct TrackerPa
     *url_req += "info_hash=" + param.info_hash;
     *url_req += "&peer_id=" + param.peer_id;
 
-    assert(param.port <= 65535); //TODO Sostituire con un gestore dell'errore
+    assert(param.port <= MAX_PORT_VALUE); //TODO Sostituire con un gestore dell'errore
 
 
     *url_req += "&port=" + to_string(param.port);
@@ -205,7 +227,7 @@ shared_ptr<string> url_builder(const string &tracker_url, const struct TrackerPa
 
 
 /**
- *  Funzione da passare alla richiesta curl per gestire la risposta
+ *  Function to manage the curl response
  */
 size_t writeFunction(void *ptr, size_t size, size_t nmemb, std::string* data) {
     if(data == NULL)
@@ -236,7 +258,7 @@ int tracker_send_request(shared_ptr<string> url, string *response, CURL *curl){
     if (curl) {
         code = curl_easy_setopt(curl, CURLOPT_URL, url->c_str());
         if(code != CURLE_OK){
-            cerr << "Error while setting the url" << endl;
+            LOG(ERROR) << "Error while setting the url" << endl;
             curl_easy_cleanup(curl);
 
             return -1;
@@ -269,12 +291,12 @@ int tracker_send_request(shared_ptr<string> url, string *response, CURL *curl){
 
         code = curl_easy_perform(curl);
         if(code != CURLE_OK){
-            cerr << endl << "Error while contacting the tracker" << endl;
+            LOG(ERROR) << endl << "Error while contacting the tracker" << endl;
             curl_easy_cleanup(curl);
             return -1;
         }
 
-        cout << endl << "Response : " << *response << endl << endl << header_string << endl << endl;
+        DLOG(INFO) << endl << "Response : " << *response << endl << endl << header_string << endl << endl;
 
 
         if(!curl_passed){
@@ -288,12 +310,12 @@ int tracker_send_request(shared_ptr<string> url, string *response, CURL *curl){
 
 
 /**
- * Funzione che verifica che un'url è valido
+ * Checks if the url is valid
  *
- *  @param *url     : URL da verificare
- *  @param *curl    : (Opzionale) istanza della libreria curl
+ *  @param *url     : URL to check 
+ *  @param *curl    : (Optional) instance of curl library
  *
- *  @return (true) se è valido, altrimenti (false)
+ *  @return (true) if it's valid, (false) otherwise
  */
 bool check_url(const string &url, CURL *curl)
 {
@@ -324,7 +346,7 @@ bool check_url(const string &url, CURL *curl)
 
 
 
-int process_tracker_response(string *response){
+int process_tracker_response(string *response, shared_ptr<vector<pwp::peer>> &peer_list){
 
     int error_code;
     be_node *node;
@@ -338,33 +360,33 @@ int process_tracker_response(string *response){
 
             //According to the protocol, if "failure reason" is present,no other keys may be present, so simply return 
             if(key == "failure reason"){    
-                cout << endl << "Error : " << node->val.d[i].val->val.s << endl;
+                LOG(ERROR) << "Error : " << node->val.d[i].val->val.s << endl;
                 be_free(node);
                 return -1;
             }else if(key == "complete"){
-                cout << endl << "There are " << node->val.d[i].val->val.i << " seeders" << endl;
+                LOG(INFO) << endl << "There are " << node->val.d[i].val->val.i << " seeders" << endl;
             }else if(key == "incomplete"){
-                cout << endl << "There are " << node->val.d[i].val->val.i << " leechers" << endl;
+                LOG(INFO) << endl << "There are " << node->val.d[i].val->val.i << " leechers" << endl;
             }else if(key == "interval"){
-                cout << endl << "Interval is " << node->val.d[i].val->val.i << endl;
+                LOG(INFO) << endl << "Interval is " << node->val.d[i].val->val.i << endl;
             }else if(key == "peers"){
                 //Need to differentiate between dictionary rappresentation and binary rappresentation
                 
                 if(is_compact_response(response)){
-                    cout << "Compact Response" << endl;
+                    LOG(INFO) << "Compact Response" << endl;
                     be_node *n = node->val.d[i].val;
                     assert(n->type == BE_STR);
 
-                    cout << "String to parse : " << n->val.s;
+                    DLOG(INFO) << "String to parse : " << n->val.s;
    
                     parse_binary_peers(n->val.s);
                 }else{
-                    cout << "No compact response";
+                    LOG(INFO) << "No compact response";
                     if(node->type == BE_DICT){
-                        error_code = parse_dict_peer(node->val.d[i].val);
+                        error_code = parse_dict_peer(node->val.d[i].val, peer_list);
                         if(error_code < 0){
                             if(error_code == EMPTY_TRACKER){
-                                cout << endl << "Empty Tracker List";
+                                LOG(WARNING) << endl << "Empty Tracker List";
                                 return EMPTY_TRACKER;
                             }
 
@@ -379,7 +401,7 @@ int process_tracker_response(string *response){
         be_free(node);
     }
 
-    
+    return 0;
 
 }
 
@@ -443,11 +465,17 @@ shared_ptr<string> get_scrape_url(const string &url){
     return scrape_url;
 }
 
-string create_tracker_key(){
 
+
+/**
+ * Create the key needed for tracker protocol
+ * 
+ * @return string cointaining the key
+ * 
+ */
+string create_tracker_key(){
     time_t time_key = time(0);
     return string("XX" + to_string(time_key)).substr(0, 8);
-
 }
 
 /**
@@ -463,29 +491,68 @@ string create_tracker_key(){
  *  @return         : 0 on success, < 0 otherwise
  */
 
-int parse_dict_peer(be_node *node){
+int parse_dict_peer(be_node *node, shared_ptr<vector<pwp::peer>> &peer_list, uint peer_num){
 
     string key;
+    struct pwp::peer tpeer;
 
-    if(node->type != BE_LIST)  //Need to be a  list of dict
+    const boost::asio::ip::address inv_address = boost::asio::ip::address::from_string("0.0.0.0");  //from_string deprecated function
+
+    if(peer_list == nullptr){
+        if(peer_num == 0)   //Default Arguent
+            peer_num = 50;  //Default Bittorrent Value
+        peer_list = make_shared<vector<pwp::peer>>(peer_num);
+        DLOG(WARNING) << "peer_list initializated";
+        assert(peer_list != nullptr);
+    }
+
+
+    if(node->type != BE_LIST){  //Need to be a  list of dict
+        LOG(ERROR) << "Peer dictionary corrupted";
         return -1;
+    }
 
     for(int j=0; node->val.l[j]; ++j){
         be_node *dict_node = node->val.l[j];
-        assert(dict_node->type == BE_DICT);     //TODO Better managment of the condition
+        
+        if(dict_node->type != BE_DICT){
+            LOG(ERROR) << "Peer dictionary doesn't exists";
+            return -2;
+        }
+
+        tpeer.port = 0; //To check later if it's found
+        tpeer.addr = inv_address; //To check later if it's found
 
         for (int i=0; dict_node->val.d[i].val; ++i) {
             key = dict_node->val.d[i].key;
                 if (key == "peer id"){
                     assert(dict_node->val.d[i].val->type == BE_STR);
-                    cout << endl << "Peer ID : " << dict_node->val.d[i].val->val.s << endl;
+                    LOG(INFO) << endl << "Peer ID : " << dict_node->val.d[i].val->val.s << endl;
+
+                    tpeer.peer_id = string(dict_node->val.d[i].val->val.s);
+
                 }else if (key == "ip"){
+                    //TODO The other two types : DNS, and IPv6
                     assert(dict_node->val.d[i].val->type == BE_STR);
-                    cout << endl << "IP : " << dict_node->val.d[i].val->val.s << endl;
+                    LOG(INFO) << endl << "\tIP : " << dict_node->val.d[i].val->val.s << endl;
+
+                    tpeer.addr = boost::asio::ip::address::from_string(dict_node->val.d[i].val->val.s);
+                
+                    cout << endl << "Verifier : " << tpeer.addr.to_string() << endl;
                 }else if (key == "port"){
                     assert(dict_node->val.d[i].val->type == BE_INT);
-                    cout << endl << "port : " << dict_node->val.d[i].val->val.i << endl;
+                    assert(dict_node->val.d[i].val->val.i >= 0 && dict_node->val.d[i].val->val.i <= MAX_PORT_VALUE);
+
+                    LOG(INFO) << endl << "\tport : " << dict_node->val.d[i].val->val.i << endl;
+
+                    tpeer.port = (uint)dict_node->val.d[i].val->val.i;
                 }
+        }
+
+        if(tpeer.addr != inv_address && tpeer.port != 0){    //Check if all(necessary) param is present
+            peer_list->push_back(tpeer);
+        }else{
+            LOG(WARNING) << "Malformed peer detected";
         }
     }
     return 0;
@@ -505,6 +572,8 @@ int parse_dict_peer(be_node *node){
 int parse_binary_peers(char *str){
     //No IPv6 support??
 
+    LOG(FATAL) << "Unimplemented" << endl;
+
     char *initial_str = str;
 
     int len = strlen(str);
@@ -515,9 +584,9 @@ int parse_binary_peers(char *str){
 
         //Experimenting the correct parsing
 
-        cout << endl << (int)(t.at(i)) << "." << (int)t.at(i+1) << "." << (int)t[i+2] << "." << (int)t[i+3] << endl;
+        DLOG(INFO) << endl << (int)(t.at(i)) << "." << (int)t.at(i+1) << "." << (int)t[i+2] << "." << (int)t[i+3] << endl;
 
-        cout << endl << "IP[" << i << "] : " << boost::endian::endian_reverse((int)str[i]) << "." << boost::endian::endian_reverse((int)str[i+1]) << "." << boost::endian::endian_reverse((int)str[i+2]) << "." << boost::endian::endian_reverse((int)str[i+3])<< endl;
+        DLOG(INFO) << endl << "IP[" << i << "] : " << boost::endian::endian_reverse((int)str[i]) << "." << boost::endian::endian_reverse((int)str[i+1]) << "." << boost::endian::endian_reverse((int)str[i+2]) << "." << boost::endian::endian_reverse((int)str[i+3])<< endl;
 
     }
 
@@ -531,7 +600,7 @@ int parse_binary_peers(char *str){
  */
 
 bool is_compact_response(const string *response){
-    //TODO da migliorare
+    //TODO to improve
     std::size_t found = response->find("peers");
     if (found!=std::string::npos){
         if(response->at(found+5) == '0' || response->at(found+5) == 'l')
