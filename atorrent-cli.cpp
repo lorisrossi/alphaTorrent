@@ -42,26 +42,22 @@ int main(int argc, char* argv[]) {
       be_free(node);
       print_torrent(mytorrent);
 
-      TrackerParameter param;
+      tracker::TParameter param;
 
       param.info_hash_raw = get_info_node_hash(&torrent_str, &mytorrent.pieces);
-      param.tracker_urls = mytorrent.trackers;
-
       param.left = mytorrent.piece_length * mytorrent.pieces.size();
       get_peer_id(&param.peer_id);
 
-      start_tracker_request(&param);
+      start_tracker_request(&param, mytorrent.trackers);
 
-      free(param.info_hash_raw);
+      if(param.info_hash_raw != nullptr)
+        free(param.info_hash_raw);
     }
     else
       cout << "Parsing of " << argv[1] << " failed!" << endl;
   }
   else
     cout << "Unable to open the file." << endl;
-
-
-
 
   curl_global_cleanup();
   return 0;

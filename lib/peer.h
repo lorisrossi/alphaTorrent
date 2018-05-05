@@ -13,6 +13,14 @@
 
 #include <glog/logging.h>   //Logging Library
 
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <boost/endian/conversion.hpp>
+#include <cmath>
+
+
 #define DEFAULT_BUFF_SIZE 128
 
 //Namespace Peer Wire Protocol
@@ -35,6 +43,13 @@ namespace pwp{
         ip::address addr;
         uint port;
         std::string peer_id;
+
+        bool operator==(peer const & rhs) const {
+            if(this->addr == rhs.addr && this->port == rhs.port)
+                return true;
+            return false;
+        }
+
     };
 
 
