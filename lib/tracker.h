@@ -19,6 +19,8 @@
 #include <glog/logging.h>   //Logging Library
 
 
+#include <fstream>
+
 //Error Codes
 #define CURL_NOT_INIT -10
 #define CURL_ESCAPE_ERROR -11
@@ -89,7 +91,7 @@ namespace tracker{
     shared_ptr<string> get_scrape_url(const string &url);
     string create_tracker_key();
     int parse_dict_peer(be_node *node, pwp::PeerList peer_list);
-    int parse_binary_peers(char *str);
+    void parse_binary_peers(const string& resp, pwp::PeerList peer_list);
     bool is_compact_response(const string *response);
     int process_tracker_response(string *response, pwp::PeerList peer_list);
     uint remove_duplicate_peers(pwp::PeerList& peer_list);

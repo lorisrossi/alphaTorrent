@@ -65,7 +65,7 @@ namespace tracker{
         
         LOG(INFO) << "Found " << peer_list->size() << " available peers";
 
-        //Once finisced manage all peer
+        //Once finished manage all peer
         manage_peer_connection(peer_list, param->info_hash_raw);
 
         return 0;
@@ -88,9 +88,8 @@ namespace tracker{
 
         for(; it != peer_list->end(); ++it){
 
+            //IMPEMENT
                 
-
-
         }
 
 
@@ -422,6 +421,9 @@ namespace tracker{
         be_node *node;
         string key; 
 
+        if(response->empty())
+            return -1;
+
         node = be_decoden(response->c_str(), response->length());
 
         if(node){
@@ -447,12 +449,15 @@ namespace tracker{
                         be_node *n = node->val.d[i].val;
                         assert(n->type == BE_STR);
 
-                        DLOG(INFO) << "String to parse : " << n->val.s;
+                        string resp = string(n->val.s);
+
+                        LOG(INFO) << endl << "String to parse : " << resp << endl;
     
-                        parse_binary_peers(n->val.s);
+                        parse_binary_peers(resp, peer_list);
                     }else{
                         LOG(INFO) << "No compact response";
                         if(node->type == BE_DICT){
+
                             error_code = parse_dict_peer(node->val.d[i].val, peer_list);
                             if(error_code < 0){
                                 if(error_code == EMPTY_TRACKER){
@@ -561,7 +566,7 @@ namespace tracker{
      *  @return         : 0 on success, < 0 otherwise
      */
 
-    int parse_dict_peer(be_node *node, shared_ptr<vector<pwp::peer>> peer_list){
+    int parse_dict_peer(be_node *node, pwp::PeerList peer_list){
 
         string key;
         struct pwp::peer tpeer;
@@ -623,37 +628,47 @@ namespace tracker{
     }
 
     /**
-     * WORK IN PROGRESS!!!
      * 
      * This function parse a compact tracker's response according to the following protocol
      * 
      * peers: (binary model) Instead of using the dictionary model described above, the peers value may be a string consisting of multiples of 6 bytes. 
      * First 4 bytes are the IP address and last 2 bytes are the port number. All in network (big endian) notation.
      * 
-     * @param *str  : the string to parse
+     * @param resp :        the response to parse
+     * @param peer_list :   the structure where to store extracted peers
+     * 
      */
 
-    int parse_binary_peers(char *str){
+    void parse_binary_peers(const string& resp, pwp::PeerList peer_list){
         //No IPv6 support??
 
-        LOG(FATAL) << "Unimplemented" << endl;
+        for(int i=0; i+5<=resp.length(); i=i+6){
 
-        char *initial_str = str;
+            string ip = to_string((uint8_t)(resp[i])) + "." + to_string((uint8_t)(resp[i+1])) + "." + to_string((uint8_t)resp[i+2]) + "." + to_string((uint8_t)resp[i+3]);
 
-        int len = strlen(str);
+            uint16_t port = 0;
+            port = ((uint16_t)resp[i+5] << 8) | resp[i+4];    //Bitwise
+            port = ntohs(port); //Convert to host order
 
-        string t = string(str);
+            if(port > MAX_PORT_VALUE){  //To remove, always false
+                LOG(WARNING) << "Malformed peer: invalid port";
+                continue;
+            }
 
-        for(int i=0; i<len; i=i+6){
+            try{
+                pwp::peer tpeer;
+                tpeer.addr = boost::asio::ip::address::from_string(ip);
+                tpeer.port = port;
+                tpeer.peer_id = ""; //Unspecified peer_id in compact response
 
-            //Experimenting the correct parsing
-
-            DLOG(INFO) << endl << (int)(t.at(i)) << "." << (int)t.at(i+1) << "." << (int)t[i+2] << "." << (int)t[i+3] << endl;
-
-            DLOG(INFO) << endl << "IP[" << i << "] : " << boost::endian::endian_reverse((int)str[i]) << "." << boost::endian::endian_reverse((int)str[i+1]) << "." << boost::endian::endian_reverse((int)str[i+2]) << "." << boost::endian::endian_reverse((int)str[i+3])<< endl;
-
+                peer_list_mutex.lock();
+                peer_list->push_back(tpeer);    //Insert Peer into the list
+                peer_list_mutex.unlock();
+            }catch(exception& e){
+                LOG(ERROR) << e.what() << '\n';
+            }
+            
         }
-
     }
 
     /**

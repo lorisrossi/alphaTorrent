@@ -21,6 +21,22 @@ void write_to_file(pwp::PeerList peer_list){
 }
 
 
+void remove_invalid_peer(pwp::PeerList peer_list){
+
+    vector<pwp::peer>::iterator it;
+    const boost::asio::ip::address inv_address = boost::asio::ip::address::from_string("0.0.0.0");  //from_string deprecated function
+
+    it=peer_list->begin();
+
+    for(; it != peer_list->end(); ++it){
+
+        if(it->addr == inv_address){
+            peer_list->erase(it);
+            LOG(WARNING) << "Peer eliminated"; 
+        }
+    }
+
+}
 
 
 /**
@@ -39,7 +55,8 @@ void manage_peer_connection(pwp::PeerList peer_list, char *info_hash){
     vector<pwp::peer>::iterator it = peer_list->begin();
     boost::thread_group t_group;
 
-    //write_to_file(peer_list);
+    remove_invalid_peer(peer_list);
+    write_to_file(peer_list);
 
     std::array<char, 256> handshake;
 
@@ -173,7 +190,7 @@ void send_handshake(const pwp::peer t_peer, const std::array<char, 256> handshak
         LOG(INFO) << "Testing : " << t_peer.addr.to_string() << "\t " << std::to_string(t_peer.port);
         boost::asio::connect(socket, endpoint_iterator);
 
-        //LOG(INFO) << "Initiating the handshake";
+        LOG(INFO) << "Initiating the handshake";
 
         for (;;){
             boost::system::error_code error;
@@ -187,7 +204,7 @@ void send_handshake(const pwp::peer t_peer, const std::array<char, 256> handshak
             len = socket.read_some(boost::asio::buffer(response), error);
 
             if (error == boost::asio::error::eof){
-                //LOG(ERROR) << "Connection Closed";
+                LOG(ERROR) << "Connection Closed";
                 break; // Connection closed cleanly by peer.
             }else if (error){
                 throw boost::system::system_error(error); // Some other error.
@@ -197,7 +214,7 @@ void send_handshake(const pwp::peer t_peer, const std::array<char, 256> handshak
             
         }
     }catch (std::exception& e){
-        //std::cerr << e.what() << std::endl;
+        LOG(ERROR) << e.what() << std::endl;
     }
 
 }
@@ -237,6 +254,17 @@ int verify_handshake(const array<char, 256> handshake, const pwp::peer t_peer, c
 
 
     if(handshake[hindex] != pstrlen){   //First Raw Byte is the length
+        //FIXME
+        /*
+        *   Convert first 4 bytest to an int, according to the procotol : 
+        * 
+        *       Data Types
+        *       Unless specified otherwise, all integers in the peer wire protocol are encoded as four byte big-endian values. This includes the length prefix on all messages that come after the handshake.
+        *       Message flow
+        *       The peer wire protocol consists of an initial handshake. After that, peers communicate via an exchange of length-prefixed messages. The length-prefix is an integer as described above. 
+        */
+
+
         LOG(ERROR) << "First Byte should be pstrlen (19), instead is " << std::to_string(handshake[hindex]);
         return -1;
     } 

@@ -11,6 +11,7 @@
 
 using namespace std;
 
+#define NDEBUG 1
 
 int main(int argc, char* argv[]) {
 
