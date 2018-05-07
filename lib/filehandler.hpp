@@ -1,5 +1,5 @@
-#ifndef FILEHANDLER_H
-#define FILEHANDLER_H
+#ifndef FILEHANDLER_HPP
+#define FILEHANDLER_HPP
 
 #include "torrentparser.hpp"
 
