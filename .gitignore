@@ -2,6 +2,6 @@
 atorrent-cli
 
 # Visual Studio config files
-.vscode*
+.vscode/
 
 *.txt
