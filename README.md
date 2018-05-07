@@ -21,6 +21,11 @@ Boost
 brew install boost
 ```
 
+Glog
+```bash
+brew install glog
+```
+
 ### Troubleshooting
 
 For OS X users who have this error:
