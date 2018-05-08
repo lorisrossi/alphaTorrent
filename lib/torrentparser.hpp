@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <boost/dynamic_bitset.hpp>
 
 #include "bencode.h"
 
@@ -22,7 +23,7 @@ typedef struct {
   std::string pieces;
   size_t num_pieces;
   std::vector<TorrentFile> files;
-  std::string bitfield;
+  boost::dynamic_bitset<unsigned char> bitfield;
   bool is_single = false; // true if single file torrent
 } Torrent;
 
