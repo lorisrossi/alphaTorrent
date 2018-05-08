@@ -10,6 +10,8 @@
 
 #include "filehandler.hpp"
 
+#define MAX_REQUEST_LENGTH 16384 // 2^14
+
 using namespace std;
 
 /**
@@ -169,10 +171,9 @@ RequestMsg compose_request_msg(string &path, Torrent &torrent, size_t piece_inde
     source.read(piece_str, blocklength);
     string str(piece_str, blocklength);
     // we are assuming that the file doesn't have any NULL string...
-    request.begin = str.find("\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 0, 15);
+    request.begin = str.find("\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 0, 16);
     if (request.begin != string::npos) {
-      // TODO: the 2nd value is hardcoded, improve it
-      request.length = min(blocklength - request.begin, (size_t)40000);
+      request.length = min(blocklength - request.begin, (size_t)MAX_REQUEST_LENGTH);
 
       cout << "Requesting block, index: " << request.index << ", begin:"
         << request.begin << ", length: " << request.length << endl;
