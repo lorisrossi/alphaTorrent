@@ -1,5 +1,5 @@
-#ifndef TORRENTPARSER_H
-#define TORRENTPARSER_H
+#ifndef TORRENTPARSER_HPP
+#define TORRENTPARSER_HPP
 
 #include <string>
 #include <vector>
