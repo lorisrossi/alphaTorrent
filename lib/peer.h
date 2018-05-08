@@ -50,6 +50,11 @@ namespace pwp{
             return false;
         }
 
+        bool operator>(peer const & rhs) const {
+            if(this->peer_id > rhs.peer_id)
+                return true;
+            return false;
+        }
     };
 
 
@@ -57,11 +62,22 @@ namespace pwp{
         struct peer peer_t;
         client_state cstate;
         peer_state pstate;
-        //Add connection instance here
+        std::shared_ptr<boost::asio::ip::tcp::socket> socket;
     };
 
-    typedef std::shared_ptr<std::vector<pwp::peer>> PeerList;
 
+
+    struct bInt{
+        uint8_t i1;
+        uint8_t i2;
+        uint8_t i3;
+        uint8_t i4;
+    };
+
+
+    typedef std::shared_ptr<std::vector<pwp::peer>> PeerList;
+    typedef std::shared_ptr<std::vector<pwp::peer_connection>> PeerConnected;
+    typedef struct bInt bInt;
 }
 
 
@@ -69,7 +85,11 @@ namespace pwp{
 void manage_peer_connection(pwp::PeerList peer_list, char *info_hash);
 void get_peer_id(std::string *id);
 void build_handshake(char *info_hash, std::array<char, 256> &handshake);
-void send_handshake(const pwp::peer t_peer, const std::array<char, 256> handshake, std::array<char, 256> &response);
-void handshake_request_manager(const std::array<char, 256> &handshake, const pwp::peer t_peer, const char *info_hash);
+void send_handshake(pwp::peer_connection& peerc_t, const std::array<char, 256> handshake, std::array<char, 256> &response);
+void handshake_request_manager(const std::array<char, 256> &handshake, const pwp::peer t_peer, const char *info_hash, pwp::PeerConnected valid_peer);
 int verify_handshake(const std::array<char, 256> handshake, const pwp::peer t_peer, const char *info_hash);
+
+uint32_t make_int(pwp::bInt bint);
+std::vector<uint8_t> from_int_to_bint(int integer);
+
 #endif

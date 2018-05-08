@@ -26,7 +26,7 @@ namespace tracker{
      *  @param peer_id      : the client generated id
      *
      */
-    int start_tracker_request(TParameter *param, const TList &tracker_list){
+    int start_tracker_request(TParameter *param, const TList &tracker_list, pwp::PeerList peer_list){
 
 
 
@@ -48,8 +48,8 @@ namespace tracker{
         boost::thread_group t_group;
         TList::const_iterator it = tracker_list.begin();
 
-        pwp::PeerList peer_list;    
-        peer_list = make_shared<vector<pwp::peer>>(50);
+        if(peer_list == nullptr)
+            peer_list = make_shared<vector<pwp::peer>>(10);
 
         for(; it != tracker_list.end(); ++it){
             LOG(INFO) << "Contacting tracker : " << *it;
@@ -63,10 +63,7 @@ namespace tracker{
         remove_duplicate_peers(peer_list);
 
         
-        LOG(INFO) << "Found " << peer_list->size() << " available peers";
-
-        //Once finished manage all peer
-        manage_peer_connection(peer_list, param->info_hash_raw);
+        std::cout << endl << "Found " << peer_list->size() << " available peers";
 
         return 0;
     }
@@ -649,11 +646,6 @@ namespace tracker{
             uint16_t port = 0;
             port = ((uint16_t)resp[i+5] << 8) | resp[i+4];    //Bitwise
             port = ntohs(port); //Convert to host order
-
-            if(port > MAX_PORT_VALUE){  //To remove, always false
-                LOG(WARNING) << "Malformed peer: invalid port";
-                continue;
-            }
 
             try{
                 pwp::peer tpeer;

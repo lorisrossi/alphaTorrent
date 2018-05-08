@@ -11,7 +11,7 @@ LIBS=-lssl -lcrypto -lcurl -lpthread -lboost_filesystem -lboost_system -lboost_t
 _DEPS=bencode.h tracker.h peer.h torrentparser.hpp filehandler.hpp
 DEPS=$(patsubst %,$(LDIR)/%,$(_DEPS))
 
-_OBJ=bencode.o tracker.o torrentparser.o atorrent-cli.o filehandler.o peer.o
+_OBJ=bencode.o tracker.o torrentparser.o atorrent-cli.o filehandler.o peer.o pwp.o
 OBJ=$(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: $(LDIR)/%.c

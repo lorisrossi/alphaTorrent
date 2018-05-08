@@ -85,7 +85,7 @@ namespace tracker{
     bool check_url(const string &url, CURL *curl=NULL);
     shared_ptr<string> url_builder(const string &tracker_url, const TParameter &t_param, event_type event, CURL *curl=NULL,  bool tls = false);
     int urlencode_paramenter(TParameter *param, CURL *curl = NULL);
-    int start_tracker_request(TParameter *param, const TList &tracker_list);
+    int start_tracker_request(TParameter *param, const TList &tracker_list, pwp::PeerList peer_list);
     void process_tracker_request(const string& tracker_url, const TParameter *param, pwp::PeerList peer_list);
     int scrape_request(string &url, string *response, CURL *curl = NULL);
     shared_ptr<string> get_scrape_url(const string &url);
