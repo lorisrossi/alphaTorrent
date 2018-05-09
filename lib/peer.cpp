@@ -1,6 +1,6 @@
 #include "peer.h"
 #include "pwp.hpp"
-
+#include <boost/dynamic_bitset.hpp>
 #include <fstream>
 using namespace std;
 
@@ -134,7 +134,7 @@ void pwp_protocol_manager(pwp::peer& peer_t, const std::array<uint8_t, 256> &han
         return;
     }
 
-    cout << endl << endl << "Success Handshaking :-)!!!!" << endl << endl;
+    cout << endl << endl << "Success Handshaking :-)!!!! " << peer_t.addr << endl << endl;
 
     result = get_bitfield(peer_conn, response);
     if(result < 0)
@@ -144,7 +144,7 @@ void pwp_protocol_manager(pwp::peer& peer_t, const std::array<uint8_t, 256> &han
     LOG(INFO) << "Keep-Alive enabled";
     pwp_msg::enable_keep_alive_message(peer_conn);
 
-    const vector<uint8_t> test= {0,0,1,3,6,0,0,0,0,0,0,0,0,0,0,0,0};
+    const vector<uint8_t> test= {0,0,0,13,6,0,0,0,0,0,0,0,0,0,0,0,0};
 
     pwp_msg::send_msg(peer_conn, test);
 
@@ -152,7 +152,7 @@ void pwp_protocol_manager(pwp::peer& peer_t, const std::array<uint8_t, 256> &han
         len = peer_conn.socket->read_some(boost::asio::buffer(response));
         std::vector<uint8_t> v(std::begin(response), std::end(response));
 
-        cout << string_to_hex(v, len);
+        cout << 'piece? ' << string_to_hex(v, len) << peer_t.addr;
 
     }catch(std::exception& e){
         LOG(ERROR) << e.what() << std::endl;
@@ -178,6 +178,25 @@ int get_bitfield(pwp::peer_connection& peerc_t, std::array<uint8_t, 256> &respon
 
         len = peerc_t.socket->read_some(boost::asio::buffer(response), error);
 
+        std::vector<uint8_t> v(std::begin(response), std::end(response));
+
+        cout << string_to_hex(v, len) << ' ' << peerc_t.peer_t.addr << endl;
+
+        // if (response[4] == 0x05)
+        // {
+        //     uint32_t bit_len = uint8_t(response[0]) << 24 | uint8_t(response[1]) << 16 | uint8_t(response[2]) << 8 | uint8_t(response[3] - 0x01);
+        //     cout << "bitfield, length: " << bit_len << endl;
+        //     boost::dynamic_bitset<> bitfield;
+        //     for (int i = 0; i < bit_len; ++i)
+        //     {
+        //         boost::dynamic_bitset<> temp(8, uint8_t(response[i + 5]));
+        //         for (int k = 7; k >= 0; --k)
+        //         {
+        //             bitfield.push_back(temp[k]);
+        //         }
+        //     }
+        //     cout << bitfield << ' ' << peerc_t.peer_t.addr << endl;
+        // }
     }catch(std::exception& e){
         LOG(ERROR) << e.what() << std::endl;
         return -2;
