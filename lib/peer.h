@@ -85,7 +85,7 @@ namespace pwp{
 void manage_peer_connection(pwp::PeerList peer_list, char *info_hash);
 void get_peer_id(std::string *id);
 void build_handshake(char *info_hash, std::array<char, 256> &handshake);
-void send_handshake(pwp::peer_connection& peerc_t, const std::array<char, 256> handshake, std::array<char, 256> &response);
+int send_handshake(pwp::peer_connection& peerc_t, const std::array<char, 256> handshake, std::array<char, 256> &response);
 void handshake_request_manager(const std::array<char, 256> &handshake, const pwp::peer t_peer, const char *info_hash, pwp::PeerConnected valid_peer);
 int verify_handshake(const std::array<char, 256> handshake, const pwp::peer t_peer, const char *info_hash);
 

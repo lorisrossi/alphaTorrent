@@ -102,10 +102,15 @@ void handshake_request_manager(const std::array<char, 256> &handshake, const pwp
 
     pwp::peer_connection pc;
     pc.peer_t = t_peer;
-    
-    send_handshake(pc, handshake, response);
+    pc.socket = nullptr;
 
-    int result = verify_handshake(response, t_peer, info_hash);
+    int result = send_handshake(pc, handshake, response);
+
+    if(result < 0){
+        return;
+    }    
+
+    result = verify_handshake(response, t_peer, info_hash);
 
     if(result < 0){
         //LOG(ERROR) << "[X] Handshake verification failed!! \t Code : " << result;
@@ -180,7 +185,7 @@ void build_handshake(char *info_hash, std::array<char, 256> &handshake){
  * 
  */
 
-void send_handshake(pwp::peer_connection& peerc_t, const std::array<char, 256> handshake, std::array<char, 256> &response){
+int send_handshake(pwp::peer_connection& peerc_t, const std::array<char, 256> handshake, std::array<char, 256> &response){
     using namespace boost::asio;
     using namespace boost::asio::ip;
   
@@ -194,7 +199,7 @@ void send_handshake(pwp::peer_connection& peerc_t, const std::array<char, 256> h
 
         if(peerc_t.peer_t.addr == inv_address){  //Check if it's invalid IP
             //LOG(ERROR) << "Invalid Address";
-            return;
+            return -3;
         }
                                  
         tcp::resolver::query query(peerc_t.peer_t.addr.to_string(), std::to_string(peerc_t.peer_t.port));   //Specify IP and Port
@@ -221,7 +226,7 @@ void send_handshake(pwp::peer_connection& peerc_t, const std::array<char, 256> h
 
             if (error == boost::asio::error::eof){
                 LOG(ERROR) << "Connection Closed";
-                break; // Connection closed cleanly by peer.
+                return -1; // Connection closed cleanly by peer.
             }else if (error){
                 throw boost::system::system_error(error); // Some other error.
             }
@@ -230,8 +235,9 @@ void send_handshake(pwp::peer_connection& peerc_t, const std::array<char, 256> h
         }
     }catch (std::exception& e){
         LOG(ERROR) << e.what() << std::endl;
+        return -2;
     }
-
+    return 0;
 }
 
 

@@ -19,7 +19,7 @@ namespace pwp_msg{
     const std::vector<uint8_t> non_interested_msg = {0,0,0,1,3};
 
     //void send_keep_alive(pwp::peer_connection peerc_t);
-    void enable_keep_alive_message(pwp::peer_connection peerc_t);
+    void enable_keep_alive_message(pwp::peer_connection& peerc_t);
     void send_msg(pwp::peer_connection& peerc_t, std::vector<uint8_t> msg);
 
 
