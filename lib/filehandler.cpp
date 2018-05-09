@@ -10,6 +10,8 @@
 
 #include "filehandler.hpp"
 
+#define MAX_REQUEST_LENGTH 16384 // 2^14
+
 using namespace std;
 
 /**
@@ -57,14 +59,14 @@ void init_bitfield(Torrent &torrent) {
         cur_file.read(file_hash, hashlength);
         cur_file.seekg((i+1)*hashlength);
         SHA1((unsigned char*)(file_hash), hashlength, digest);
-        torrent.bitfield.at(i) = (memcmp(piece_hash.c_str(), digest, 20) == 0) ? '1' : '0';
+        torrent.bitfield.set(i, (memcmp(piece_hash.c_str(), digest, 20) == 0));
       }
       // last piece
       hashlength = file_length % torrent.piece_length;
       piece_hash = torrent.pieces.substr((torrent.num_pieces - 1)*20, 20);
       cur_file.read(file_hash, hashlength);
       SHA1((unsigned char*)(file_hash), hashlength, digest);
-      torrent.bitfield.at(torrent.num_pieces-1) = (memcmp(piece_hash.c_str(), digest, 20) == 0) ? '1' : '0';
+      torrent.bitfield.set(torrent.num_pieces-1, (memcmp(piece_hash.c_str(), digest, 20) == 0));
 
       cur_file.close();
       cout << "Bitfield: " << torrent.bitfield << endl;
@@ -112,8 +114,8 @@ void check_files(Torrent &torrent) {
 int compare_bitfields(string peer_bitfield, string own_bitfield) {
   assert(peer_bitfield.size() == own_bitfield.size());
   boost::dynamic_bitset<unsigned char> own(own_bitfield), peer(peer_bitfield);
-  boost::dynamic_bitset<unsigned char> temp = ~own & peer;
-  size_t block_index = temp.find_first();
+  boost::dynamic_bitset<unsigned char> needed_pieces = ~own & peer;
+  size_t block_index = needed_pieces.find_first();
   if (block_index != boost::dynamic_bitset<>::npos) {
     // find_first() start from the right, but bitfield has 0-index on the left,
     // so we need to reverse the value
@@ -143,7 +145,7 @@ bool check_bitfield_piece(Torrent &torrent, size_t piece_index) {
     SHA1((unsigned char*)(file_hash), hashlength, digest);
 
     is_complete = memcmp(piece_hash.c_str(), digest, 20) == 0;
-    torrent.bitfield.at(piece_index) = is_complete ? '1' : '0';
+    torrent.bitfield.set(piece_index, is_complete);
 
     if (is_complete) {
       cout << "New piece completed! Piece index: " << piece_index << endl;
@@ -169,10 +171,9 @@ RequestMsg compose_request_msg(string &path, Torrent &torrent, size_t piece_inde
     source.read(piece_str, blocklength);
     string str(piece_str, blocklength);
     // we are assuming that the file doesn't have any NULL string...
-    request.begin = str.find("\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 0, 15);
+    request.begin = str.find("\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 0, 16);
     if (request.begin != string::npos) {
-      // TODO: the 2nd value is hardcoded, improve it
-      request.length = min(blocklength - request.begin, (size_t)40000);
+      request.length = min(blocklength - request.begin, (size_t)MAX_REQUEST_LENGTH);
 
       cout << "Requesting block, index: " << request.index << ", begin:"
         << request.begin << ", length: " << request.length << endl;
@@ -215,11 +216,40 @@ void save_block(char* blockdata, string path, RequestMsg request, Torrent &torre
   dest.close();
 }
 
-void check_file_complete(Torrent &torrent) {
-  size_t found = torrent.bitfield.find_first_of('0');
+/**
+ * Check if a torrent is 100% downloaded.
+ * If that is the case, remove the ".part" suffix from the filename.
+ * WARNING: only single file torrents are supported.
+ * 
+ * @param torrent  Torrent struct
+ */
+void check_file_is_complete(Torrent &torrent) {
+  // If the bitfield is all set, ~bitfield is all 0s,
+  // and find_first() doesn't find any set bit
+  size_t found = (~torrent.bitfield).find_first();
   if (found == string::npos) {
     cout << torrent.name << " completed!" << endl;
     boost::filesystem::rename(torrent.name + ".part", torrent.name);
   }
 }
 
+void save_piece(Torrent &torrent, size_t piece_index)
+{
+  // save piece in the file.part
+
+  // compare_bitfields("101110", "000110");
+  string source_path = "real/Raccolta.Ebook.29.11.2017-iCV.rar";
+  string dest_path = "Raccolta.Ebook.29.11.2017-iCV.rar.part";
+  
+  RequestMsg request = compose_request_msg(dest_path, torrent, piece_index);
+  
+  if (request.begin != string::npos) {
+    char block[request.length];
+    get_block_from_request(source_path, torrent, request, block);
+    save_block(block, dest_path, request, torrent);
+  }
+  
+  // if(check_bitfield_piece(torrent, request.index)) {
+  //   is_(torrent);
+  // }
+}
