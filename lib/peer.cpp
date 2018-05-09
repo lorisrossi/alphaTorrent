@@ -88,10 +88,10 @@ int create_socket(pwp::peer_connection& peer_conn_p){
 
 
 
-std::string string_to_hex(const std::vector<uint8_t>& input, size_t len)
+std::string string_to_hex(const std::vector<uint8_t>& input)
 {
     static const char* const lut = "0123456789ABCDEF";
-
+    size_t len = input.size();
     std::string output;
     output.reserve(2 * len);
     for (size_t i = 0; i < len; ++i)
@@ -104,9 +104,8 @@ std::string string_to_hex(const std::vector<uint8_t>& input, size_t len)
 }
 
 
-void pwp_protocol_manager(pwp::peer& peer_t, const std::array<uint8_t, 256> &handshake, const char *info_hash){
-    std::array<uint8_t, 256> response;
-    response.fill(0);
+void pwp_protocol_manager(pwp::peer& peer_t, const std::vector<uint8_t> &handshake, const char *info_hash){
+    std::vector<uint8_t> response = std::vector<uint8_t>(512);
 
     pwp::peer_connection peer_conn;
     peer_conn.peer_t = peer_t;
@@ -118,8 +117,11 @@ void pwp_protocol_manager(pwp::peer& peer_t, const std::array<uint8_t, 256> &han
         return;
     }
 
+    assert(peer_conn.socket != nullptr);
+
     int result = send_handshake(peer_conn, handshake, response);
-    _io_service.run();
+
+    _io_service.run();  //Really necessary?
 
     if(result < 0){
         return;
@@ -136,23 +138,35 @@ void pwp_protocol_manager(pwp::peer& peer_t, const std::array<uint8_t, 256> &han
 
     cout << endl << endl << "Success Handshaking :-)!!!! " << peer_t.addr << endl << endl;
 
+
     result = get_bitfield(peer_conn, response);
     if(result < 0)
         return;
     len = result;
 
     LOG(INFO) << "Keep-Alive enabled";
+
+    if(pwp_msg::send_msg(peer_conn, pwp_msg::interested_msg) < 0)
+        LOG(ERROR) << "Error senging interested_msg";
+
+    if(pwp_msg::send_msg(peer_conn, pwp_msg::unchoke_msg) < 0)
+        LOG(ERROR) << "Error sending unchoke mesg";
+    
+
     pwp_msg::enable_keep_alive_message(peer_conn);
+
+
 
     const vector<uint8_t> test= {0,0,0,13,6,0,0,0,0,0,0,0,0,0,0,0,0};
 
+    cout << endl << "Sending request msg" << endl;
     pwp_msg::send_msg(peer_conn, test);
 
     try{
         len = peer_conn.socket->read_some(boost::asio::buffer(response));
-        std::vector<uint8_t> v(std::begin(response), std::end(response));
+        
 
-        cout << 'piece? ' << string_to_hex(v, len) << peer_t.addr;
+        cout << endl << "piece? " << string_to_hex(response) << "   " << peer_t.addr.to_string() << endl;
 
     }catch(std::exception& e){
         LOG(ERROR) << e.what() << std::endl;
@@ -165,7 +179,7 @@ void pwp_protocol_manager(pwp::peer& peer_t, const std::array<uint8_t, 256> &han
 
 
 
-int get_bitfield(pwp::peer_connection& peerc_t, std::array<uint8_t, 256> &response){
+int get_bitfield(pwp::peer_connection& peerc_t, std::vector<uint8_t> &response){
 
     if(!peerc_t.socket->is_open()){
         LOG(ERROR) << "get-bitfield : Socket is closed!!!";
@@ -173,14 +187,16 @@ int get_bitfield(pwp::peer_connection& peerc_t, std::array<uint8_t, 256> &respon
     }
     boost::system::error_code error;
     size_t len;
+    
+
+    if(peerc_t.socket->available() <= 0){
+        return -1;
+    }
 
     try{
-
         len = peerc_t.socket->read_some(boost::asio::buffer(response), error);
 
-        std::vector<uint8_t> v(std::begin(response), std::end(response));
-
-        cout << string_to_hex(v, len) << ' ' << peerc_t.peer_t.addr << endl;
+        cout << "Bitfield : " << string_to_hex(response) << ' ' << peerc_t.peer_t.addr << endl;
 
         // if (response[4] == 0x05)
         // {
@@ -217,11 +233,13 @@ int get_bitfield(pwp::peer_connection& peerc_t, std::array<uint8_t, 256> &respon
  * 
  */
 
-void build_handshake(char *info_hash, std::array<uint8_t, 256> &handshake){
+void build_handshake(char *info_hash, std::vector<uint8_t> &handshake){
     int hindex = 0;
 
     const string pstr = "BitTorrent protocol";
     const size_t pstrlen = pstr.length();
+
+    handshake.resize(200);  //TODO Improve this
 
     //Constructing the handshake request
 
@@ -258,6 +276,8 @@ void build_handshake(char *info_hash, std::array<uint8_t, 256> &handshake){
         ++hindex;
     }
     //DLOG(INFO) << "<peer_id> written";
+
+    handshake.shrink_to_fit();  //Resize the handshake
 }
 
 /**
@@ -269,7 +289,7 @@ void build_handshake(char *info_hash, std::array<uint8_t, 256> &handshake){
  * 
  */
 
-int send_handshake(pwp::peer_connection& peerc_t, const std::array<uint8_t, 256> handshake, std::array<uint8_t, 256> &response){
+int send_handshake(pwp::peer_connection& peerc_t, const std::vector<uint8_t> handshake, std::vector<uint8_t> &response){
     using namespace boost::asio;
     using namespace boost::asio::ip;
   
@@ -278,23 +298,12 @@ int send_handshake(pwp::peer_connection& peerc_t, const std::array<uint8_t, 256>
     size_t len;
 
     try{ 
-        tcp::resolver resolver(_io_service); //Domain resolver
-
         const boost::asio::ip::address inv_address = boost::asio::ip::address::from_string("0.0.0.0");  //from_string deprecated function
 
         if(peerc_t.peer_t.addr == inv_address){  //Check if it's invalid IP
             //LOG(ERROR) << "Invalid Address";
             return -3;
         }
-                                 
-        tcp::resolver::query query(peerc_t.peer_t.addr.to_string(), std::to_string(peerc_t.peer_t.port));   //Specify IP and Port
-        
-        tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
-        //tcp::socket socket(_io_service);
-        peerc_t.socket = std::make_shared<tcp::socket>(_io_service);
-
-        LOG(INFO) << "Testing : " << peerc_t.peer_t.addr.to_string() << "\t " << std::to_string(peerc_t.peer_t.port);
-        boost::asio::connect(*(peerc_t.socket), endpoint_iterator);
 
         LOG(INFO) << "Initiating the handshake";
         
@@ -348,7 +357,7 @@ void get_peer_id(string *id){
  * 
  */
 
-int verify_handshake(const array<uint8_t, 256> handshake, size_t len, const pwp::peer t_peer, const char *info_hash){
+int verify_handshake(const vector<uint8_t> handshake, size_t len, const pwp::peer t_peer, const char *info_hash){
     int hindex = 0;
 
     string pstr = string("BitTorrent protocol");

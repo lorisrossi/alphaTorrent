@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
 
   //remove_invalid_peer(peer_list);
 
-  std::array<uint8_t, 256> handshake;
+  std::vector<uint8_t> handshake = std::vector<uint8_t>();
 
   DLOG(INFO) << "Building handshake...";
   build_handshake(param.info_hash_raw, handshake);

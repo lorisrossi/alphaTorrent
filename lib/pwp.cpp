@@ -57,7 +57,7 @@ namespace pwp_msg{
     }
 
     
-    void send_msg(pwp::peer_connection& peerc_t, std::vector<uint8_t> msg){
+    int send_msg(pwp::peer_connection& peerc_t, std::vector<uint8_t> msg){
         using namespace boost::asio;
         using namespace boost::asio::ip;
     
@@ -69,14 +69,14 @@ namespace pwp_msg{
 
             if(peerc_t.peer_t.addr == inv_address){  //Check if it's invalid IP
                 //LOG(ERROR) << "Invalid Address";
-                return;
+                return -1;
             }
 
             LOG(INFO) << "Checking connection";
 
             if(!peerc_t.socket->is_open()){
                 std::cout << std::endl << "Error socket not opened!!!!!";
-                return;
+                return -1;
             }
 
             
@@ -90,14 +90,16 @@ namespace pwp_msg{
 
             if (error == boost::asio::error::eof){
                 LOG(ERROR) << "Connection Closed";
-                return;
+                return -1;
             }else if (error){
                 throw boost::system::system_error(error); // Some other error.
             }
             
         }catch (std::exception& e){
             LOG(ERROR) << e.what() << std::endl;
+            return -2;
         }
+        return 0;
     }
 
 

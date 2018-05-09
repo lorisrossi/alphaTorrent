@@ -85,14 +85,14 @@ namespace pwp{
 
 void manage_peer_connection(pwp::PeerList peer_list, char *info_hash);
 void get_peer_id(std::string *id);
-void build_handshake(char *info_hash, std::array<uint8_t, 256> &handshake);
-int send_handshake(pwp::peer_connection& peerc_t, const std::array<uint8_t, 256> handshake, std::array<uint8_t, 256> &response);
+void build_handshake(char *info_hash, std::vector<uint8_t> &handshake);
+int send_handshake(pwp::peer_connection& peerc_t, const std::vector<uint8_t> handshake, std::vector<uint8_t> &response);
 void handshake_request_manager(const std::array<char, 256> &handshake, const pwp::peer t_peer, const char *info_hash, pwp::PeerConnected valid_peer);
-int verify_handshake(const std::array<uint8_t, 256> handshake, size_t len,  const pwp::peer t_peer, const char *info_hash);
+int verify_handshake(const std::vector<uint8_t> handshake, size_t len,  const pwp::peer t_peer, const char *info_hash);
 
 
-void pwp_protocol_manager(pwp::peer& peer_t, const std::array<uint8_t, 256> &handshake, const char *info_hash);
-int get_bitfield(pwp::peer_connection& peerc_t, std::array<uint8_t, 256> &response);
+void pwp_protocol_manager(pwp::peer& peer_t, const std::vector<uint8_t> &handshake, const char *info_hash);
+int get_bitfield(pwp::peer_connection& peerc_t, std::vector<uint8_t> &response);
 uint32_t make_int(pwp::bInt bint);
 std::vector<uint8_t> from_int_to_bint(int integer);
 
