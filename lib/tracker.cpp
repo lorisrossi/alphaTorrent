@@ -63,7 +63,7 @@ namespace tracker{
         remove_duplicate_peers(peer_list);
 
         
-        std::cout << endl << "Found " << peer_list->size() << " available peers";
+        std::cout << endl << endl << "Found " << peer_list->size() << " available peers" << endl;
 
         return 0;
     }
@@ -272,7 +272,7 @@ namespace tracker{
         *url_req += "&no_peer_ids=1&supportcrypto=1&redundant=0";
 
         //Optional
-        *url_req += "&numwant=50";
+        *url_req += "&numwant=200";
         *url_req += "&key=" + create_tracker_key();
 
         switch(event){

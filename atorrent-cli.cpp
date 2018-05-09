@@ -49,8 +49,7 @@ int main(int argc, char* argv[]) {
     return -2;    //Exit the program
   }
 
-  //Start processing the file
-
+  //Start processing the torrent file
   Torrent mytorrent;
   parse_torrent(node, mytorrent);
   be_free(node);
@@ -58,6 +57,7 @@ int main(int argc, char* argv[]) {
 
   tracker::TParameter param;
 
+  //Populate the torret parameter
   param.info_hash_raw = get_info_node_hash(&torrent_str, &mytorrent.pieces);  //Extract info_hash
   param.left = mytorrent.piece_length * mytorrent.pieces.size();
   get_peer_id(&param.peer_id);
@@ -71,8 +71,27 @@ int main(int argc, char* argv[]) {
     return -3;  //Error while encoding param, exit 
   }
 
+  //remove_invalid_peer(peer_list);
+
+  std::array<uint8_t, 256> handshake;
+
+  DLOG(INFO) << "Building handshake...";
+  build_handshake(param.info_hash_raw, handshake);
+
+  vector<pwp::peer>::iterator it = peer_list->begin();
+  boost::thread_group t_group;
+  //Start the PWP protocol with the peers
+  for(;it != peer_list->end(); ++it){
+
+      LOG(INFO) << "Starting executing the protocol with " << it->addr.to_string() << ":" << it->port << "...";
+      t_group.add_thread(new boost::thread( pwp_protocol_manager, *it, handshake, param.info_hash_raw));
+  
+  }
+
+
+  t_group.join_all();
   //Once finished manage all peer
-  manage_peer_connection(peer_list, param.info_hash_raw);
+  //manage_peer_connection(peer_list, param.info_hash_raw);
 
 
 

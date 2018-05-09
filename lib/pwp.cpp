@@ -27,14 +27,14 @@ namespace pwp_msg{
             
             boost::system::error_code error;
             size_t len;
-            std::array<char, 4> keep_alive_msg;
+            std::array<uint8_t, 4> keep_alive_msg;
             keep_alive_msg.fill(0);
 
             //Sending initial request
             std::cout << std::endl << "Sending keep-alive";
             len = peerc_t.socket->send(buffer(keep_alive_msg));
 
-
+            _io_service.run();
             if (error == boost::asio::error::eof){
                 LOG(ERROR) << "Connection Closed";
                 return;

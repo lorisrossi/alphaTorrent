@@ -40,89 +40,154 @@ void remove_invalid_peer(pwp::PeerList peer_list){
 }
 
 
-/**
- *  Manage all the peer connection and create the appropriate threads
- * 
- *  @param peer_list : the list of the peers fetched from the tracker
- *  @param info_hash : the info_hash of the file to download
- * 
- */
-void manage_peer_connection(pwp::PeerList peer_list, char *info_hash){
 
-    if(peer_list == nullptr){
-        LOG(FATAL) << "Empty Peer List should be not allowed";
+int create_socket(pwp::peer_connection& peer_conn_p){
+    using namespace boost::asio;
+    using namespace boost::asio::ip;
+  
+
+    //Start the request
+    try{ 
+        tcp::resolver resolver(_io_service); //Domain resolver
+
+        const boost::asio::ip::address inv_address = boost::asio::ip::address::from_string("0.0.0.0");  //from_string deprecated function
+
+        if(peer_conn_p.peer_t.addr == inv_address){  //Check if it's invalid IP
+            //LOG(ERROR) << "Invalid Address";
+            return -3;
+        }
+                                 
+        tcp::resolver::query query(peer_conn_p.peer_t.addr.to_string(), std::to_string(peer_conn_p.peer_t.port));   //Specify IP and Port
+        
+        tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
+        //tcp::socket socket(_io_service);
+        peer_conn_p.socket = std::make_shared<tcp::socket>(_io_service);
+
+        boost::system::error_code error;
+
+        LOG(INFO) << "Testing : " << peer_conn_p.peer_t.addr.to_string() << "\t " << std::to_string(peer_conn_p.peer_t.port);
+        peer_conn_p.socket->connect(*endpoint_iterator);
+
+        peer_conn_p.socket->is_open();
+
+        if (error == boost::asio::error::eof){
+            LOG(ERROR) << "Connection Closed";
+            return -1; // Connection closed cleanly by peer.
+        }else if (error){
+            throw boost::system::system_error(error); // Some other error.
+        }
+
+        //std::cout.write(&response[0], len);
+        
+    }catch (std::exception& e){
+        LOG(ERROR) << e.what() << std::endl;
+        return -2;
     }
-
-    vector<pwp::peer>::iterator it = peer_list->begin();
-    boost::thread_group t_group;
-
-    remove_invalid_peer(peer_list);
-    write_to_file(peer_list);
-
-    std::array<char, 256> handshake;
-
-    DLOG(INFO) << "Building handshake...";
-    build_handshake(info_hash, handshake);
-
-
-    pwp::PeerConnected valid_peer = make_shared<std::vector<pwp::peer_connection>>(0);
-
-    //Handshake Request
-    for(;it != peer_list->end(); ++it){
-
-        LOG(INFO) << "Starting handshake request to " << it->addr.to_string() << ":" << it->port << "...";
-        t_group.add_thread(new boost::thread(handshake_request_manager, handshake, *it, info_hash, valid_peer));
-    
-    }
-
-    t_group.join_all();
-
-
-
-    cout << endl << "Sono stati trovati : " << valid_peer->size() << " peer validi" << endl;
-
+    return 0;
 }
 
 
-/**
- *  Manage the handshake of a single peer
- *      1 - Send the handshake
- *      2 - Verify the handshake
- * 
- *  @param handshake :  the handshake sequence to send
- *  @param t_peer    :  the peer to contact
- *  @param info_hash :  the info_hash of the file
- * 
- */
 
-void handshake_request_manager(const std::array<char, 256> &handshake, const pwp::peer t_peer, const char *info_hash, pwp::PeerConnected valid_peer){
+std::string string_to_hex(const std::vector<uint8_t>& input, size_t len)
+{
+    static const char* const lut = "0123456789ABCDEF";
 
-    std::array<char, 256> response;
+    std::string output;
+    output.reserve(2 * len);
+    for (size_t i = 0; i < len; ++i)
+    {
+        const unsigned char c = input[i];
+        output.push_back(lut[c >> 4]);
+        output.push_back(lut[c & 15]);
+    }
+    return output;
+}
+
+
+void pwp_protocol_manager(pwp::peer& peer_t, const std::array<uint8_t, 256> &handshake, const char *info_hash){
+    std::array<uint8_t, 256> response;
     response.fill(0);
 
-    pwp::peer_connection pc;
-    pc.peer_t = t_peer;
-    pc.socket = nullptr;
+    pwp::peer_connection peer_conn;
+    peer_conn.peer_t = peer_t;
+    peer_conn.socket = nullptr;
 
-    int result = send_handshake(pc, handshake, response);
+    int error_code = create_socket(peer_conn);
+
+    if(error_code < 0){
+        return;
+    }
+
+    int result = send_handshake(peer_conn, handshake, response);
+    _io_service.run();
 
     if(result < 0){
         return;
-    }    
+    }
 
-    result = verify_handshake(response, t_peer, info_hash);
+    size_t len = result;    //To improve this for readibility    
+
+    result = verify_handshake(response, len, peer_conn.peer_t, info_hash);
 
     if(result < 0){
-        //LOG(ERROR) << "[X] Handshake verification failed!! \t Code : " << result;
+        LOG(ERROR) << "[X] Handshake verification failed!! \t Code : " << result;
         return;
     }
 
     cout << endl << endl << "Success Handshaking :-)!!!!" << endl << endl;
 
+    result = get_bitfield(peer_conn, response);
+    if(result < 0)
+        return;
+    len = result;
 
-    valid_peer->push_back(pc);  //Insert into the vector of valid Peer
-    pwp_msg::enable_keep_alive_message(pc);
+    LOG(INFO) << "Keep-Alive enabled";
+    pwp_msg::enable_keep_alive_message(peer_conn);
+
+    const vector<uint8_t> test= {0,0,1,3,6,0,0,0,0,0,0,0,0,0,0,0,0};
+
+    pwp_msg::send_msg(peer_conn, test);
+
+    try{
+        len = peer_conn.socket->read_some(boost::asio::buffer(response));
+        std::vector<uint8_t> v(std::begin(response), std::end(response));
+
+        cout << string_to_hex(v, len);
+
+    }catch(std::exception& e){
+        LOG(ERROR) << e.what() << std::endl;
+        return;
+    }
+    while(1){
+        boost::this_thread::sleep_for(boost::chrono::milliseconds(100));
+    }
 }
+
+
+
+int get_bitfield(pwp::peer_connection& peerc_t, std::array<uint8_t, 256> &response){
+
+    if(!peerc_t.socket->is_open()){
+        LOG(ERROR) << "get-bitfield : Socket is closed!!!";
+        return -1;
+    }
+    boost::system::error_code error;
+    size_t len;
+
+    try{
+
+        len = peerc_t.socket->read_some(boost::asio::buffer(response), error);
+
+    }catch(std::exception& e){
+        LOG(ERROR) << e.what() << std::endl;
+        return -2;
+    }
+
+    return len;
+}
+
+
+
 
 
 /**
@@ -133,7 +198,7 @@ void handshake_request_manager(const std::array<char, 256> &handshake, const pwp
  * 
  */
 
-void build_handshake(char *info_hash, std::array<char, 256> &handshake){
+void build_handshake(char *info_hash, std::array<uint8_t, 256> &handshake){
     int hindex = 0;
 
     const string pstr = "BitTorrent protocol";
@@ -185,12 +250,13 @@ void build_handshake(char *info_hash, std::array<char, 256> &handshake){
  * 
  */
 
-int send_handshake(pwp::peer_connection& peerc_t, const std::array<char, 256> handshake, std::array<char, 256> &response){
+int send_handshake(pwp::peer_connection& peerc_t, const std::array<uint8_t, 256> handshake, std::array<uint8_t, 256> &response){
     using namespace boost::asio;
     using namespace boost::asio::ip;
   
-
     //Start the request
+
+    size_t len;
 
     try{ 
         tcp::resolver resolver(_io_service); //Domain resolver
@@ -212,32 +278,28 @@ int send_handshake(pwp::peer_connection& peerc_t, const std::array<char, 256> ha
         boost::asio::connect(*(peerc_t.socket), endpoint_iterator);
 
         LOG(INFO) << "Initiating the handshake";
+        
+        boost::system::error_code error;
 
-        for (;;){
-            boost::system::error_code error;
-            size_t len;
+        //Sending initial request
+        LOG(INFO) << "Sending handshake";
+        len = peerc_t.socket->send(buffer(handshake));
 
-            //Sending initial request
-            LOG(INFO) << "Sending handshake";
-            len = peerc_t.socket->send(buffer(handshake));
+        LOG(INFO) << "Waiting for response...";
+        len = peerc_t.socket->read_some(boost::asio::buffer(response), error);
 
-            LOG(INFO) << "Waiting for response...";
-            len = peerc_t.socket->read_some(boost::asio::buffer(response), error);
-
-            if (error == boost::asio::error::eof){
-                LOG(ERROR) << "Connection Closed";
-                return -1; // Connection closed cleanly by peer.
-            }else if (error){
-                throw boost::system::system_error(error); // Some other error.
-            }
-
-            //std::cout.write(&response[0], len);
+        if (error == boost::asio::error::eof){
+            LOG(ERROR) << "Connection Closed";
+            return -1; // Connection closed cleanly by peer.
+        }else if (error){
+            throw boost::system::system_error(error); // Some other error.
         }
+
     }catch (std::exception& e){
         LOG(ERROR) << e.what() << std::endl;
         return -2;
     }
-    return 0;
+    return len;
 }
 
 
@@ -267,7 +329,7 @@ void get_peer_id(string *id){
  * 
  */
 
-int verify_handshake(const array<char, 256> handshake, const pwp::peer t_peer, const char *info_hash){
+int verify_handshake(const array<uint8_t, 256> handshake, size_t len, const pwp::peer t_peer, const char *info_hash){
     int hindex = 0;
 
     string pstr = string("BitTorrent protocol");
@@ -292,7 +354,7 @@ int verify_handshake(const array<char, 256> handshake, const pwp::peer t_peer, c
 
     ++hindex;
 
-    for(int i=0;i<(int)pstrlen;++i){
+    for(int i=0;i<(int)pstrlen && hindex<len;++i){
         if(handshake[hindex] != pstr.at(i)){   //Checking pstr
             cout << handshake[hindex];
             //LOG(ERROR) << "\"BitTorrent protocol\" string not found";
@@ -301,15 +363,15 @@ int verify_handshake(const array<char, 256> handshake, const pwp::peer t_peer, c
         ++hindex;
     }
 
-    for(int i=0; i<8;++i){
+    for(int i=0; i<8 && hindex<len;++i){
         if(handshake[hindex] != 0){ //Check for unimplemented function
             LOG(WARNING) << "Found unimplemented function on peer's response";
         }  
         ++hindex;
     }
 
-    for(int i=0; i<20;++i){
-        if(handshake[hindex] != info_hash[i]){   //Info hash raw byte
+    for(int i=0; i<20 && hindex<len;++i){
+        if(handshake[hindex] != (uint8_t)info_hash[i]){   //Info hash raw byte
             LOG(ERROR) << "info_hash does not match";
             return -3;
         }
@@ -330,7 +392,7 @@ int verify_handshake(const array<char, 256> handshake, const pwp::peer t_peer, c
 
     string peer_id = t_peer.peer_id;
    
-    for(int i=0; i<(int)peer_id.length();++i){
+    for(int i=0; i<(int)peer_id.length() && hindex<len;++i){
         if(handshake[hindex] != peer_id.at(i)){
             LOG(ERROR) << "Peer ID does not match";
             //return -4;

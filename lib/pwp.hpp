@@ -25,6 +25,7 @@ namespace pwp_msg{
 
 
     std::vector<uint8_t> craft_have_msg(int piece_index);
+    
 }
 
 #endif
