@@ -34,7 +34,7 @@ namespace pwp_msg{
             std::cout << std::endl << "Sending keep-alive";
             len = peerc_t.socket->send(buffer(keep_alive_msg));
 
-            _io_service.run();
+          
             if (error == boost::asio::error::eof){
                 LOG(ERROR) << "Connection Closed";
                 return;
@@ -53,7 +53,7 @@ namespace pwp_msg{
 
         timer.async_wait(boost::bind(send_keep_alive, peerc_t));
 
-        _io_service.run();
+      
     }
 
     

@@ -9,6 +9,8 @@
 #define KEEP_ALIVE_TIME 2
 
 extern boost::asio::io_service _io_service;  
+extern int active_peer;
+extern boost::mutex mtx_peer_num;
 
 namespace pwp_msg{
 

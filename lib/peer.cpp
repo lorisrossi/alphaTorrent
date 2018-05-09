@@ -6,6 +6,9 @@ using namespace std;
 
 boost::asio::io_service _io_service;    //Link to OS I/O services
 
+int active_peer =0;
+boost::mutex mtx_peer_num;
+
 //DEBUG FUNCTION
 void write_to_file(pwp::PeerList peer_list){
     
@@ -104,7 +107,7 @@ std::string string_to_hex(const std::vector<uint8_t>& input)
 }
 
 
-void pwp_protocol_manager(pwp::peer& peer_t, const std::vector<uint8_t> &handshake, const char *info_hash){
+void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshake, const char *info_hash){
     std::vector<uint8_t> response = std::vector<uint8_t>(512);
 
     pwp::peer_connection peer_conn;
@@ -114,6 +117,7 @@ void pwp_protocol_manager(pwp::peer& peer_t, const std::vector<uint8_t> &handsha
     int error_code = create_socket(peer_conn);
 
     if(error_code < 0){
+        LOG(ERROR) << "Exit thread ";
         return;
     }
 
@@ -121,15 +125,18 @@ void pwp_protocol_manager(pwp::peer& peer_t, const std::vector<uint8_t> &handsha
 
     int result = send_handshake(peer_conn, handshake, response);
 
-    _io_service.run();  //Really necessary?
+    //Really necessary?
 
     if(result < 0){
+        LOG(ERROR) << "Exit thread ";
+
         return;
     }
 
     size_t len = result;    //To improve this for readibility    
 
     result = verify_handshake(response, len, peer_conn.peer_t, info_hash);
+    //Really necessary?
 
     if(result < 0){
         LOG(ERROR) << "[X] Handshake verification failed!! \t Code : " << result;
@@ -138,10 +145,16 @@ void pwp_protocol_manager(pwp::peer& peer_t, const std::vector<uint8_t> &handsha
 
     cout << endl << endl << "Success Handshaking :-)!!!! " << peer_t.addr << endl << endl;
 
+    add_active_peer();
 
     result = get_bitfield(peer_conn, response);
-    if(result < 0)
+    
+    //Really necessary?
+
+    if(result < 0){
+        rm_active_peer();
         return;
+    }
     len = result;
 
     LOG(INFO) << "Keep-Alive enabled";
@@ -170,11 +183,10 @@ void pwp_protocol_manager(pwp::peer& peer_t, const std::vector<uint8_t> &handsha
 
     }catch(std::exception& e){
         LOG(ERROR) << e.what() << std::endl;
+        rm_active_peer();
         return;
     }
-    while(1){
-        boost::this_thread::sleep_for(boost::chrono::milliseconds(100));
-    }
+
 }
 
 
@@ -190,14 +202,15 @@ int get_bitfield(pwp::peer_connection& peerc_t, std::vector<uint8_t> &response){
     
 
     if(peerc_t.socket->available() <= 0){
+        cout << endl << "Exiting " << peerc_t.peer_t.addr << endl;
         return -1;
     }
 
     try{
         len = peerc_t.socket->read_some(boost::asio::buffer(response), error);
 
-        cout << "Bitfield : " << string_to_hex(response) << ' ' << peerc_t.peer_t.addr << endl;
-
+        //cout << "Bitfield : " << string_to_hex(response) << ' ' << peerc_t.peer_t.addr << endl;
+        cout << "Bitfiled found " << endl;
         // if (response[4] == 0x05)
         // {
         //     uint32_t bit_len = uint8_t(response[0]) << 24 | uint8_t(response[1]) << 16 | uint8_t(response[2]) << 8 | uint8_t(response[3] - 0x01);
@@ -464,4 +477,19 @@ std::vector<uint8_t> from_int_to_bint(int integer){
     ret[3] = out[3];
     return ret;
 
+}
+
+
+
+inline void add_active_peer(){
+    mtx_peer_num.lock();
+    active_peer++;
+    mtx_peer_num.unlock();
+}
+
+inline void rm_active_peer(){
+    mtx_peer_num.lock();
+    active_peer--;
+    assert(active_peer >= 0);
+    mtx_peer_num.unlock();
 }

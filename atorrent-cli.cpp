@@ -11,6 +11,31 @@
 
 using namespace std;
 
+#define PEER_TREESHOLD 10
+
+
+void worker(){
+  while( true )
+	{
+    try
+    {
+      boost::system::error_code ec;
+      _io_service.run( ec );
+      if( ec )
+      {
+        std::cout << "[" << boost::this_thread::get_id()
+        << "] Error: " << ec << std::endl;
+      }
+      break;
+    }
+    catch( std::exception & ex )
+    {
+      std::cout << "[" << boost::this_thread::get_id()
+      << "] Exception: " << ex.what() << std::endl;
+    }
+	}
+}
+
 
 int main(int argc, char* argv[]) {
 
@@ -65,31 +90,43 @@ int main(int argc, char* argv[]) {
 
   pwp::PeerList peer_list = make_shared<vector<pwp::peer>>(10); //Pre-Allocate the peers list
 
-  //Start contacting the tracker
-  int error_code = start_tracker_request(&param, mytorrent.trackers, peer_list);  
-  if(error_code < 0){
-    return -3;  //Error while encoding param, exit 
-  }
+  do{
 
-  //remove_invalid_peer(peer_list);
+    peer_list->clear();
+    peer_list->resize(10);
+    
+    //Start contacting the tracker
+    int error_code = start_tracker_request(&param, mytorrent.trackers, peer_list);  
+    if(error_code < 0){
+      return -3;  //Error while encoding param, exit 
+    }
 
-  std::vector<uint8_t> handshake = std::vector<uint8_t>();
+    //remove_invalid_peer(peer_list);
 
-  DLOG(INFO) << "Building handshake...";
-  build_handshake(param.info_hash_raw, handshake);
+    std::vector<uint8_t> handshake = std::vector<uint8_t>();
 
-  vector<pwp::peer>::iterator it = peer_list->begin();
-  boost::thread_group t_group;
-  //Start the PWP protocol with the peers
-  for(;it != peer_list->end(); ++it){
+    DLOG(INFO) << "Building handshake...";
+    build_handshake(param.info_hash_raw, handshake);
 
-      LOG(INFO) << "Starting executing the protocol with " << it->addr.to_string() << ":" << it->port << "...";
-      t_group.add_thread(new boost::thread( pwp_protocol_manager, *it, handshake, param.info_hash_raw));
-  
-  }
+    vector<pwp::peer>::iterator it = peer_list->begin();
+    boost::thread_group t_group;
+    //Start the PWP protocol with the peers
+    int i=0;
 
+    _io_service.run();
+    t_group.add_thread(new boost::thread(worker));
+    for(;it != peer_list->end(); ++it){
 
-  t_group.join_all();
+        cout<< "Starting executing the protocol with " << it->addr.to_string() << ":" << it->port << "... " << i << endl;
+        t_group.add_thread(new boost::thread( pwp_protocol_manager, *it, handshake, param.info_hash_raw));
+        i++;
+    }
+
+    _io_service.run();
+    boost::this_thread::sleep_for(boost::chrono::seconds(10));
+  }while(active_peer < PEER_TREESHOLD);
+
+  //t_group.join_all();
   //Once finished manage all peer
   //manage_peer_connection(peer_list, param.info_hash_raw);
 

@@ -24,11 +24,22 @@
 
 #define DEFAULT_BUFF_SIZE 128
 
+
+extern boost::asio::io_service _io_service;
+extern int active_peer;
+extern boost::mutex mtx_peer_num;
+
+
+
+inline void add_active_peer();
+inline void rm_active_peer();
+
 //Namespace Peer Wire Protocol
 namespace pwp{
 
     using namespace boost::asio;
 
+    
 
     enum client_state{
         am_choking,
@@ -91,7 +102,7 @@ void handshake_request_manager(const std::array<char, 256> &handshake, const pwp
 int verify_handshake(const std::vector<uint8_t> handshake, size_t len,  const pwp::peer t_peer, const char *info_hash);
 
 
-void pwp_protocol_manager(pwp::peer& peer_t, const std::vector<uint8_t> &handshake, const char *info_hash);
+void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshake, const char *info_hash);
 int get_bitfield(pwp::peer_connection& peerc_t, std::vector<uint8_t> &response);
 uint32_t make_int(pwp::bInt bint);
 std::vector<uint8_t> from_int_to_bint(int integer);
