@@ -173,22 +173,33 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
     // request length = 2303
     const vector<uint8_t> test= {0,0,0,13,6,0,0,0,0,0,0,0,0,0,0,8,255};
 
+    //boost::function<void(const std::vector<uint8_t>&, pwp::peer_connection&, const boost::system::error_code&,
+    //                        size_t)> recv_msg_handler;
+
+    // recv_msg_handler =  boost::bind(pwp_msg::read_msg_handler, boost::ref(response), 
+    //                         boost::ref(peer_conn), 
+    //                         boost::asio::placeholders::error,
+    //                         boost::asio::placeholders::bytes_transferred
+    //                     );
+
     // read 10 packets
     while(1){
         try{
             //Receive 5 bytes and parse it
             boost::asio::async_read(*(peer_conn.socket), boost::asio::buffer(response, sizeof(uint8_t)*5), 
+                boost::asio::transfer_exactly(5),
                 boost::bind(pwp_msg::read_msg_handler, boost::ref(response), 
-                    boost::ref(peer_conn), 
-                    boost::asio::placeholders::error,
-                    boost::asio::placeholders::bytes_transferred
-                )
+                            boost::ref(peer_conn), 
+                            boost::asio::placeholders::error,
+                            boost::asio::placeholders::bytes_transferred
+                        )
             );
 
             // Try to send
             // pwp_msg::sender(peer_conn, torrent);
             _io_service.run();
-            
+            boost::this_thread::sleep_for(boost::chrono::milliseconds(100));  //Sleep for 10 seconds
+
         }catch(std::exception& e){
             LOG(ERROR) << peer_t.addr << ' ' << e.what() << std::endl;
             rm_active_peer();

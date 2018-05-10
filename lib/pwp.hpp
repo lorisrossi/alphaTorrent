@@ -6,7 +6,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include "peer.h"
 
-#define KEEP_ALIVE_TIME 2
+#define KEEP_ALIVE_TIME 5
 
 extern boost::asio::io_service _io_service;  
 extern int active_peer;

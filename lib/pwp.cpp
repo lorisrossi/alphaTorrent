@@ -127,6 +127,7 @@ namespace pwp_msg{
 
         uint32_t msg_len = (uint8_t(response[0]) << 24 | uint8_t(response[1]) << 16 | uint8_t(response[2]) << 8 | uint8_t(response[3]));
 
+        cout << "LOLOLOLOLOLOLO" << endl;
 
         switch(response[4]){
 
