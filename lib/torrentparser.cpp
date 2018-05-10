@@ -2,10 +2,7 @@
 
 #include <iostream>
 #include <iomanip>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <assert.h>
+#include <fstream>
 #include <openssl/sha.h>
 
 #include "torrentparser.hpp"
@@ -87,7 +84,7 @@ void parse_info_dict(const be_node *info_node, Torrent &new_torrent) {
  * @param node         be_node dictionary corresponding to the torrent file
  * @param new_torrent  Torrent struct where to save the parsed info
  */
-void parse_torrent(const be_node *node, Torrent &new_torrent) {
+void parse_torrent_node(const be_node *node, Torrent &new_torrent) {
   string key;
   for (int i=0; node->val.d[i].val; ++i) {
     key = node->val.d[i].key;
@@ -214,4 +211,43 @@ void print_torrent(const Torrent &torrent) {
   }
 
   cout << separator << endl;
+}
+
+/**
+ * Main function for parsing a .torrent file.
+ * 
+ * @param torrent     Torrent struct
+ * @param torrent_str String for storing the torrent file
+ * @param filename    Path of the .torrent file
+ * @return int        Return negative number in case of error, otherwise 0
+ */
+int parse_torrent(Torrent &torrent, string &torrent_str, const char *filename) {
+  ifstream myfile(filename);
+  if (!myfile.is_open()){
+    cout << "Error opening " << filename << endl;
+    return -1;
+  }
+
+  // parse .torrent file as a string
+  string line;
+  while (getline(myfile, line)) {
+    torrent_str += line + '\n';
+  }
+  myfile.close();
+
+  // decoding
+  be_node *node;
+  long long len = torrent_str.length();
+  node = be_decoden(torrent_str.c_str(), len);
+  if (!node) {
+    cout << "Parsing of " << filename << " failed!" << endl;
+    return -2;
+  }
+
+  // Start processing the torrent file
+  parse_torrent_node(node, torrent);
+  be_free(node);
+  print_torrent(torrent);
+
+  return 0;
 }

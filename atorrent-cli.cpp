@@ -1,9 +1,7 @@
 #include <iostream>
-#include <fstream>
 #include <string>
 #include <string.h>
 
-#include "bencode.h"
 #include "torrentparser.hpp"
 #include "tracker.h"
 #include "filehandler.hpp"
@@ -12,18 +10,6 @@
 using namespace std;
 
 #define PEER_TREESHOLD 10
-
-void read_file(const char *path, string& dest){
-  
-    ifstream torrent_file(path);
-
-    // parsing .torrent file as a string
-    string line;
-    while (getline(torrent_file, line))
-    dest += line + '\n';
-    torrent_file.close();
-}
-
 
 tracker::TParameter set_parameter(const string& torrent_str, const Torrent& torr){
     tracker::TParameter param;
@@ -43,38 +29,18 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-
   google::InitGoogleLogging(argv[0]); //Initialize GLog with passed argument
-  curl_global_init(CURL_GLOBAL_DEFAULT);  //Initialize cURL
+  curl_global_init(CURL_GLOBAL_DEFAULT);
 
-  string torrent_str;
-  try{
-    read_file(argv[1], torrent_str);
-  }catch(const ifstream::failure& e){
-    LOG(ERROR) << "Error : " << e.what();
-    return -1;
-  }
-
-
-  // decoding
-  be_node *node;
-  long long len = torrent_str.length();
-  node = be_decoden(torrent_str.c_str(), len);
-  if (!node) {
-    cout << "Parsing of " << argv[1] << " failed!" << endl;
-    return -2;    //Exit the program
-  }
-
-  //Start processing the torrent file
   Torrent mytorrent;
-  {
-    parse_torrent(node, mytorrent);
-    be_free(node);
-    print_torrent(mytorrent);
+  string torrent_str;
+  // parse .torrent file
+  int success = parse_torrent(mytorrent, torrent_str, argv[1]);
+  if(success < 0) {
+    return success;
   }
 
-
-  //Populate the torret parameter
+  //Populate the torrent parameter
   tracker::TParameter param = set_parameter(torrent_str, mytorrent);
 
   pwp::PeerList peer_list = make_shared<vector<pwp::peer>>(); //Pre-Allocate the peers list
