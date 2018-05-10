@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
 
     for(;it != peer_list->end(); ++it){
         cout<< "Starting executing the protocol with " << it->addr.to_string() << ":" << it->port << "... " << endl;
-        t_group.add_thread(new boost::thread( pwp_protocol_manager, *it, handshake, param.info_hash_raw));
+        t_group.add_thread(new boost::thread( pwp_protocol_manager, *it, handshake, param.info_hash_raw, mytorrent));
     }
 
     _io_service.run();

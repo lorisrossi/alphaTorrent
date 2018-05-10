@@ -1,5 +1,7 @@
 #include "pwp.hpp"
 #include "peer.h"
+#include "torrentparser.hpp"
+#include "filehandler.hpp"
 
 
 bool is_inv_address(const boost::asio::ip::address& addr){
@@ -124,7 +126,7 @@ namespace pwp_msg{
         using namespace std;
 
         uint32_t msg_len = (uint8_t(response[0]) << 24 | uint8_t(response[1]) << 16 | uint8_t(response[2]) << 8 | uint8_t(response[3]));
-        
+
 
         switch(response[4]){
 
@@ -136,6 +138,21 @@ namespace pwp_msg{
             case pwp_msg::unchocked:
                 peer_c.pstate.peer_choking = false;
                 cout << peer_c.peer_t.addr.to_string() << " UNCHOKED, stop reading packets" << endl;
+                break;
+
+            case pwp_msg::bitfield: {
+                boost::dynamic_bitset<> temp_bitfield;
+                uint32_t bit_len = msg_len - 1;
+                cout << peer_c.peer_t.addr << " bitfield, length: " << bit_len << endl;
+                for (int i = 0; i < bit_len; ++i) {
+                    boost::dynamic_bitset<> temp(8, uint8_t(response[i + 5]));
+                    for (int k = 7; k >= 0; --k) {
+                        temp_bitfield.push_back(temp[k]);
+                    }
+                }
+                peer_c.bitfield = temp_bitfield;
+                cout << peer_c.peer_t.addr << " bitfield: " << peer_c.bitfield << endl;
+                }
                 break;
 
             case pwp_msg::piece:
@@ -157,6 +174,23 @@ namespace pwp_msg{
 
 
 
+
+
+    // void sender(pwp::peer_connection peer_conn, Torrent &torrent) {
+    //     if (!peer_conn.pstate.peer_choking && peer_conn.cstate.am_interested) {
+    //         int piece_index = compare_bitfields(peer, own);
+    //         if (piece_index != -1) {
+    //             RequestMsg request = compose_request_msg(torrent, piece_index);
+    //             vector<uint8_t> msg = make_request_msg(request);
+                
+    //             send_msg(peer, msg);
+    //         }
+    //         else {
+    //             peer_conn.cstate.am_interested = false;
+    //         }
+
+    //     }
+    // }
 
 
 }

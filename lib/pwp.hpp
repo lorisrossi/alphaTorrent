@@ -21,6 +21,7 @@ namespace pwp_msg{
     enum msg_id{
         chocked = 0x00,
         unchocked = 0x01,
+        bitfield = 0x05,
         piece = 0x07, 
     };
 

@@ -1,5 +1,6 @@
 #include "peer.h"
 #include "pwp.hpp"
+#include "torrentparser.hpp"
 #include <boost/dynamic_bitset.hpp>
 #include <fstream>
 using namespace std;
@@ -101,7 +102,7 @@ std::string string_to_hex(const std::vector<uint8_t>& input)
 }
 
 
-void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshake, const char *info_hash){
+void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshake, const char *info_hash, Torrent &torrent){
     std::vector<uint8_t> response = std::vector<uint8_t>(512);
 
     pwp::peer_state peer_s = {
@@ -114,6 +115,7 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
         peer_t,             //Peer Data
         client_s ,    //Client State
         peer_s,  //Peer State
+        boost::dynamic_bitset<>(),
         nullptr,            //Socket pointer
     };
 
@@ -148,7 +150,7 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
 
     add_active_peer();  //The current peer is valid
 
-    result = get_bitfield(peer_conn, response);
+    // result = get_bitfield(peer_conn, response);
     
     if(result < 0){
         rm_active_peer();
@@ -175,7 +177,6 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
     while(1){
         try{
             //Receive 5 bytes and parse it
-           
             boost::asio::async_read(*(peer_conn.socket), boost::asio::buffer(response, sizeof(uint8_t)*5), 
                 boost::bind(pwp_msg::read_msg_handler, boost::ref(response), 
                     boost::ref(peer_conn), 
@@ -183,11 +184,17 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
                     boost::asio::placeholders::bytes_transferred
                 )
             );
+
+            // Try to send
+            // pwp_msg::sender(peer_conn, torrent);
+            _io_service.run();
+            
         }catch(std::exception& e){
             LOG(ERROR) << peer_t.addr << ' ' << e.what() << std::endl;
             rm_active_peer();
             return;
         }
+
 
     }
 

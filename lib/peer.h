@@ -11,6 +11,7 @@
 #include <boost/array.hpp>
 #include <boost/thread.hpp>
 #include <boost/chrono.hpp>
+#include <boost/dynamic_bitset.hpp>
 
 #include <glog/logging.h>   //Logging Library
 
@@ -21,6 +22,7 @@
 #include <boost/endian/conversion.hpp>
 #include <cmath>
 
+#include "torrentparser.hpp"
 
 #define DEFAULT_BUFF_SIZE 128
 
@@ -74,6 +76,7 @@ namespace pwp{
         struct peer peer_t;
         client_state cstate;
         peer_state pstate;
+        boost::dynamic_bitset<> bitfield;
         std::shared_ptr<boost::asio::ip::tcp::socket> socket;
     };
 
@@ -102,7 +105,7 @@ void handshake_request_manager(const std::array<char, 256> &handshake, const pwp
 int verify_handshake(const std::vector<uint8_t> handshake, size_t len,  const pwp::peer t_peer, const char *info_hash);
 
 void remove_invalid_peer(pwp::PeerList peer_list);
-void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshake, const char *info_hash);
+void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshake, const char *info_hash, Torrent &torrent);
 int get_bitfield(pwp::peer_connection& peerc_t, std::vector<uint8_t> &response);
 uint32_t make_int(pwp::bInt bint);
 std::vector<uint8_t> from_int_to_bint(int integer);
