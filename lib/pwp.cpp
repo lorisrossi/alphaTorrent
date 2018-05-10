@@ -118,4 +118,45 @@ namespace pwp_msg{
     }
 
 
+
+
+    void read_msg_handler(std::vector<uint8_t>& response, pwp::peer_connection& peer_c, const boost::system::error_code& error, size_t bytes_read){
+        using namespace std;
+
+        uint32_t msg_len = (uint8_t(response[0]) << 24 | uint8_t(response[1]) << 16 | uint8_t(response[2]) << 8 | uint8_t(response[3]));
+        
+
+        switch(response[4]){
+
+            case pwp_msg::chocked:
+                peer_c.pstate.peer_choking = true;
+                cout << peer_c.peer_t.addr.to_string() << " CHOKED, stop reading packets" << endl;
+                break;
+
+            case pwp_msg::unchocked:
+                peer_c.pstate.peer_choking = false;
+                cout << peer_c.peer_t.addr.to_string() << " UNCHOKED, stop reading packets" << endl;
+                break;
+
+            case pwp_msg::piece:
+                uint32_t piece_len = msg_len - 9;
+                cout << peer_c.peer_t.addr << " PIECE received, length: " << piece_len << endl;
+                response.resize(piece_len);
+                peer_c.socket->receive(boost::asio::buffer(response,sizeof(uint8_t)*piece_len));
+
+                cout << peer_c.peer_t.addr << endl << string_to_hex(response) << endl;
+
+
+                break;
+
+        }
+
+       
+    }
+
+
+
+
+
+
 }

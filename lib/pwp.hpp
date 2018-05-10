@@ -18,6 +18,13 @@ bool is_inv_address(const boost::asio::ip::address& addr);
 
 namespace pwp_msg{
 
+    enum msg_id{
+        chocked = 0x00,
+        unchocked = 0x01,
+        piece = 0x07, 
+    };
+
+
 
     const std::vector<uint8_t> choke_msg = {0,0,0,1,0};
     const std::vector<uint8_t> unchoke_msg = {0,0,0,1,1};
@@ -29,7 +36,9 @@ namespace pwp_msg{
     int send_msg(pwp::peer_connection& peerc_t, std::vector<uint8_t> msg);
 
     std::vector<uint8_t> craft_have_msg(int piece_index);
-    
+
+    void read_msg_handler(std::vector<uint8_t>& response, pwp::peer_connection& peer_c, const boost::system::error_code& error, size_t bytes_read);
+
 }
 
 #endif

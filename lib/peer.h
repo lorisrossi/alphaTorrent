@@ -41,15 +41,15 @@ namespace pwp{
 
     
 
-    enum client_state{
-        am_choking,
-        am_interested
-    };
+    typedef struct{
+        bool am_choking;
+        bool am_interested;
+    }client_state ;
 
-    enum peer_state{
-        peer_choking,
-        peer_interested
-    };
+    typedef struct {
+        bool peer_choking;  
+        bool peer_interested;
+    }peer_state;
 
     struct peer{
         ip::address addr;
@@ -106,5 +106,7 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
 int get_bitfield(pwp::peer_connection& peerc_t, std::vector<uint8_t> &response);
 uint32_t make_int(pwp::bInt bint);
 std::vector<uint8_t> from_int_to_bint(int integer);
+
+std::string string_to_hex(const std::vector<uint8_t>& input);
 
 #endif

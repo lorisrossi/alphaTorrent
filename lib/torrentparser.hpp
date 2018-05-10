@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 #include <boost/dynamic_bitset.hpp>
+#include <string.h> //For memcpy
+
+
 
 #include "bencode.h"
 

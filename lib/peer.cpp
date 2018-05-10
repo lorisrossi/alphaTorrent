@@ -104,10 +104,16 @@ std::string string_to_hex(const std::vector<uint8_t>& input)
 void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshake, const char *info_hash){
     std::vector<uint8_t> response = std::vector<uint8_t>(512);
 
+    pwp::peer_state peer_s = {
+        false, false
+    };
+    pwp::client_state client_s = {
+        false, false
+    };
     pwp::peer_connection peer_conn = {
         peer_t,             //Peer Data
-        pwp::am_choking,    //Client State
-        pwp::peer_choking,  //Peer State
+        client_s ,    //Client State
+        peer_s,  //Peer State
         nullptr,            //Socket pointer
     };
 
@@ -166,30 +172,23 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
     const vector<uint8_t> test= {0,0,0,13,6,0,0,0,0,0,0,0,0,0,0,8,255};
 
     // read 10 packets
-    for (int i=0; i<10; ++i) {
+    while(1){
         try{
-            len = peer_conn.socket->read_some(boost::asio::buffer(response));
-            uint32_t msg_len = (uint8_t(response[0]) << 24 | uint8_t(response[1]) << 16 | uint8_t(response[2]) << 8 | uint8_t(response[3]));
-            if (i == 0 && response[4] == 0x00) { // choked
-                cout << peer_t.addr << " CHOKED, stop reading packets" << endl;
-                break;                
-            }
-            else if (i == 0 && response[4] == 0x01) { // unchoked
-                cout << peer_t.addr << " UNCHOKED, sending REQUEST msg" << endl;
-                pwp_msg::send_msg(peer_conn, test);
-            }
-            else if (response[4] == 0x07) { // piece
-                uint32_t piece_len = msg_len - 9;
-                cout << peer_t.addr << " PIECE received, length: " << piece_len << endl;
-            }
-            else {
-                cout << peer_t.addr << " [packet " << i+1 << "] unknown " << string_to_hex(response) << endl;
-            }
+            //Receive 5 bytes and parse it
+           
+            boost::asio::async_read(*(peer_conn.socket), boost::asio::buffer(response, sizeof(uint8_t)*5), 
+                boost::bind(pwp_msg::read_msg_handler, boost::ref(response), 
+                    boost::ref(peer_conn), 
+                    boost::asio::placeholders::error,
+                    boost::asio::placeholders::bytes_transferred
+                )
+            );
         }catch(std::exception& e){
             LOG(ERROR) << peer_t.addr << ' ' << e.what() << std::endl;
             rm_active_peer();
             return;
         }
+
     }
 
 }
@@ -483,3 +482,8 @@ inline void rm_active_peer(){
     assert(active_peer >= 0);
     mtx_peer_num.unlock();
 }
+
+
+
+
+
