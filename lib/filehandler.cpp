@@ -37,6 +37,11 @@ void make_file(const string &main_folder, const TorrentFile &tfile) {
   boost::filesystem::resize_file(temp_path, tfile.length);
 }
 
+/**
+ * Initialize bitfield of a torrent, checking the pieces already downloaded.
+ * 
+ * @param torrent  Torrent struct
+ */
 void init_bitfield(Torrent &torrent) {
   if (torrent.is_single) {
     string path = torrent.name + ".part";
@@ -109,10 +114,15 @@ void check_files(Torrent &torrent) {
   // }
 }
 
-// return index of a piece that the peer can give to us
-// return -1 if the peer doesn't have any piece we need
+/**
+ * Get the index of a piece the peer can give to us
+ * 
+ * @param peer_bitfield 
+ * @param own_bitfield 
+ * @return int          Index of a needed piece, or -1 if no piece available 
+ */
 int compare_bitfields(boost::dynamic_bitset<> peer_bitfield, boost::dynamic_bitset<> own_bitfield) {
-  // assert(peer_bitfield.size() == own_bitfield.size());
+  assert(peer_bitfield.size() == own_bitfield.size());
   boost::dynamic_bitset<> needed_pieces = ~own_bitfield & peer_bitfield;
   size_t block_index = needed_pieces.find_first();
   if (block_index != boost::dynamic_bitset<>::npos) {
@@ -122,6 +132,13 @@ int compare_bitfields(boost::dynamic_bitset<> peer_bitfield, boost::dynamic_bits
 }
 
 // check the value of the bitfield at index "piece_index"
+/**
+ * Check the value of the bitfield at index "piece_index", and change it accordingly.
+ * 
+ * @param torrent      Torrent struct
+ * @param piece_index  Index to check
+ * @return true        If the piece is completed, otherwise false
+ */
 bool check_bitfield_piece(Torrent &torrent, size_t piece_index) {
   bool is_complete = false;
   // single file torrent only
@@ -152,10 +169,17 @@ bool check_bitfield_piece(Torrent &torrent, size_t piece_index) {
   return is_complete;
 }
 
+/**
+ * Create a RequestMsg struct starting from "piece_index".
+ * 
+ * @param torrent    
+ * @param piece_index  
+ * @return RequestMsg 
+ */
 RequestMsg create_request(Torrent &torrent, int piece_index) {
   RequestMsg request;
   request.index = piece_index;
-  fstream source(torrent.name);
+  fstream source(torrent.name + ".part");
   if (source.is_open()) {
     int blocklength = torrent.piece_length;
     // check if last piece
@@ -171,9 +195,6 @@ RequestMsg create_request(Torrent &torrent, int piece_index) {
     request.begin = str.find("\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 0, 16);
     if (request.begin != string::npos) {
       request.length = min(blocklength - request.begin, (size_t)MAX_REQUEST_LENGTH);
-
-      cout << "Requesting block, index: " << request.index << ", begin:"
-        << request.begin << ", length: " << request.length << endl;
     }
     else {
       // nothing to request, maybe the piece is complete or it contains wrong data
@@ -185,6 +206,9 @@ RequestMsg create_request(Torrent &torrent, int piece_index) {
         source.write(null_string, blocklength);
       }
     }
+  }
+  else {
+    cout << "Error: can't create request for " << torrent.name + ".part" << endl;
   }
   source.close();
   return request;
@@ -202,13 +226,21 @@ void get_block_from_request(string &path, Torrent &torrent, RequestMsg request, 
   source.close();
 }
 
-void save_block(char* blockdata, string path, RequestMsg request, Torrent &torrent) {
-  fstream dest(path);
+/**
+ * Save a blockdata received from a "piece" message.
+ * WARNING: only single file torrents are supported. 
+ * 
+ * @param blockdata  Byte-array of data
+ * @param index      Piece index 
+ * @param begin      Block index (within the piece)
+ * @param length     Length of blockdata
+ * @param torrent    Torrent struct
+ */
+void save_block(char* blockdata, size_t index, size_t begin, size_t length, Torrent &torrent) {
+  fstream dest(torrent.name);
   if (dest.is_open()) {
-    cout << "Writing block,    index: " << request.index << ", begin:"
-      << request.begin << ", length: " << request.length << endl;
-    dest.seekp(request.index * torrent.piece_length + request.begin);
-    dest.write(blockdata, request.length);
+    dest.seekp(index * torrent.piece_length + begin);
+    dest.write(blockdata, length);
   }
   dest.close();
 }
