@@ -13,27 +13,26 @@ using namespace std;
 
 #define PEER_TREESHOLD 10
 
+void read_file(const char *path, string& dest){
+  
+    ifstream torrent_file(path);
 
-void worker(){
-  while( true )
-	{
-    try
-    {
-      boost::system::error_code ec;
-      _io_service.run( ec );
-      if( ec )
-      {
-        std::cout << "[" << boost::this_thread::get_id()
-        << "] Error: " << ec << std::endl;
-      }
-      break;
-    }
-    catch( std::exception & ex )
-    {
-      std::cout << "[" << boost::this_thread::get_id()
-      << "] Exception: " << ex.what() << std::endl;
-    }
-	}
+    // parsing .torrent file as a string
+    string line;
+    while (getline(torrent_file, line))
+    dest += line + '\n';
+    torrent_file.close();
+}
+
+
+tracker::TParameter set_parameter(const string& torrent_str, const Torrent& torr){
+    tracker::TParameter param;
+
+    param.info_hash_raw = get_info_node_hash(&torrent_str, &torr.pieces);  //Extract info_hash
+    param.left = torr.piece_length * torr.pieces.size();
+    get_peer_id(&param.peer_id);
+    
+    return param;
 }
 
 
@@ -45,25 +44,17 @@ int main(int argc, char* argv[]) {
   }
 
 
-
-
   google::InitGoogleLogging(argv[0]); //Initialize GLog with passed argument
+  curl_global_init(CURL_GLOBAL_DEFAULT);  //Initialize cURL
 
-  curl_global_init(CURL_GLOBAL_DEFAULT);
-
-  ifstream myfile(argv[1]);
-  if (!myfile.is_open()){
-    cout << "Unable to open the file." << endl;
-    return -1;  //Exit the progra,m
+  string torrent_str;
+  try{
+    read_file(argv[1], torrent_str);
+  }catch(const ifstream::failure& e){
+    LOG(ERROR) << "Error : " << e.what();
+    return -1;
   }
 
-
-  // parsing .torrent file as a string
-  string line;
-  string torrent_str;
-  while (getline(myfile, line))
-  torrent_str += line + '\n';
-  myfile.close();
 
   // decoding
   be_node *node;
@@ -76,19 +67,18 @@ int main(int argc, char* argv[]) {
 
   //Start processing the torrent file
   Torrent mytorrent;
-  parse_torrent(node, mytorrent);
-  be_free(node);
-  print_torrent(mytorrent);
+  {
+    parse_torrent(node, mytorrent);
+    be_free(node);
+    print_torrent(mytorrent);
+  }
 
-  tracker::TParameter param;
 
   //Populate the torret parameter
-  param.info_hash_raw = get_info_node_hash(&torrent_str, &mytorrent.pieces);  //Extract info_hash
-  param.left = mytorrent.piece_length * mytorrent.pieces.size();
-  get_peer_id(&param.peer_id);
+  tracker::TParameter param = set_parameter(torrent_str, mytorrent);
 
-
-  pwp::PeerList peer_list = make_shared<vector<pwp::peer>>(10); //Pre-Allocate the peers list
+  pwp::PeerList peer_list = make_shared<vector<pwp::peer>>(); //Pre-Allocate the peers list
+  boost::thread_group t_group;  //Thread Group for managing the peers
 
   do{
 
@@ -101,44 +91,35 @@ int main(int argc, char* argv[]) {
       return -3;  //Error while encoding param, exit 
     }
 
-    //remove_invalid_peer(peer_list);
+    remove_invalid_peer(peer_list);
 
+    LOG(INFO) << "Building handshake...";
     std::vector<uint8_t> handshake = std::vector<uint8_t>();
-
-    DLOG(INFO) << "Building handshake...";
     build_handshake(param.info_hash_raw, handshake);
 
-    vector<pwp::peer>::iterator it = peer_list->begin();
-    boost::thread_group t_group;
+
     //Start the PWP protocol with the peers
-    int i=0;
 
-    _io_service.run();
-    t_group.add_thread(new boost::thread(worker));
+    vector<pwp::peer>::iterator it = peer_list->begin();
+
     for(;it != peer_list->end(); ++it){
-
-        cout<< "Starting executing the protocol with " << it->addr.to_string() << ":" << it->port << "... " << i << endl;
+        cout<< "Starting executing the protocol with " << it->addr.to_string() << ":" << it->port << "... " << endl;
         t_group.add_thread(new boost::thread( pwp_protocol_manager, *it, handshake, param.info_hash_raw));
-        i++;
     }
 
     _io_service.run();
-    boost::this_thread::sleep_for(boost::chrono::seconds(10));
+    boost::this_thread::sleep_for(boost::chrono::seconds(10));  //Sleep for 10 seconds
+
+
   }while(active_peer < PEER_TREESHOLD);
 
-  //t_group.join_all();
-  //Once finished manage all peer
-  //manage_peer_connection(peer_list, param.info_hash_raw);
-
-
+  t_group.join_all();
 
 
   if(param.info_hash_raw != nullptr)
     free(param.info_hash_raw);
 
       
-  
-
   curl_global_cleanup();
   return 0;
 }

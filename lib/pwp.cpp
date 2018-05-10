@@ -2,22 +2,34 @@
 #include "peer.h"
 
 
+bool is_inv_address(const boost::asio::ip::address& addr){
+    const boost::asio::ip::address inv_address = boost::asio::ip::address::from_string("0.0.0.0");  //from_string deprecated function
+
+    if(addr == inv_address){  //Check if it's invalid IP
+        return true;
+    }        
+    return false;
+} 
+
+
+/**
+ *  This namespace contains all the function that are related to the messages of the PWP Protocol
+ * 
+ */
+
 namespace pwp_msg{
+
 
     void send_keep_alive(const pwp::peer_connection& peerc_t){
         using namespace boost::asio;
         using namespace boost::asio::ip;
 
         //Start the request
+        if(is_inv_address(peerc_t.peer_t.addr)){  //Check if it's invalid IP
+            return;
+        }
 
         try{ 
-            const boost::asio::ip::address inv_address = boost::asio::ip::address::from_string("0.0.0.0");  //from_string deprecated function
-
-            if(peerc_t.peer_t.addr == inv_address){  //Check if it's invalid IP
-                LOG(ERROR) << "Invalid Address";
-                return;
-            }
-        
 
             if(!peerc_t.socket->is_open()){
                 std::cout << std::endl << "Keep-Alive routine : Error socket not opened!!!!!";
@@ -28,13 +40,12 @@ namespace pwp_msg{
             boost::system::error_code error;
             size_t len;
             std::array<uint8_t, 4> keep_alive_msg;
+
             keep_alive_msg.fill(0);
 
-            //Sending initial request
             std::cout << std::endl << "Sending keep-alive";
             len = peerc_t.socket->send(buffer(keep_alive_msg));
-
-          
+        
             if (error == boost::asio::error::eof){
                 LOG(ERROR) << "Connection Closed";
                 return;
@@ -53,26 +64,22 @@ namespace pwp_msg{
 
         timer.async_wait(boost::bind(send_keep_alive, peerc_t));
 
-      
+        _io_service.run();
     }
 
     
     int send_msg(pwp::peer_connection& peerc_t, std::vector<uint8_t> msg){
         using namespace boost::asio;
         using namespace boost::asio::ip;
-    
+        
+        if(is_inv_address(peerc_t.peer_t.addr)){  //Check if it's invalid IP
+            return -1;
+        }
 
         //Start the request
         try{ 
-            const boost::asio::ip::address inv_address = boost::asio::ip::address::from_string("0.0.0.0");  //from_string deprecated function
-
-            if(peerc_t.peer_t.addr == inv_address){  //Check if it's invalid IP
-                //LOG(ERROR) << "Invalid Address";
-                return -1;
-            }
 
             LOG(INFO) << "Checking connection";
-
             if(!peerc_t.socket->is_open()){
                 std::cout << std::endl << "Error socket not opened!!!!!";
                 return -1;
@@ -82,7 +89,6 @@ namespace pwp_msg{
             boost::system::error_code error;
             size_t len;
 
-            //Sending initial request
             LOG(INFO) << "Sending message";
             len = peerc_t.socket->send(buffer(msg));
 
@@ -94,7 +100,7 @@ namespace pwp_msg{
             }
             
         }catch (std::exception& e){
-            LOG(ERROR) << peerc_t.peer_t.addr << e.what() << std::endl;
+            LOG(ERROR) << peerc_t.peer_t.addr.to_string() << " " << e.what() << std::endl;
             return -2;
         }
         return 0;

@@ -101,7 +101,7 @@ int send_handshake(pwp::peer_connection& peerc_t, const std::vector<uint8_t> han
 void handshake_request_manager(const std::array<char, 256> &handshake, const pwp::peer t_peer, const char *info_hash, pwp::PeerConnected valid_peer);
 int verify_handshake(const std::vector<uint8_t> handshake, size_t len,  const pwp::peer t_peer, const char *info_hash);
 
-
+void remove_invalid_peer(pwp::PeerList peer_list);
 void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshake, const char *info_hash);
 int get_bitfield(pwp::peer_connection& peerc_t, std::vector<uint8_t> &response);
 uint32_t make_int(pwp::bInt bint);

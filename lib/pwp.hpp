@@ -12,6 +12,10 @@ extern boost::asio::io_service _io_service;
 extern int active_peer;
 extern boost::mutex mtx_peer_num;
 
+
+
+bool is_inv_address(const boost::asio::ip::address& addr);
+
 namespace pwp_msg{
 
 
@@ -23,8 +27,6 @@ namespace pwp_msg{
     //void send_keep_alive(pwp::peer_connection peerc_t);
     void enable_keep_alive_message(pwp::peer_connection& peerc_t);
     int send_msg(pwp::peer_connection& peerc_t, std::vector<uint8_t> msg);
-
-
 
     std::vector<uint8_t> craft_have_msg(int piece_index);
     

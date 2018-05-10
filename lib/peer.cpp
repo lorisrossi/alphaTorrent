@@ -48,14 +48,11 @@ int create_socket(pwp::peer_connection& peer_conn_p){
     using namespace boost::asio;
     using namespace boost::asio::ip;
   
-
     //Start the request
     try{ 
         tcp::resolver resolver(_io_service); //Domain resolver
 
-        const boost::asio::ip::address inv_address = boost::asio::ip::address::from_string("0.0.0.0");  //from_string deprecated function
-
-        if(peer_conn_p.peer_t.addr == inv_address){  //Check if it's invalid IP
+        if(is_inv_address(peer_conn_p.peer_t.addr)){  //Check if it's invalid IP
             //LOG(ERROR) << "Invalid Address";
             return -3;
         }
@@ -64,14 +61,14 @@ int create_socket(pwp::peer_connection& peer_conn_p){
         
         tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
         //tcp::socket socket(_io_service);
-        peer_conn_p.socket = std::make_shared<tcp::socket>(_io_service);
+        peer_conn_p.socket = std::make_shared<tcp::socket>(_io_service);    //Allocate the socket
 
         boost::system::error_code error;
 
         LOG(INFO) << "Testing : " << peer_conn_p.peer_t.addr.to_string() << "\t " << std::to_string(peer_conn_p.peer_t.port);
+        
+        //Try connection
         peer_conn_p.socket->connect(*endpoint_iterator);
-
-        peer_conn_p.socket->is_open();
 
         if (error == boost::asio::error::eof){
             LOG(ERROR) << "Connection Closed";
@@ -79,9 +76,6 @@ int create_socket(pwp::peer_connection& peer_conn_p){
         }else if (error){
             throw boost::system::system_error(error); // Some other error.
         }
-
-        //std::cout.write(&response[0], len);
-        
     }catch (std::exception& e){
         LOG(ERROR) << peer_conn_p.peer_t.addr << ' ' << e.what() << std::endl;
         return -2;
@@ -110,14 +104,18 @@ std::string string_to_hex(const std::vector<uint8_t>& input)
 void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshake, const char *info_hash){
     std::vector<uint8_t> response = std::vector<uint8_t>(512);
 
-    pwp::peer_connection peer_conn;
-    peer_conn.peer_t = peer_t;
-    peer_conn.socket = nullptr;
+    pwp::peer_connection peer_conn = {
+        peer_t,             //Peer Data
+        pwp::am_choking,    //Client State
+        pwp::peer_choking,  //Peer State
+        nullptr,            //Socket pointer
+    };
+
 
     int error_code = create_socket(peer_conn);
 
     if(error_code < 0){
-        LOG(ERROR) << peer_t.addr << " Exit thread";
+        LOG(ERROR) << peer_t.addr.to_string() << " Exit thread";
         return;
     }
 
@@ -125,39 +123,35 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
 
     int result = send_handshake(peer_conn, handshake, response);
 
-    //Really necessary?
-
     if(result < 0){
         LOG(ERROR) << "Exit thread ";
-
         return;
     }
 
-    size_t len = result;    //To improve this for readibility    
+    //If there was no error (result >= 0) thet it's value is the length of the received handshake
+    size_t len = result;        
 
     result = verify_handshake(response, len, peer_conn.peer_t, info_hash);
-    //Really necessary?
 
     if(result < 0){
         LOG(ERROR) << "[X] Handshake verification failed!! \t Code : " << result;
         return;
     }
 
-    cout << peer_t.addr << " handshake done succesfully" << endl;
+    cout << peer_t.addr.to_string() << " handshake done succesfully" << endl;
 
-    add_active_peer();
+    add_active_peer();  //The current peer is valid
 
     result = get_bitfield(peer_conn, response);
     
-    //Really necessary?
-
     if(result < 0){
         rm_active_peer();
         return;
     }
+
+    //If there was no error (result >= 0) thet it's value is the length of the received handshake
     len = result;
 
-    LOG(INFO) << "Keep-Alive enabled";
 
     if(pwp_msg::send_msg(peer_conn, pwp_msg::interested_msg) < 0)
         LOG(ERROR) << "Error senging interested_msg";
@@ -165,7 +159,7 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
     if(pwp_msg::send_msg(peer_conn, pwp_msg::unchoke_msg) < 0)
         LOG(ERROR) << "Error sending unchoke mesg";
     
-
+    LOG(INFO) << "Keep-Alive enabled";
     pwp_msg::enable_keep_alive_message(peer_conn);
 
     // request length = 2303
@@ -226,10 +220,10 @@ int get_bitfield(pwp::peer_connection& peerc_t, std::vector<uint8_t> &response){
                     bitfield.push_back(temp[k]);
                 }
             }
-            // cout << bitfield << endl;
+            //cout << bitfield << endl;
         }
     }catch(std::exception& e){
-        cout << "errore " << peerc_t.peer_t.addr << endl; 
+        cout << "errore " << peerc_t.peer_t.addr.to_string() << endl; 
         LOG(ERROR) << e.what() << std::endl;
         return -2;
     }
@@ -374,7 +368,7 @@ void get_peer_id(string *id){
  */
 
 int verify_handshake(const vector<uint8_t> handshake, size_t len, const pwp::peer t_peer, const char *info_hash){
-    int hindex = 0;
+    uint hindex = 0;
 
     string pstr = string("BitTorrent protocol");
     const size_t pstrlen = pstr.length();
@@ -383,30 +377,22 @@ int verify_handshake(const vector<uint8_t> handshake, size_t len, const pwp::pee
 
 
     if((uint8_t)handshake[0] != pstrlen){   //First Raw Byte is the length
-        //LOG(ERROR) << "First Byte should be pstrlen (19), instead is " << std::to_string(handshake[hindex]);
+        LOG(ERROR) << "First Byte should be pstrlen (19), instead is " << std::to_string(handshake[hindex]);
         return -1;
     } 
 
-    /*
-    //This print the handshake
-    cout << endl << "[0]" << to_string(handshake[0]);
-	for (int i = 1; i < 64; i++)
-	{
-		cout << "[" << i << "] " << (char)(handshake[i])<<endl;
-	}
-    */
-
     ++hindex;
 
+    //Check for "BitTorrent protocol"
     for(int i=0;i<(int)pstrlen && hindex<len;++i){
         if(handshake[hindex] != pstr.at(i)){   //Checking pstr
-            cout << handshake[hindex];
-            //LOG(ERROR) << "\"BitTorrent protocol\" string not found";
+            LOG(ERROR) << "\"BitTorrent protocol\" string not found";
             return -2;
         }    
         ++hindex;
     }
 
+    //Check for reserved byte
     for(int i=0; i<8 && hindex<len;++i){
         if(handshake[hindex] != 0){ //Check for unimplemented function
             LOG(WARNING) << "Found unimplemented function on peer's response";
@@ -414,6 +400,7 @@ int verify_handshake(const vector<uint8_t> handshake, size_t len, const pwp::pee
         ++hindex;
     }
 
+    //Check for info_hash
     for(int i=0; i<20 && hindex<len;++i){
         if(handshake[hindex] != (uint8_t)info_hash[i]){   //Info hash raw byte
             LOG(ERROR) << "info_hash does not match";
