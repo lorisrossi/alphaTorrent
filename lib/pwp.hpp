@@ -4,6 +4,7 @@
 #include <iostream>
 #include <boost/asio.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include "torrentparser.hpp"
 #include "peer.h"
 
 #define KEEP_ALIVE_TIME 2
@@ -39,7 +40,7 @@ namespace pwp_msg{
     std::vector<uint8_t> craft_have_msg(int piece_index);
 
     void read_msg_handler(std::vector<uint8_t>& response, pwp::peer_connection& peer_c, const boost::system::error_code& error, size_t bytes_read);
-
+    void sender(pwp::peer_connection peer_conn, Torrent &torrent);
 }
 
 #endif

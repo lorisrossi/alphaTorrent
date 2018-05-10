@@ -26,7 +26,7 @@ typedef struct {
   std::string pieces;
   size_t num_pieces;
   std::vector<TorrentFile> files;
-  boost::dynamic_bitset<unsigned char> bitfield;
+  boost::dynamic_bitset<> bitfield;
   bool is_single = false; // true if single file torrent
 } Torrent;
 

@@ -111,15 +111,12 @@ void check_files(Torrent &torrent) {
 
 // return index of a piece that the peer can give to us
 // return -1 if the peer doesn't have any piece we need
-int compare_bitfields(string peer_bitfield, string own_bitfield) {
-  assert(peer_bitfield.size() == own_bitfield.size());
-  boost::dynamic_bitset<unsigned char> own(own_bitfield), peer(peer_bitfield);
-  boost::dynamic_bitset<unsigned char> needed_pieces = ~own & peer;
+int compare_bitfields(boost::dynamic_bitset<> peer_bitfield, boost::dynamic_bitset<> own_bitfield) {
+  // assert(peer_bitfield.size() == own_bitfield.size());
+  boost::dynamic_bitset<> needed_pieces = ~own_bitfield & peer_bitfield;
   size_t block_index = needed_pieces.find_first();
   if (block_index != boost::dynamic_bitset<>::npos) {
-    // find_first() start from the right, but bitfield has 0-index on the left,
-    // so we need to reverse the value
-    return own_bitfield.size() - 1 - block_index;
+    return block_index;
   }
   else return -1;
 }
@@ -155,10 +152,10 @@ bool check_bitfield_piece(Torrent &torrent, size_t piece_index) {
   return is_complete;
 }
 
-RequestMsg compose_request_msg(string &path, Torrent &torrent, size_t piece_index) {
+RequestMsg create_request(Torrent &torrent, int piece_index) {
   RequestMsg request;
   request.index = piece_index;
-  fstream source(path);
+  fstream source(torrent.name);
   if (source.is_open()) {
     int blocklength = torrent.piece_length;
     // check if last piece
@@ -241,7 +238,7 @@ void save_piece(Torrent &torrent, size_t piece_index)
   string source_path = "real/Raccolta.Ebook.29.11.2017-iCV.rar";
   string dest_path = "Raccolta.Ebook.29.11.2017-iCV.rar.part";
   
-  RequestMsg request = compose_request_msg(dest_path, torrent, piece_index);
+  RequestMsg request = create_request(torrent, piece_index);
   
   if (request.begin != string::npos) {
     char block[request.length];
