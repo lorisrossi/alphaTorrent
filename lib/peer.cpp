@@ -83,7 +83,7 @@ int create_socket(pwp::peer_connection& peer_conn_p){
         //std::cout.write(&response[0], len);
         
     }catch (std::exception& e){
-        LOG(ERROR) << e.what() << std::endl;
+        LOG(ERROR) << peer_conn_p.peer_t.addr << ' ' << e.what() << std::endl;
         return -2;
     }
     return 0;
@@ -117,7 +117,7 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
     int error_code = create_socket(peer_conn);
 
     if(error_code < 0){
-        LOG(ERROR) << "Exit thread ";
+        LOG(ERROR) << peer_t.addr << " Exit thread";
         return;
     }
 
@@ -143,7 +143,7 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
         return;
     }
 
-    cout << endl << endl << "Success Handshaking :-)!!!! " << peer_t.addr << endl << endl;
+    cout << peer_t.addr << " handshake done succesfully" << endl;
 
     add_active_peer();
 
@@ -168,23 +168,34 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
 
     pwp_msg::enable_keep_alive_message(peer_conn);
 
+    // request length = 2303
+    const vector<uint8_t> test= {0,0,0,13,6,0,0,0,0,0,0,0,0,0,0,8,255};
 
-
-    const vector<uint8_t> test= {0,0,0,13,6,0,0,0,0,0,0,0,0,0,0,0,0};
-
-    cout << endl << "Sending request msg" << endl;
-    pwp_msg::send_msg(peer_conn, test);
-
-    try{
-        len = peer_conn.socket->read_some(boost::asio::buffer(response));
-        
-
-        cout << endl << "piece? " << string_to_hex(response) << "   " << peer_t.addr.to_string() << endl;
-
-    }catch(std::exception& e){
-        LOG(ERROR) << e.what() << std::endl;
-        rm_active_peer();
-        return;
+    // read 10 packets
+    for (int i=0; i<10; ++i) {
+        try{
+            len = peer_conn.socket->read_some(boost::asio::buffer(response));
+            uint32_t msg_len = (uint8_t(response[0]) << 24 | uint8_t(response[1]) << 16 | uint8_t(response[2]) << 8 | uint8_t(response[3]));
+            if (i == 0 && response[4] == 0x00) { // choked
+                cout << peer_t.addr << " CHOKED, stop reading packets" << endl;
+                break;                
+            }
+            else if (i == 0 && response[4] == 0x01) { // unchoked
+                cout << peer_t.addr << " UNCHOKED, sending REQUEST msg" << endl;
+                pwp_msg::send_msg(peer_conn, test);
+            }
+            else if (response[4] == 0x07) { // piece
+                uint32_t piece_len = msg_len - 9;
+                cout << peer_t.addr << " PIECE received, length: " << piece_len << endl;
+            }
+            else {
+                cout << peer_t.addr << " [packet " << i+1 << "] unknown " << string_to_hex(response) << endl;
+            }
+        }catch(std::exception& e){
+            LOG(ERROR) << peer_t.addr << ' ' << e.what() << std::endl;
+            rm_active_peer();
+            return;
+        }
     }
 
 }
@@ -200,33 +211,25 @@ int get_bitfield(pwp::peer_connection& peerc_t, std::vector<uint8_t> &response){
     boost::system::error_code error;
     size_t len;
     
-
-    if(peerc_t.socket->available() <= 0){
-        cout << endl << "Exiting " << peerc_t.peer_t.addr << endl;
-        return -1;
-    }
-
     try{
         len = peerc_t.socket->read_some(boost::asio::buffer(response), error);
 
-        //cout << "Bitfield : " << string_to_hex(response) << ' ' << peerc_t.peer_t.addr << endl;
-        cout << "Bitfiled found " << endl;
-        // if (response[4] == 0x05)
-        // {
-        //     uint32_t bit_len = uint8_t(response[0]) << 24 | uint8_t(response[1]) << 16 | uint8_t(response[2]) << 8 | uint8_t(response[3] - 0x01);
-        //     cout << "bitfield, length: " << bit_len << endl;
-        //     boost::dynamic_bitset<> bitfield;
-        //     for (int i = 0; i < bit_len; ++i)
-        //     {
-        //         boost::dynamic_bitset<> temp(8, uint8_t(response[i + 5]));
-        //         for (int k = 7; k >= 0; --k)
-        //         {
-        //             bitfield.push_back(temp[k]);
-        //         }
-        //     }
-        //     cout << bitfield << ' ' << peerc_t.peer_t.addr << endl;
-        // }
+        if (response[4] == 0x05) { // bitfield
+            uint32_t bit_len = (uint8_t(response[0]) << 24 | uint8_t(response[1]) << 16 | uint8_t(response[2]) << 8 | uint8_t(response[3])) - 1;
+            cout << peerc_t.peer_t.addr << " bitfield, length: " << bit_len << endl;
+            boost::dynamic_bitset<> bitfield;
+            for (int i = 0; i < bit_len; ++i)
+            {
+                boost::dynamic_bitset<> temp(8, uint8_t(response[i + 5]));
+                for (int k = 7; k >= 0; --k)
+                {
+                    bitfield.push_back(temp[k]);
+                }
+            }
+            // cout << bitfield << endl;
+        }
     }catch(std::exception& e){
+        cout << "errore " << peerc_t.peer_t.addr << endl; 
         LOG(ERROR) << e.what() << std::endl;
         return -2;
     }
@@ -435,7 +438,7 @@ int verify_handshake(const vector<uint8_t> handshake, size_t len, const pwp::pee
    
     for(int i=0; i<(int)peer_id.length() && hindex<len;++i){
         if(handshake[hindex] != peer_id.at(i)){
-            LOG(ERROR) << "Peer ID does not match";
+            LOG(ERROR) << peer_id << " Peer ID does not match";
             //return -4;
         }
         ++hindex;

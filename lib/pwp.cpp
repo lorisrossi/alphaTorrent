@@ -63,7 +63,6 @@ namespace pwp_msg{
     
 
         //Start the request
-
         try{ 
             const boost::asio::ip::address inv_address = boost::asio::ip::address::from_string("0.0.0.0");  //from_string deprecated function
 
@@ -87,7 +86,6 @@ namespace pwp_msg{
             LOG(INFO) << "Sending message";
             len = peerc_t.socket->send(buffer(msg));
 
-
             if (error == boost::asio::error::eof){
                 LOG(ERROR) << "Connection Closed";
                 return -1;
@@ -96,7 +94,7 @@ namespace pwp_msg{
             }
             
         }catch (std::exception& e){
-            LOG(ERROR) << e.what() << std::endl;
+            LOG(ERROR) << peerc_t.peer_t.addr << e.what() << std::endl;
             return -2;
         }
         return 0;
