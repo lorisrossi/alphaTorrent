@@ -152,13 +152,13 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
 
     // result = get_bitfield(peer_conn, response);
     
-    if(result < 0){
-        rm_active_peer();
-        return;
-    }
+    // if(result < 0){
+    //     rm_active_peer();
+    //     return;
+    // }
 
     //If there was no error (result >= 0) thet it's value is the length of the received handshake
-    len = result;
+    // len = result;
 
 
     if(pwp_msg::send_msg(peer_conn, pwp_msg::interested_msg) < 0)
@@ -186,6 +186,7 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
     while(1){
         try{
             //Receive 5 bytes and parse it
+            cout << peer_conn.peer_t.addr << " reading something\n";
             boost::asio::async_read(*(peer_conn.socket), boost::asio::buffer(response, sizeof(uint8_t)*5), 
                 boost::asio::transfer_exactly(5),
                 boost::bind(pwp_msg::read_msg_handler, boost::ref(response), 

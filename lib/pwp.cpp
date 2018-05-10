@@ -1,6 +1,5 @@
 #include "pwp.hpp"
 #include "peer.h"
-#include "torrentparser.hpp"
 #include "filehandler.hpp"
 
 
@@ -119,17 +118,29 @@ namespace pwp_msg{
         return msg;
     }
 
+    std::vector<uint8_t> make_request_msg(RequestMsg request) {
+        std::vector<uint8_t> msg = {0,0,0,13,6}; // From the protocol
 
+        std::vector<uint8_t> index = from_int_to_bint(request.index);
+        std::vector<uint8_t> begin = from_int_to_bint(request.begin);
+        std::vector<uint8_t> length = from_int_to_bint(request.length);
+
+        msg.insert(msg.end(), index.begin(), index.end());
+        msg.insert(msg.end(), begin.begin(), begin.end());
+        msg.insert(msg.end(), length.begin(), length.end());
+
+        return msg;
+    }
 
 
     void read_msg_handler(std::vector<uint8_t>& response, pwp::peer_connection& peer_c, const boost::system::error_code& error, size_t bytes_read){
         using namespace std;
+        cout << peer_c.peer_t.addr << " hit read_msg_handler\n";
 
-        uint32_t msg_len = (uint8_t(response[0]) << 24 | uint8_t(response[1]) << 16 | uint8_t(response[2]) << 8 | uint8_t(response[3]));
+        uint32_t msg_len = uint8_t(response[0]) << 24 | uint8_t(response[1]) << 16 | uint8_t(response[2]) << 8 | uint8_t(response[3]);
+        uint8_t msg_id = response[4];
 
-        cout << "LOLOLOLOLOLOLO" << endl;
-
-        switch(response[4]){
+        switch(msg_id){
 
             case pwp_msg::chocked:
                 peer_c.pstate.peer_choking = true;
@@ -142,16 +153,16 @@ namespace pwp_msg{
                 break;
 
             case pwp_msg::bitfield: {
-                boost::dynamic_bitset<> temp_bitfield;
+                boost::dynamic_bitset<> new_bitfield;
                 uint32_t bit_len = msg_len - 1;
                 cout << peer_c.peer_t.addr << " bitfield, length: " << bit_len << endl;
                 for (int i = 0; i < bit_len; ++i) {
                     boost::dynamic_bitset<> temp(8, uint8_t(response[i + 5]));
                     for (int k = 7; k >= 0; --k) {
-                        temp_bitfield.push_back(temp[k]);
+                        new_bitfield.push_back(temp[k]);
                     }
                 }
-                peer_c.bitfield = temp_bitfield;
+                peer_c.bitfield = new_bitfield;
                 cout << peer_c.peer_t.addr << " bitfield: " << peer_c.bitfield << endl;
                 }
                 break;
@@ -164,34 +175,23 @@ namespace pwp_msg{
 
                 cout << peer_c.peer_t.addr << endl << string_to_hex(response) << endl;
 
-
                 break;
 
         }
-
-       
     }
 
-
-
-
-
-
-    // void sender(pwp::peer_connection peer_conn, Torrent &torrent) {
-    //     if (!peer_conn.pstate.peer_choking && peer_conn.cstate.am_interested) {
-    //         int piece_index = compare_bitfields(peer, own);
-    //         if (piece_index != -1) {
-    //             RequestMsg request = compose_request_msg(torrent, piece_index);
-    //             vector<uint8_t> msg = make_request_msg(request);
+    void sender(pwp::peer_connection &peer_conn, Torrent &torrent) {
+        if (!peer_conn.pstate.peer_choking && peer_conn.cstate.am_interested) {
+            int piece_index = compare_bitfields(peer_conn.bitfield, torrent.bitfield);
+            if (piece_index != -1) {
+                RequestMsg request = create_request(torrent, piece_index);
+                std::vector<uint8_t> msg = make_request_msg(request);
                 
-    //             send_msg(peer, msg);
-    //         }
-    //         else {
-    //             peer_conn.cstate.am_interested = false;
-    //         }
-
-    //     }
-    // }
-
-
+                send_msg(peer_conn, msg);
+            }
+            else {
+                peer_conn.cstate.am_interested = false;
+            }
+        }
+    }
 }
