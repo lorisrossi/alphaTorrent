@@ -6,6 +6,7 @@
 #include "tracker.h"
 #include "filehandler.hpp"
 #include "peer.h"
+#include "pwp.hpp"  //For is_inv_address
 
 using namespace std;
 
@@ -59,7 +60,7 @@ int main(int argc, char* argv[]) {
 
     remove_invalid_peer(peer_list);
 
-    LOG(INFO) << "Building handshake...";
+    cout << "Building handshake...";
     std::vector<uint8_t> handshake = std::vector<uint8_t>();
     build_handshake(param.info_hash_raw, handshake);
 
@@ -69,8 +70,10 @@ int main(int argc, char* argv[]) {
     vector<pwp::peer>::iterator it = peer_list->begin();
 
     for(;it != peer_list->end(); ++it){
-        cout<< "Starting executing the protocol with " << it->addr.to_string() << ":" << it->port << "... " << endl;
-        t_group.add_thread(new boost::thread( pwp_protocol_manager, *it, handshake, param.info_hash_raw, mytorrent));
+        if(!is_inv_address(it->addr)){
+          cout<< "Starting executing the protocol with " << it->addr.to_string() << ":" << it->port << "... " << endl;
+          t_group.add_thread(new boost::thread( pwp_protocol_manager, *it, handshake, param.info_hash_raw, mytorrent));
+        }
     }
 
     _io_service.run();

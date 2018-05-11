@@ -13,6 +13,8 @@ bool is_inv_address(const boost::asio::ip::address& addr){
 } 
 
 
+
+
 /**
  *  This namespace contains all the function that are related to the messages of the PWP Protocol
  * 
@@ -65,7 +67,13 @@ namespace pwp_msg{
 
         timer.async_wait(boost::bind(send_keep_alive, peerc_t));
 
-        _io_service.run();
+        if(_io_service.stopped()){
+            DLOG(INFO) << "IO-Service stopped, resetting";
+            _io_service.reset();
+            _io_service.run();
+        }else{
+            _io_service.poll();
+        }
     }
 
     
@@ -133,9 +141,12 @@ namespace pwp_msg{
     }
 
 
+
+
     void read_msg_handler(std::vector<uint8_t>& response, pwp::peer_connection& peer_c, const boost::system::error_code& error, size_t bytes_read){
         using namespace std;
-        cout << peer_c.peer_t.addr << " hit read_msg_handler\n";
+        using namespace boost::asio;
+        //cout << peer_c.peer_t.addr << " hit read_msg_handler, bytes read " << bytes_read << "\n";
 
         uint32_t msg_len = uint8_t(response[0]) << 24 | uint8_t(response[1]) << 16 | uint8_t(response[2]) << 8 | uint8_t(response[3]);
         uint8_t msg_id = response[4];
@@ -155,14 +166,26 @@ namespace pwp_msg{
             case pwp_msg::bitfield: {
                 boost::dynamic_bitset<> new_bitfield;
                 uint32_t bit_len = msg_len - 1;
-                cout << peer_c.peer_t.addr << " bitfield, length: " << bit_len << endl;
+                
+                cout << peer_c.peer_t.addr.to_string() << " bitfield, length: " << bit_len << endl;
+
+                vector<uint8_t> vbit = vector<uint8_t>(bit_len);
+
+                try{
+                    size_t read_len = boost::asio::read(*(peer_c.socket), buffer(vbit),transfer_exactly(bit_len));
+                    cout << endl << read_len << " bytes of bitfield readed" << endl;
+                }catch(std::exception& e){
+                    cout << endl << e.what() << endl;
+                    return;
+                }
+
                 for (int i = 0; i < bit_len; ++i) {
-                    boost::dynamic_bitset<> temp(8, uint8_t(response[i + 5]));
+                    boost::dynamic_bitset<> temp(8, uint8_t(vbit[i + 5]));
                     for (int k = 7; k >= 0; --k) {
                         new_bitfield.push_back(temp[k]);
                     }
                 }
-                peer_c.bitfield = new_bitfield;
+                //peer_c.bitfield = new_bitfield;
                 cout << peer_c.peer_t.addr << " bitfield: " << peer_c.bitfield << endl;
                 }
                 break;

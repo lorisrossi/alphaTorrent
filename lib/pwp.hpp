@@ -14,7 +14,6 @@ extern int active_peer;
 extern boost::mutex mtx_peer_num;
 
 
-
 bool is_inv_address(const boost::asio::ip::address& addr);
 
 namespace pwp_msg{

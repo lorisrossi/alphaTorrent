@@ -275,7 +275,7 @@ void save_piece(Torrent &torrent, size_t piece_index)
   if (request.begin != string::npos) {
     char block[request.length];
     get_block_from_request(source_path, torrent, request, block);
-    save_block(block, dest_path, request, torrent);
+    //save_block(block, dest_path, request, torrent);
   }
   
   // if(check_bitfield_piece(torrent, request.index)) {
