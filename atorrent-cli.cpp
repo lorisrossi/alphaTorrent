@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
     }
 
     _io_service.run();
-    boost::this_thread::sleep_for(boost::chrono::seconds(10));  //Sleep for 10 seconds
+    boost::this_thread::sleep_for(boost::chrono::seconds(7));  //Sleep for 10 seconds
 
 
   }while(active_peer < PEER_TREESHOLD);

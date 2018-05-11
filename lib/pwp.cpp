@@ -202,6 +202,22 @@ namespace pwp_msg{
                 break;
 
         }
+
+        boost::asio::async_read(*(peer_c.socket), boost::asio::buffer(response, sizeof(uint8_t)*5), 
+            boost::asio::transfer_exactly(5),
+            boost::bind(&pwp_msg::read_msg_handler, boost::ref(response), 
+                        boost::ref(peer_c), 
+                        boost::asio::placeholders::error,
+                        boost::asio::placeholders::bytes_transferred
+            )
+        );
+
+        if(_io_service.stopped()){
+            DLOG(INFO) << endl << "IO-Service stopped, resetting";
+            _io_service.reset();
+            _io_service.run();
+        }
+
     }
 
     void sender(pwp::peer_connection &peer_conn, Torrent &torrent) {

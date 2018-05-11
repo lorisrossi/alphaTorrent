@@ -113,11 +113,11 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
         false, false
     };
     pwp::peer_connection peer_conn = {
-        peer_t,             //Peer Data
-        client_s ,    //Client State
-        peer_s,  //Peer State
+        peer_t,                     //Peer Data
+        client_s ,                  //Client State
+        peer_s,                     //Peer State
         boost::dynamic_bitset<>(),
-        nullptr,            //Socket pointer
+        nullptr,                    //Socket pointer
     };
 
     int error_code = create_socket(peer_conn);
@@ -167,10 +167,11 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
 
     boost::asio::ip::tcp::socket *sk = (peer_conn.socket.get());
 
-    for (int i=0; i < 10; ++i){
+
+    // read 10 packets
         try{
             //Receive 5 bytes and parse it
-            cout << peer_conn.peer_t.addr << " reading something, byte available : " << peer_conn.socket->available() << "\n";
+            cout << peer_conn.peer_t.addr << " reading something, byte availabe : " << peer_conn.socket->available() << "\n";
             boost::asio::async_read(*(peer_conn.socket), boost::asio::buffer(response, sizeof(uint8_t)*5), 
                 boost::asio::transfer_exactly(5),
                 boost::bind(&pwp_msg::read_msg_handler, boost::ref(response), 
@@ -198,7 +199,7 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
         }
 
 
-    }
+    
 
 }
 
