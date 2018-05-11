@@ -122,6 +122,12 @@ void check_files(Torrent &torrent) {
  * @return int          Index of a needed piece, or -1 if no piece available 
  */
 int compare_bitfields(boost::dynamic_bitset<> peer_bitfield, boost::dynamic_bitset<> own_bitfield) {
+  // peer_bitfield can be longer because of the 0 bits in the last byte
+  if (peer_bitfield.size() > own_bitfield.size()
+    && peer_bitfield.size() - own_bitfield.size() < 8)
+  {
+    peer_bitfield.resize(own_bitfield.size());
+  }
   assert(peer_bitfield.size() == own_bitfield.size());
   boost::dynamic_bitset<> needed_pieces = ~own_bitfield & peer_bitfield;
   size_t block_index = needed_pieces.find_first();
@@ -187,12 +193,15 @@ RequestMsg create_request(Torrent &torrent, int piece_index) {
       blocklength = torrent.files[0].length % torrent.piece_length;
     }
 
-    char piece_str[blocklength];
+    std::vector<char> piece_str(blocklength);
     source.seekg(request.index * torrent.piece_length);
-    source.read(piece_str, blocklength);
-    string str(piece_str, blocklength);
+    source.read(piece_str.data(), blocklength);
+    string str(piece_str.data(), blocklength);
     // we are assuming that the file doesn't have any NULL string...
-    request.begin = str.find("\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 0, 16);
+    size_t find_size = 40000;
+    char null_string[find_size];
+    memset(null_string, '\0', find_size);
+    request.begin = str.find(null_string, 0, find_size);
     if (request.begin != string::npos) {
       request.length = min(blocklength - request.begin, (size_t)MAX_REQUEST_LENGTH);
     }
@@ -239,8 +248,8 @@ void get_block_from_request(string &path, Torrent &torrent, RequestMsg request, 
 void save_block(char* blockdata, size_t index, size_t begin, size_t length, Torrent &torrent) {
   fstream dest(torrent.name + ".part");
   if (dest.is_open()) {
-    cout << "Writing block,    index: " << index << ", begin:" 
-      << begin << ", length: " << length << endl; 
+    // cout << "Writing block,    index: " << index << ", begin:" 
+    //   << begin << ", length: " << length << endl; 
     dest.seekp(index * torrent.piece_length + begin);
     dest.write(blockdata, length);
   }
@@ -264,23 +273,3 @@ void check_file_is_complete(Torrent &torrent) {
   }
 }
 
-void save_piece(Torrent &torrent, size_t piece_index)
-{
-  // save piece in the file.part
-
-  // compare_bitfields("101110", "000110");
-  string source_path = "real/Raccolta.Ebook.29.11.2017-iCV.rar";
-  string dest_path = "Raccolta.Ebook.29.11.2017-iCV.rar.part";
-  
-  RequestMsg request = create_request(torrent, piece_index);
-  
-  if (request.begin != string::npos) {
-    char block[request.length];
-    get_block_from_request(source_path, torrent, request, block);
-    //save_block(block, dest_path, request, torrent);
-  }
-  
-  // if(check_bitfield_piece(torrent, request.index)) {
-  //   is_(torrent);
-  // }
-}

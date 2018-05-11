@@ -157,10 +157,10 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
     pwp_msg::enable_keep_alive_message(peer_conn);
 
     try{
-        // Receive 5 bytes and parse them
+        // Receive 4 bytes
         cout << peer_conn.peer_t.addr << " reading something, byte available : " << peer_conn.socket->available() << "\n";
-        boost::asio::async_read(*(peer_conn.socket), boost::asio::buffer(response, sizeof(uint8_t)*5), 
-            boost::asio::transfer_exactly(5),
+        boost::asio::async_read(*(peer_conn.socket), boost::asio::buffer(response, sizeof(uint8_t)*4), 
+            boost::asio::transfer_exactly(4),
             boost::bind(&pwp_msg::read_msg_handler, boost::ref(response), 
                         boost::ref(peer_conn), boost::ref(torrent),
                         boost::asio::placeholders::error,
@@ -168,16 +168,16 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
             )
         );
 
-        // Try to send
-        // pwp_msg::sender(peer_conn, torrent);
-
         if(_io_service.stopped()){
             DLOG(INFO) << endl << "IO-Service stopped, resetting";
             _io_service.reset();
             _io_service.run();
         }
 
-        boost::this_thread::sleep_for(boost::chrono::milliseconds(100));  //Sleep for 10 seconds
+        while(1) {
+            pwp_msg::sender(peer_conn, torrent);
+            boost::this_thread::sleep_for(boost::chrono::milliseconds(2000));  // Sleep for 2 seconds
+        }
 
     }catch(std::exception& e){
         LOG(ERROR) << peer_t.addr << ' ' << e.what() << std::endl;
@@ -408,16 +408,14 @@ uint32_t make_int(pwp::bInt bint){
 
 std::vector<uint8_t> from_int_to_bint(int integer){
 
-    uint32_t i = integer;
-
     uint8_t out[4];
     *(uint32_t*)&out = integer;
     
     std::vector<uint8_t> ret(4);
-    ret[0] = out[0];
-    ret[1] = out[1];
-    ret[2] = out[2];
-    ret[3] = out[3];
+    ret[0] = out[3];
+    ret[1] = out[2];
+    ret[2] = out[1];
+    ret[3] = out[0];
     return ret;
 
 }
