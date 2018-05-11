@@ -44,13 +44,13 @@ namespace pwp{
     
 
     typedef struct{
-        bool am_choking = true;
-        bool am_interested = true;
+        bool am_choking;
+        bool am_interested;
     }client_state ;
 
     typedef struct {
-        bool peer_choking = true;  
-        bool peer_interested = false;
+        bool peer_choking;  
+        bool peer_interested;
     }peer_state;
 
     struct peer{
@@ -106,6 +106,7 @@ int verify_handshake(const std::vector<uint8_t> handshake, size_t len,  const pw
 
 void remove_invalid_peer(pwp::PeerList peer_list);
 void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshake, const char *info_hash, Torrent &torrent);
+int get_bitfield(pwp::peer_connection& peerc_t, std::vector<uint8_t> &response);
 uint32_t make_int(pwp::bInt bint);
 std::vector<uint8_t> from_int_to_bint(int integer);
 

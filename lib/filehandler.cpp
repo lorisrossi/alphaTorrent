@@ -237,10 +237,8 @@ void get_block_from_request(string &path, Torrent &torrent, RequestMsg request, 
  * @param torrent    Torrent struct
  */
 void save_block(char* blockdata, size_t index, size_t begin, size_t length, Torrent &torrent) {
-  fstream dest(torrent.name + ".part");
+  fstream dest(torrent.name);
   if (dest.is_open()) {
-    cout << "Writing block,    index: " << index << ", begin:" 
-      << begin << ", length: " << length << endl; 
     dest.seekp(index * torrent.piece_length + begin);
     dest.write(blockdata, length);
   }

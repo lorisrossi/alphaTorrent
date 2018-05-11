@@ -38,8 +38,8 @@ namespace pwp_msg{
 
     std::vector<uint8_t> craft_have_msg(int piece_index);
 
-    void read_msg_handler(std::vector<uint8_t>& response, pwp::peer_connection& peer_c, Torrent &torrent, const boost::system::error_code& error, size_t bytes_read);
-    void sender(pwp::peer_connection &peer_conn, Torrent &torrent);
+    void read_msg_handler(std::vector<uint8_t>& response, pwp::peer_connection& peer_c, const boost::system::error_code& error, size_t bytes_read);
+    void sender(pwp::peer_connection peer_conn, Torrent &torrent);
 }
 
 #endif
