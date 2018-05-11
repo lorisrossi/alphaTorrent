@@ -150,16 +150,8 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
 
     add_active_peer();  //The current peer is valid
 
-    // result = get_bitfield(peer_conn, response);
-    
-    // if(result < 0){
-    //     rm_active_peer();
-    //     return;
-    // }
-
     //If there was no error (result >= 0) thet it's value is the length of the received handshake
     // len = result;
-
 
     if(pwp_msg::send_msg(peer_conn, pwp_msg::interested_msg) < 0)
         LOG(ERROR) << "Error senging interested_msg";
@@ -175,17 +167,10 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
 
     boost::asio::ip::tcp::socket *sk = (peer_conn.socket.get());
 
-    auto read_msg =     boost::bind(&pwp_msg::read_msg_handler, boost::ref(response), 
-                            boost::ref(peer_conn), 
-                            boost::asio::placeholders::error,
-                            boost::asio::placeholders::bytes_transferred
-                        );
-
-    // read 10 packets
-    while(1){
+    for (int i=0; i < 10; ++i){
         try{
             //Receive 5 bytes and parse it
-            cout << peer_conn.peer_t.addr << " reading something, byte availabe : " << peer_conn.socket->available() << "\n";
+            cout << peer_conn.peer_t.addr << " reading something, byte available : " << peer_conn.socket->available() << "\n";
             boost::asio::async_read(*(peer_conn.socket), boost::asio::buffer(response, sizeof(uint8_t)*5), 
                 boost::asio::transfer_exactly(5),
                 boost::bind(&pwp_msg::read_msg_handler, boost::ref(response), 
@@ -197,7 +182,6 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
 
             // Try to send
             // pwp_msg::sender(peer_conn, torrent);
-
 
             if(_io_service.stopped()){
                 DLOG(INFO) << endl << "IO-Service stopped, resetting";
@@ -217,46 +201,6 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
     }
 
 }
-
-
-
-int get_bitfield(pwp::peer_connection& peerc_t, std::vector<uint8_t> &response){
-
-    if(!peerc_t.socket->is_open()){
-        LOG(ERROR) << "get-bitfield : Socket is closed!!!";
-        return -1;
-    }
-    boost::system::error_code error;
-    size_t len;
-    
-    try{
-        len = peerc_t.socket->read_some(boost::asio::buffer(response), error);
-
-        if (response[4] == 0x05) { // bitfield
-            uint32_t bit_len = (uint8_t(response[0]) << 24 | uint8_t(response[1]) << 16 | uint8_t(response[2]) << 8 | uint8_t(response[3])) - 1;
-            cout << peerc_t.peer_t.addr << " bitfield, length: " << bit_len << endl;
-            boost::dynamic_bitset<> bitfield;
-            for (int i = 0; i < bit_len; ++i)
-            {
-                boost::dynamic_bitset<> temp(8, uint8_t(response[i + 5]));
-                for (int k = 7; k >= 0; --k)
-                {
-                    bitfield.push_back(temp[k]);
-                }
-            }
-            //cout << bitfield << endl;
-        }
-    }catch(std::exception& e){
-        cout << "errore " << peerc_t.peer_t.addr.to_string() << endl; 
-        LOG(ERROR) << e.what() << std::endl;
-        return -2;
-    }
-
-    return len;
-}
-
-
-
 
 
 /**

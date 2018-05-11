@@ -169,24 +169,25 @@ namespace pwp_msg{
                 
                 cout << peer_c.peer_t.addr.to_string() << " bitfield, length: " << bit_len << endl;
 
-                vector<uint8_t> vbit = vector<uint8_t>(bit_len);
+                vector<uint8_t> bit_vector = vector<uint8_t>(bit_len);
 
                 try{
-                    size_t read_len = boost::asio::read(*(peer_c.socket), buffer(vbit),transfer_exactly(bit_len));
+                    size_t read_len = boost::asio::read(*(peer_c.socket), buffer(bit_vector),transfer_exactly(bit_len));
                     cout << endl << read_len << " bytes of bitfield readed" << endl;
                 }catch(std::exception& e){
                     cout << endl << e.what() << endl;
                     return;
                 }
 
-                for (int i = 0; i < bit_len; ++i) {
-                    boost::dynamic_bitset<> temp(8, uint8_t(vbit[i + 5]));
+                // loop each byte extracted
+                for (uint32_t i = 0; i < bit_len; ++i) {
+                    boost::dynamic_bitset<> temp(8, uint8_t(bit_vector[i]));
+                    // insert each bit into the bitfield
                     for (int k = 7; k >= 0; --k) {
                         new_bitfield.push_back(temp[k]);
                     }
                 }
-                //peer_c.bitfield = new_bitfield;
-                cout << peer_c.peer_t.addr << " bitfield: " << peer_c.bitfield << endl;
+                peer_c.bitfield = new_bitfield;
                 }
                 break;
 
