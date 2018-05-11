@@ -41,6 +41,8 @@ int main(int argc, char* argv[]) {
     return success;
   }
 
+  // check_files(mytorrent);
+
   //Populate the torrent parameter
   tracker::TParameter param = set_parameter(torrent_str, mytorrent);
 

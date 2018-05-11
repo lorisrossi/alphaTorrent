@@ -106,16 +106,10 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
         
     std::vector<uint8_t> response = std::vector<uint8_t>(512);
 
-    pwp::peer_state peer_s = {
-        false, false
-    };
-    pwp::client_state client_s = {
-        false, false
-    };
     pwp::peer_connection peer_conn = {
-        peer_t,                     //Peer Data
-        client_s ,                  //Client State
-        peer_s,                     //Peer State
+        peer_t,             //Peer Data
+        pwp::client_state(),//Client State
+        pwp::peer_state(),  //Peer State
         boost::dynamic_bitset<>(),
         nullptr,                    //Socket pointer
     };
@@ -162,44 +156,34 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
     LOG(INFO) << "Keep-Alive enabled";
     pwp_msg::enable_keep_alive_message(peer_conn);
 
-    // request length = 2303
-    const vector<uint8_t> test= {0,0,0,13,6,0,0,0,0,0,0,0,0,0,0,8,255};
+    try{
+        // Receive 5 bytes and parse them
+        cout << peer_conn.peer_t.addr << " reading something, byte available : " << peer_conn.socket->available() << "\n";
+        boost::asio::async_read(*(peer_conn.socket), boost::asio::buffer(response, sizeof(uint8_t)*5), 
+            boost::asio::transfer_exactly(5),
+            boost::bind(&pwp_msg::read_msg_handler, boost::ref(response), 
+                        boost::ref(peer_conn), boost::ref(torrent),
+                        boost::asio::placeholders::error,
+                        boost::asio::placeholders::bytes_transferred
+            )
+        );
 
-    boost::asio::ip::tcp::socket *sk = (peer_conn.socket.get());
+        // Try to send
+        // pwp_msg::sender(peer_conn, torrent);
 
-
-    // read 10 packets
-        try{
-            //Receive 5 bytes and parse it
-            cout << peer_conn.peer_t.addr << " reading something, byte availabe : " << peer_conn.socket->available() << "\n";
-            boost::asio::async_read(*(peer_conn.socket), boost::asio::buffer(response, sizeof(uint8_t)*5), 
-                boost::asio::transfer_exactly(5),
-                boost::bind(&pwp_msg::read_msg_handler, boost::ref(response), 
-                            boost::ref(peer_conn), 
-                            boost::asio::placeholders::error,
-                            boost::asio::placeholders::bytes_transferred
-                )
-            );
-
-            // Try to send
-            // pwp_msg::sender(peer_conn, torrent);
-
-            if(_io_service.stopped()){
-                DLOG(INFO) << endl << "IO-Service stopped, resetting";
-                _io_service.reset();
-                _io_service.run();
-            }
-
-            boost::this_thread::sleep_for(boost::chrono::milliseconds(100));  //Sleep for 10 seconds
-
-        }catch(std::exception& e){
-            LOG(ERROR) << peer_t.addr << ' ' << e.what() << std::endl;
-            rm_active_peer();
-            return;
+        if(_io_service.stopped()){
+            DLOG(INFO) << endl << "IO-Service stopped, resetting";
+            _io_service.reset();
+            _io_service.run();
         }
 
+        boost::this_thread::sleep_for(boost::chrono::milliseconds(100));  //Sleep for 10 seconds
 
-    
+    }catch(std::exception& e){
+        LOG(ERROR) << peer_t.addr << ' ' << e.what() << std::endl;
+        rm_active_peer();
+        return;
+    }
 
 }
 
