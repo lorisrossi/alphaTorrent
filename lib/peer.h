@@ -83,18 +83,21 @@ namespace pwp{
 
 
 
-    struct bInt{
-        uint8_t i1;
-        uint8_t i2;
-        uint8_t i3;
-        uint8_t i4;
-    };
+
 
 
     typedef std::shared_ptr<std::vector<pwp::peer>> PeerList;
     typedef std::shared_ptr<std::vector<pwp::peer_connection>> PeerConnected;
     typedef struct bInt bInt;
 }
+
+
+struct bInt{
+    uint8_t i1;
+    uint8_t i2;
+    uint8_t i3;
+    uint8_t i4;
+};
 
 
 
@@ -108,7 +111,9 @@ int verify_handshake(const std::vector<uint8_t> handshake, size_t len,  const pw
 void remove_invalid_peer(pwp::PeerList peer_list);
 void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshake, const char *info_hash, Torrent &torrent);
 uint32_t make_int(pwp::bInt bint);
-std::vector<uint8_t> from_int_to_bint(int integer);
+uint32_t make_int(std::vector<uint8_t> v);
+std::vector<uint8_t> from_int_to_bint(uint integer);
+std::vector<uint8_t> from_int64_to_bint(uint64_t integer);
 
 std::string string_to_hex(const std::vector<uint8_t>& input);
 

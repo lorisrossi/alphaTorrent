@@ -125,9 +125,9 @@ namespace pwp_msg{
     std::vector<uint8_t> make_request_msg(RequestMsg request) {
         std::vector<uint8_t> msg = {0,0,0,13,6}; // From the protocol
 
-        std::vector<uint8_t> index = from_int_to_bint(request.index);
-        std::vector<uint8_t> begin = from_int_to_bint(request.begin);
-        std::vector<uint8_t> length = from_int_to_bint(request.length);
+        std::vector<uint8_t> index = from_int_to_bint((uint)request.index);
+        std::vector<uint8_t> begin = from_int_to_bint((uint)request.begin);
+        std::vector<uint8_t> length = from_int_to_bint((uint)request.length);
 
         msg.insert(msg.end(), index.begin(), index.end());
         msg.insert(msg.end(), begin.begin(), begin.end());

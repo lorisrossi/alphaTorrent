@@ -7,9 +7,6 @@
 
 #include "peer.h"
 
-
-
-
 namespace tracker{
 
     using namespace std;
@@ -58,7 +55,7 @@ namespace tracker{
             if(t_udp::is_udp_tracker(*it))
                 t_group.add_thread(new boost::thread(&t_udp::udp_manager, *it, *param));
             else
-                t_group.add_thread(new boost::thread(process_tracker_request, *it, param, peer_list));
+                ;//t_group.add_thread(new boost::thread(process_tracker_request, *it, param, peer_list));
         }
 
 

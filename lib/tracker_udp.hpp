@@ -99,6 +99,9 @@ namespace t_udp{
     bool is_udp_tracker(const std::string& tracker_url);
     void get_tracker_domain(std::string tracker_url, std::string& udp_tracker, uint& port);
     void udp_manager(const std::string tracker_url, tracker::TParameter param);
+    void verify_connect_resp(std::vector<uint8_t>& resp, uint32_t& trans_id, uint64_t& conn_id);
+    void get_announce_req(std::vector<uint8_t>& req, const tracker::TParameter& param, uint64_t conn_id);
+
 }
 
 #endif

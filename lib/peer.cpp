@@ -396,7 +396,7 @@ int verify_handshake(const vector<uint8_t> handshake, size_t len, const pwp::pee
 
 
 
-uint32_t make_int(pwp::bInt bint){
+uint32_t make_int(bInt bint){
     uint32_t dataBoth = 0x0000;
 
     dataBoth = bint.i1;
@@ -413,20 +413,54 @@ uint32_t make_int(pwp::bInt bint){
 
 
 
-std::vector<uint8_t> from_int_to_bint(int integer){
+uint32_t make_int(std::vector<uint8_t> v){
+    uint32_t dataBoth = 0x0000;
+
+    assert(v.size() == 4);
+
+    dataBoth = v[0];
+    dataBoth = dataBoth << 8;
+    dataBoth |= v[1];
+    dataBoth = dataBoth << 8;
+    dataBoth |= v[2];       
+    dataBoth = dataBoth << 8;
+    dataBoth |= v[3];  
+
+    return dataBoth;
+}
+
+
+std::vector<uint8_t> from_int_to_bint(uint integer){
 
     uint8_t out[4];
     *(uint32_t*)&out = integer;
     
     std::vector<uint8_t> ret(4);
-    ret[0] = out[3];
-    ret[1] = out[2];
-    ret[2] = out[1];
-    ret[3] = out[0];
+    ret[0] = out[0];
+    ret[1] = out[1];
+    ret[2] = out[2];
+    ret[3] = out[3];
     return ret;
 
 }
 
+std::vector<uint8_t> from_int64_to_bint(uint64_t integer){
+
+    uint8_t out[8];
+    *(uint64_t*)&out = integer;
+    
+    std::vector<uint8_t> ret(8);
+    ret[0] = out[0];
+    ret[1] = out[1];
+    ret[2] = out[2];
+    ret[3] = out[3];
+    ret[4] = out[4];
+    ret[5] = out[5];
+    ret[6] = out[6];
+    ret[7] = out[7];
+    return ret;
+
+}
 
 
 inline void add_active_peer(){
