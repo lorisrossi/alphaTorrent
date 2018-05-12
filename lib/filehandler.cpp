@@ -249,14 +249,14 @@ void get_block_from_request(string &path, Torrent &torrent, RequestMsg request, 
  * @param torrent    Torrent struct
  */
 void save_block(char* blockdata, size_t index, size_t begin, size_t length, Torrent &torrent) {
-  fstream dest(torrent.name + ".part");
-  if (dest.is_open()) {
-    // cout << "Writing block,    index: " << index << ", begin:" 
-    //   << begin << ", length: " << length << endl; 
-    dest.seekp(index * torrent.piece_length + begin);
-    dest.write(blockdata, length);
+  if (index < torrent.bitfield.size() && !torrent.bitfield.test(index)) {
+    fstream dest(torrent.name + ".part");
+    if (dest.is_open()) {
+      dest.seekp(index * torrent.piece_length + begin);
+      dest.write(blockdata, length);
+    }
+    dest.close();
   }
-  dest.close();
 }
 
 /**
@@ -267,10 +267,8 @@ void save_block(char* blockdata, size_t index, size_t begin, size_t length, Torr
  * @param torrent  Torrent struct
  */
 void check_file_is_complete(Torrent &torrent) {
-  // If the bitfield is all set, ~bitfield is all 0s,
-  // and find_first() doesn't find any set bit
-  size_t found = (~torrent.bitfield).find_first();
-  if (found == string::npos) {
+  bool is_complete = torrent.bitfield.all();
+  if (is_complete) {
     cout << torrent.name << " completed!" << endl;
     boost::filesystem::rename(torrent.name + ".part", torrent.name);
   }

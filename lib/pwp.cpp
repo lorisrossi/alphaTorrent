@@ -13,16 +13,11 @@ bool is_inv_address(const boost::asio::ip::address& addr){
 } 
 
 
-
-
-
 /**
  *  This namespace contains all the function that are related to the messages of the PWP Protocol
  * 
  */
-
 namespace pwp_msg{
-
 
     void send_keep_alive(const pwp::peer_connection& peerc_t){
         using namespace boost::asio;
@@ -47,7 +42,7 @@ namespace pwp_msg{
 
             keep_alive_msg.fill(0);
 
-            std::cout << std::endl << "Sending keep-alive";
+            std::cout << "Sending keep-alive" << std::endl;
             len = peerc_t.socket->send(buffer(keep_alive_msg));
         
             if (error == boost::asio::error::eof){
@@ -164,7 +159,7 @@ namespace pwp_msg{
         switch(msg_id){
 
             case 255:
-                cout << peer_c.peer_t.addr << " KEEP ALIVE received" << endl;
+                // cout << peer_c.peer_t.addr << " KEEP ALIVE received" << endl;
                 break;
 
             case pwp_msg::chocked:
@@ -203,13 +198,16 @@ namespace pwp_msg{
             
             case pwp_msg::bitfield: {
                 uint32_t bit_len = msg_len - 1;
-                uint32_t real_len = torrent.num_pieces/8;
+                uint32_t real_len = torrent.num_pieces/8 + 1;
 
-                if(real_len < bit_len)
-                    bit_len = real_len;
+                if (bit_len > real_len) {
+                    cout << peer_c.peer_t.addr << " BITFIELD TOO LONG: " << bit_len << endl;
+                    dead_peer = true;
+                    return;
+                    break;
+                }
 
                 vector<uint8_t> *bit_vector = new vector<uint8_t>(bit_len);
-
 
                 cout << peer_c.peer_t.addr << " BITFIELD, length: " << bit_len << endl;
 
@@ -268,7 +266,7 @@ namespace pwp_msg{
                     // Get blockdata
                     piece_len = msg_len - 9;
                     response.resize(piece_len);
-                    peer_c.socket->receive(boost::asio::buffer(response));
+                    peer_c.socket->receive(boost::asio::buffer(response), sizeof(uint8_t)*piece_len);
                 }catch(std::exception& e){
                     LOG(ERROR) << peer_c.peer_t.addr << ' ' << e.what() << std::endl;
                     dead_peer = true;
