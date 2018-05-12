@@ -31,19 +31,15 @@ namespace pwp_msg{
         port = 0x09
     };
 
-
-
     const std::vector<uint8_t> choke_msg = {0,0,0,1,0};
     const std::vector<uint8_t> unchoke_msg = {0,0,0,1,1};
     const std::vector<uint8_t> interested_msg = {0,0,0,1,2};
     const std::vector<uint8_t> non_interested_msg = {0,0,0,1,3};
 
-    //void send_keep_alive(pwp::peer_connection peerc_t);
     void enable_keep_alive_message(pwp::peer_connection& peerc_t);
     int send_msg(pwp::peer_connection& peerc_t, std::vector<uint8_t> msg);
 
-    std::vector<uint8_t> craft_have_msg(int piece_index);
-
+    int get_bitfield(pwp::peer_connection &peer_c, Torrent &torrent);
     void read_msg_handler(std::vector<uint8_t>& response, pwp::peer_connection& peer_c, Torrent &torrent, bool& dead_peer, const boost::system::error_code& error, size_t bytes_read);
     void sender(pwp::peer_connection &peer_conn, Torrent &torrent);
 }
