@@ -146,13 +146,19 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
 
 
     if(pwp_msg::send_msg(peer_conn, pwp_msg::interested_msg) < 0)
-        LOG(ERROR) << "Error senging interested_msg";
+        LOG(ERROR) << "Error sending interested_msg";
 
     if(pwp_msg::send_msg(peer_conn, pwp_msg::unchoke_msg) < 0)
-        LOG(ERROR) << "Error sending unchoke mesg";
+        LOG(ERROR) << "Error sending unchoke msg";
     
     LOG(INFO) << "Keep-Alive enabled";
     pwp_msg::enable_keep_alive_message(peer_conn);
+
+    result = pwp_msg::get_bitfield(peer_conn, torrent);
+    if(result < 0){
+        LOG(ERROR) << "Bitfield error, exit\n";
+        return;
+    }
 
     try{
         // Receive 4 bytes
