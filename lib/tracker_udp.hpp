@@ -8,6 +8,11 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+#include <iostream>
+#include <boost/array.hpp>
+#include <boost/asio.hpp>
+
+
 namespace t_udp{
 
     typedef struct{ 
@@ -89,6 +94,11 @@ namespace t_udp{
         int16_t port;
     }announce_response;
 
+
+
+    bool is_udp_tracker(const std::string& tracker_url);
+    void get_tracker_domain(std::string tracker_url, std::string& udp_tracker, uint& port);
+    void udp_manager(const std::string tracker_url, tracker::TParameter param);
 }
 
 #endif

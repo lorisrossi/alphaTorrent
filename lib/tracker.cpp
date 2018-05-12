@@ -1,5 +1,5 @@
 #include "tracker.h"
-
+#include "tracker_udp.hpp"
 
 
 //#include <algorithm>    //Lower String
@@ -39,6 +39,7 @@ namespace tracker{
         //-------------------------------------
 
 
+
         if(urlencode_paramenter(param) < 0){
             LOG(FATAL) << "Cannot encode parameter correctly";
             return -1;
@@ -54,7 +55,10 @@ namespace tracker{
 
         for(; it != tracker_list.end(); ++it){
             LOG(INFO) << "Contacting tracker : " << *it;
-            t_group.add_thread(new boost::thread(process_tracker_request, *it, param, peer_list));
+            if(t_udp::is_udp_tracker(*it))
+                t_group.add_thread(new boost::thread(&t_udp::udp_manager, *it, *param));
+            else
+                t_group.add_thread(new boost::thread(process_tracker_request, *it, param, peer_list));
         }
 
 
@@ -246,7 +250,7 @@ namespace tracker{
             return NULL;
 
 
-        struct TParameter param = t_param;
+        TParameter param = t_param;
 
         shared_ptr<string> url_req(new string(""));
 

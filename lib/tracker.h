@@ -39,7 +39,7 @@ namespace tracker{
 
     //Struct that contains all tracker param
 
-    struct TParameter{
+    typedef struct {
         string info_hash;      //Strings for urlencode
         string peer_id;        //parameters
 
@@ -51,7 +51,7 @@ namespace tracker{
         uint16_t numwant;       //Number of peer requested
         string key;             //Key used in the request
         char* info_hash_raw;    //Raw Bytes
-    };
+    }TParameter;
 
 
     enum event_type{ 

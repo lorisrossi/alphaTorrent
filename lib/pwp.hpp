@@ -7,7 +7,7 @@
 #include "torrentparser.hpp"
 #include "peer.h"
 
-#define KEEP_ALIVE_TIME 5
+#define KEEP_ALIVE_TIME 75
 
 extern boost::asio::io_service _io_service;  
 extern int active_peer;
@@ -44,7 +44,7 @@ namespace pwp_msg{
 
     std::vector<uint8_t> craft_have_msg(int piece_index);
 
-    void read_msg_handler(std::vector<uint8_t>& response, pwp::peer_connection& peer_c, Torrent &torrent, const boost::system::error_code& error, size_t bytes_read);
+    void read_msg_handler(std::vector<uint8_t>& response, pwp::peer_connection& peer_c, Torrent &torrent, bool& dead_peer, const boost::system::error_code& error, size_t bytes_read);
     void sender(pwp::peer_connection &peer_conn, Torrent &torrent);
 }
 

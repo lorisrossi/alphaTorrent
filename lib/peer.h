@@ -78,6 +78,7 @@ namespace pwp{
         peer_state pstate;
         boost::dynamic_bitset<> bitfield;
         std::shared_ptr<boost::asio::ip::tcp::socket> socket;
+        //boost::mutex bitfield_mutex;
     };
 
 

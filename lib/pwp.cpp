@@ -15,6 +15,7 @@ bool is_inv_address(const boost::asio::ip::address& addr){
 
 
 
+
 /**
  *  This namespace contains all the function that are related to the messages of the PWP Protocol
  * 
@@ -140,14 +141,20 @@ namespace pwp_msg{
         return msg;
     }
 
-    void read_msg_handler(std::vector<uint8_t>& response, pwp::peer_connection& peer_c, Torrent &torrent, const boost::system::error_code& error, size_t bytes_read){
+    void read_msg_handler(std::vector<uint8_t>& response, pwp::peer_connection& peer_c, Torrent &torrent, bool& dead_peer, const boost::system::error_code& error, size_t bytes_read){
         using namespace std;
         using namespace boost::asio;
 
         uint32_t msg_len = uint8_t(response[0]) << 24 | uint8_t(response[1]) << 16 | uint8_t(response[2]) << 8 | uint8_t(response[3]);
         uint8_t msg_id;
         if (msg_len > 0) {
-            peer_c.socket->receive(boost::asio::buffer(response, sizeof(uint8_t) * 1));
+            try{
+                peer_c.socket->receive(boost::asio::buffer(response, sizeof(uint8_t) * 1));
+            }catch(std::exception& e){
+                cout << endl << e.what() << endl;
+                dead_peer = true;
+                return;
+            }
             msg_id = response[0];
         }
         else {
@@ -181,7 +188,13 @@ namespace pwp_msg{
                 break;
             
             case pwp_msg::have: {
-                peer_c.socket->receive(boost::asio::buffer(response, sizeof(uint8_t) * 4));
+                try{
+                    peer_c.socket->receive(boost::asio::buffer(response, sizeof(uint8_t) * 4));
+                }catch(std::exception& e){
+                    cout << endl << e.what() << endl;
+                    dead_peer = true;
+                    return;
+                }
                 uint32_t piece = uint8_t(response[0]) << 24 | uint8_t(response[1]) << 16 | uint8_t(response[2]) << 8 | uint8_t(response[3]);
                 
                 cout << peer_c.peer_t.addr << " HAVE piece n°" << piece << endl;
@@ -190,52 +203,77 @@ namespace pwp_msg{
             
             case pwp_msg::bitfield: {
                 uint32_t bit_len = msg_len - 1;
-                vector<uint8_t> bit_vector = vector<uint8_t>(bit_len);
-                
+                uint32_t real_len = torrent.num_pieces/8;
+
+                if(real_len < bit_len)
+                    bit_len = real_len;
+
+                vector<uint8_t> *bit_vector = new vector<uint8_t>(bit_len);
+
+
                 cout << peer_c.peer_t.addr << " BITFIELD, length: " << bit_len << endl;
 
                 try{
-                    size_t read_len = boost::asio::read(*(peer_c.socket), buffer(bit_vector),transfer_exactly(bit_len));
+                    size_t read_len = boost::asio::read(*(peer_c.socket), buffer(*bit_vector),transfer_exactly(bit_len));
                 }catch(std::exception& e){
                     cout << endl << e.what() << endl;
+                    dead_peer = true;
                     return;
                 }
 
-                boost::dynamic_bitset<> new_bitfield;
+                boost::dynamic_bitset<> *new_bitfield = new boost::dynamic_bitset<>();
 
                 // loop each byte extracted
                 for (uint32_t i = 0; i < bit_len; ++i) {
-                    boost::dynamic_bitset<> temp(8, uint8_t(bit_vector[i]));
+                    boost::dynamic_bitset<> temp(8, uint8_t(bit_vector->at(i)));
                     // insert each bit into the bitfield
                     for (int k = 7; k >= 0; --k) {
-                        new_bitfield.push_back(temp[k]);
+                        new_bitfield->push_back(temp[k]);
                     }
                 }
 
-                peer_c.bitfield = new_bitfield;
+                peer_c.bitfield = *new_bitfield;
+
+                delete bit_vector;
+                delete new_bitfield;   //Deallocate memory
                 break;
             }
 
             case pwp_msg::request:
                 // seeding not supported, only clean the buffer
-                peer_c.socket->receive(boost::asio::buffer(response, sizeof(uint8_t) * 12));
+                try{
+                    peer_c.socket->receive(boost::asio::buffer(response, sizeof(uint8_t) * 12));
+                }catch(std::exception& e){
+                    cout << endl << e.what() << endl;
+                    dead_peer = true;
+                    return;
+                }
                 cout << peer_c.peer_t.addr << " REQUEST received" << endl;
                 break;
 
             case pwp_msg::piece: {
+                uint32_t index;
+                uint32_t begin;
+                int32_t piece_len;
+
+                try{
                 // Get index
-                peer_c.socket->receive(boost::asio::buffer(response, sizeof(uint8_t) * 4));
-                uint32_t index = uint8_t(response[0]) << 24 | uint8_t(response[1]) << 16 | uint8_t(response[2]) << 8 | uint8_t(response[3]);
+                    peer_c.socket->receive(boost::asio::buffer(response, sizeof(uint8_t) * 4));
+                    index = uint8_t(response[0]) << 24 | uint8_t(response[1]) << 16 | uint8_t(response[2]) << 8 | uint8_t(response[3]);
 
-                // Get begin
-                peer_c.socket->receive(boost::asio::buffer(response, sizeof(uint8_t) * 4));
-                uint32_t begin = uint8_t(response[0]) << 24 | uint8_t(response[1]) << 16 | uint8_t(response[2]) << 8 | uint8_t(response[3]);
+                    // Get begin
+                    peer_c.socket->receive(boost::asio::buffer(response, sizeof(uint8_t) * 4));
+                    begin = uint8_t(response[0]) << 24 | uint8_t(response[1]) << 16 | uint8_t(response[2]) << 8 | uint8_t(response[3]);
 
-                // Get blockdata
-                uint32_t piece_len = msg_len - 9;
-                response.resize(piece_len);
-                peer_c.socket->receive(boost::asio::buffer(response,sizeof(uint8_t)*piece_len));
-
+                    // Get blockdata
+                    piece_len = msg_len - 9;
+                    response.resize(piece_len);
+                    peer_c.socket->receive(boost::asio::buffer(response));
+                }catch(std::exception& e){
+                    LOG(ERROR) << peer_c.peer_t.addr << ' ' << e.what() << std::endl;
+                    dead_peer = true;
+                    return;
+                }
                 cout << peer_c.peer_t.addr << " PIECE received, index: " << index << ", begin: " << begin << ", length: " << piece_len << endl;
                 // cout << peer_c.peer_t.addr << endl << string_to_hex(response) << endl;
 
@@ -247,39 +285,59 @@ namespace pwp_msg{
 
             case pwp_msg::cancel:
                 // seeding not supported, only clean the buffer
-                peer_c.socket->receive(boost::asio::buffer(response, sizeof(uint8_t) * 12));
+                try{
+                    peer_c.socket->receive(boost::asio::buffer(response, sizeof(uint8_t) * 12));
+                }catch(std::exception& e){
+                    LOG(ERROR) << peer_c.peer_t.addr << ' ' << e.what() << std::endl;
+                    dead_peer = true;
+                    return;
+                }
                 cout << peer_c.peer_t.addr << " CANCEL received" << endl;
                 break;
 
             case pwp_msg::port:
                 // message not suported, only clean the buffer
-                peer_c.socket->receive(boost::asio::buffer(response, sizeof(uint8_t) * 2));
+                try{
+                    peer_c.socket->receive(boost::asio::buffer(response, sizeof(uint8_t) * 2));
+                }catch(std::exception& e){
+                    LOG(ERROR) << peer_c.peer_t.addr << ' ' << e.what() << std::endl;
+                    dead_peer = true;
+                    return;
+                }
                 cout << peer_c.peer_t.addr << " PORT received" << endl;
                 break;
         }
 
-        boost::this_thread::sleep_for(boost::chrono::milliseconds(500)); // Sleep half second
+        boost::this_thread::sleep_for(boost::chrono::milliseconds(200));
 
-        boost::asio::async_read(*(peer_c.socket), boost::asio::buffer(response, sizeof(uint8_t)*4), 
-            boost::asio::transfer_exactly(4),
-            boost::bind(&pwp_msg::read_msg_handler, boost::ref(response), 
-                        boost::ref(peer_c), boost::ref(torrent),
-                        boost::asio::placeholders::error,
-                        boost::asio::placeholders::bytes_transferred
-            )
-        );
+        try{
+            boost::asio::async_read(*(peer_c.socket), boost::asio::buffer(response, sizeof(uint8_t)*4), 
+                boost::asio::transfer_exactly(4),
+                boost::bind(&pwp_msg::read_msg_handler, boost::ref(response), 
+                            boost::ref(peer_c), boost::ref(torrent), boost::ref(dead_peer), 
+                            boost::asio::placeholders::error,
+                            boost::asio::placeholders::bytes_transferred
+                )
+            );
 
-        if(_io_service.stopped()){
-            DLOG(INFO) << endl << "IO-Service stopped, resetting";
-            _io_service.reset();
-            _io_service.run();
+            if(_io_service.stopped()){
+                DLOG(INFO) << std::endl << "IO-Service stopped, resetting";
+                _io_service.reset();
+                _io_service.run();
+            }
+        }catch(std::exception& e){
+                    LOG(ERROR) << peer_c.peer_t.addr << ' ' << e.what() << std::endl;
+                    dead_peer = true;
+                    return;
         }
 
     }
 
     void sender(pwp::peer_connection &peer_conn, Torrent &torrent) {
         if (!peer_conn.pstate.peer_choking && peer_conn.cstate.am_interested && peer_conn.bitfield.size() > 0) {
+            
             int piece_index = compare_bitfields(peer_conn.bitfield, torrent.bitfield);
+
             if (piece_index != -1) {
                 RequestMsg request = create_request(torrent, piece_index);
                 if (request.begin != std::string::npos) {

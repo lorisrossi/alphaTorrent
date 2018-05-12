@@ -144,8 +144,6 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
 
     add_active_peer();  //The current peer is valid
 
-    //If there was no error (result >= 0) thet it's value is the length of the received handshake
-    // len = result;
 
     if(pwp_msg::send_msg(peer_conn, pwp_msg::interested_msg) < 0)
         LOG(ERROR) << "Error senging interested_msg";
@@ -158,33 +156,42 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
 
     try{
         // Receive 4 bytes
+        bool dead_peer = false;
+
         cout << peer_conn.peer_t.addr << " reading something, byte available : " << peer_conn.socket->available() << "\n";
         boost::asio::async_read(*(peer_conn.socket), boost::asio::buffer(response, sizeof(uint8_t)*4), 
             boost::asio::transfer_exactly(4),
             boost::bind(&pwp_msg::read_msg_handler, boost::ref(response), 
-                        boost::ref(peer_conn), boost::ref(torrent),
+                        boost::ref(peer_conn), boost::ref(torrent), boost::ref(dead_peer),
                         boost::asio::placeholders::error,
                         boost::asio::placeholders::bytes_transferred
             )
         );
 
-        if(_io_service.stopped()){
-            DLOG(INFO) << endl << "IO-Service stopped, resetting";
-            _io_service.reset();
-            _io_service.run();
-        }
 
-        while(1) {
+        while(!dead_peer) {
             pwp_msg::sender(peer_conn, torrent);
             boost::this_thread::sleep_for(boost::chrono::milliseconds(2000));  // Sleep for 2 seconds
+        
+            if(_io_service.stopped()){
+                DLOG(INFO) << endl << "IO-Service stopped, resetting";
+                _io_service.reset();
+                _io_service.run();
+            }
         }
 
     }catch(std::exception& e){
         LOG(ERROR) << peer_t.addr << ' ' << e.what() << std::endl;
         rm_active_peer();
+        peer_conn.socket->close();
+
         return;
     }
 
+    cout << endl << "DEAD-PEER - Exiting" << endl;
+    peer_conn.socket->close();
+    rm_active_peer();
+    return;
 }
 
 

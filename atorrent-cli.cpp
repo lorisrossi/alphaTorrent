@@ -73,13 +73,14 @@ int main(int argc, char* argv[]) {
 
     for(;it != peer_list->end(); ++it){
         if(!is_inv_address(it->addr)){
+
           cout<< "Starting executing the protocol with " << it->addr.to_string() << ":" << it->port << "... " << endl;
           t_group.add_thread(new boost::thread( pwp_protocol_manager, *it, handshake, param.info_hash_raw, mytorrent));
         }
     }
 
     _io_service.run();
-    boost::this_thread::sleep_for(boost::chrono::seconds(7));  //Sleep for 10 seconds
+    boost::this_thread::sleep_for(boost::chrono::seconds(30));  //Sleep for 10 seconds
 
 
   }while(active_peer < PEER_TREESHOLD);
