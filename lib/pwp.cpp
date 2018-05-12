@@ -282,9 +282,11 @@ namespace pwp_msg{
             int piece_index = compare_bitfields(peer_conn.bitfield, torrent.bitfield);
             if (piece_index != -1) {
                 RequestMsg request = create_request(torrent, piece_index);
-                std::vector<uint8_t> msg = make_request_msg(request);
-                std::cout << peer_conn.peer_t.addr << " sending REQUEST: " << string_to_hex(msg) << std::endl;
-                send_msg(peer_conn, msg);
+                if (request.begin != std::string::npos) {
+                    std::vector<uint8_t> msg = make_request_msg(request);
+                    // std::cout << peer_conn.peer_t.addr << " sending REQUEST: " << string_to_hex(msg) << std::endl;
+                    send_msg(peer_conn, msg);
+                }
             }
             else {
                 peer_conn.cstate.am_interested = false;
