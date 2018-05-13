@@ -1,6 +1,7 @@
 #include "tracker.h"
 #include "tracker_udp.hpp"
 #include "peer.h" //from int to bint
+#include "pwp.hpp" //for is_inv_address
 
 namespace t_udp{
     using namespace std;
@@ -62,12 +63,12 @@ namespace t_udp{
     }
 
 
-    void udp_manager(const std::string tracker_url, tracker::TParameter param){
+    void udp_manager(const std::string tracker_url, tracker::TParameter param, pwp::PeerList peer_list){
         using namespace std;
         using namespace boost::asio::ip;
 
 
-        cout << endl << "Called UDP procedure " << endl;
+        DLOG(INFO) << "Called UDP procedure " << endl;
 
 
         uint port;
@@ -90,13 +91,12 @@ namespace t_udp{
 
             boost::system::error_code error;
 
-            cout << endl << "Testing : " << recv_endpoint.address().to_string() << "\t " << std::to_string(port);
+            DLOG(INFO) << "Testing : " << recv_endpoint.address().to_string() << "\t " << std::to_string(port);
             
 
             socket.connect(recv_endpoint);
 
             //Try connection
-            //socket.open(udp::v4());
 
             std::vector<uint8_t> req(16);
 
@@ -109,22 +109,22 @@ namespace t_udp{
             //assert(req.size() == 16);
 
             if(!socket.is_open()){
-                cout << endl << "Socket closed";
+                LOG(ERROR) << "Socket closed";
                 return;
             }
 
 
-            cout << endl << "Connect request : ";
-            cout << string_to_hex(req);
-            cout << endl << "Sending request...";
+            DLOG(INFO) << "Connect request : ";
+            DLOG(INFO) << string_to_hex(req);
+            DLOG(INFO) << "Sending request...";
             socket.send_to(boost::asio::buffer(req), recv_endpoint);
 
-            if(_io_service.stopped()){
-                _io_service.reset();
-                _io_service.run();
-            }
+            // if(_io_service.stopped()){
+            //     _io_service.reset();
+            //     _io_service.run();
+            // }
 
-            cout << endl << "Sended " << "bytes \nWaiting for response...";
+            LOG(INFO) << "Sended " << "bytes \nWaiting for response...";
             std::vector<uint8_t> recv_buf(16);
             udp::endpoint sender_endpoint;
             size_t len = socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
@@ -137,31 +137,41 @@ namespace t_udp{
 
 
 
-            cout << endl << "UDP - Reqponse : ";
+            DLOG(INFO) << "UDP - Reqponse : ";
 
             uint32_t trans_id_peer;
             uint64_t conn_id;
+            std::vector<uint8_t> conn_id_v;
 
-            verify_connect_resp(recv_buf, trans_id_peer, conn_id);
+            verify_connect_resp(recv_buf, trans_id_peer, conn_id, conn_id_v);
 
 
-            cout << endl << "Transaction ID : " << std::to_string(trans_id_peer) << endl << "Connection ID : " << std::to_string(conn_id) << endl;
+            DLOG(INFO) << "Transaction ID : " << std::to_string(trans_id_peer) << "\nConnection ID : " << std::to_string(conn_id);
 
             
-            cout << endl << "Sending announce...";
+            LOG(INFO) << "Sending announce...";
 
             req.resize(98);
-            get_announce_req(req, param, conn_id);
-            cout << endl << string_to_hex(req) << endl << endl;
+            get_announce_req(req, param, conn_id_v);
+            DLOG(INFO) << string_to_hex(req);
 
             socket.send_to(boost::asio::buffer(req), recv_endpoint);
 
-            cout << endl << "Sended " << "bytes \nWaiting for response...";
+            cout << "Sended announce \nWaiting for response...";
             recv_buf.resize(512);
             len = socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
 
 
-            cout << endl << "Response : " << endl << string_to_hex(recv_buf) << endl << endl;
+            cout << "Response : \n" << string_to_hex(recv_buf);
+
+            parse_announce_resp(recv_buf, peer_list);
+            
+            cout << endl << "LOLOL";
+            
+            
+            
+            
+            //cout << "Parsed " << num << " peers from " << recv_endpoint.address().to_string() << ":" << std::to_string(port);
 
 
             if(_io_service.stopped()){
@@ -176,15 +186,18 @@ namespace t_udp{
                 throw boost::system::system_error(error); // Some other error.
             }
         }catch (std::exception& e){
-            cout << endl << "Error UDP : " << e.what() << endl;
+            LOG(ERROR) << "Error UDP : " << e.what();
             return;
         }
+
+        cout << "Exiting from ";
+
     }
 
 
 
 
-    void verify_connect_resp(std::vector<uint8_t>& resp, uint32_t& trans_id, uint64_t& conn_id){
+    void verify_connect_resp(std::vector<uint8_t>& resp, uint32_t& trans_id, uint64_t& conn_id, std::vector<uint8_t>& conn_id_v){
 
         if(resp[0] == 0 && resp[1] == 0 && resp[2] == 0 && resp[3] == 0)
             ;
@@ -209,10 +222,15 @@ namespace t_udp{
         uint32_t conn_id_2 = make_int(conn_id_v2);
         
         conn_id = (uint64_t) conn_id_1 << 32 | conn_id_2;
+
+
+        conn_id_v.clear();
+        conn_id_v = vector<uint8_t>(first1, last2);
+
     }
 
 
-    void get_announce_req(std::vector<uint8_t>& req, const tracker::TParameter& param, uint64_t conn_id){
+    void get_announce_req(std::vector<uint8_t>& req, const tracker::TParameter& param, std::vector<uint8_t>& conn_id_v){
         using namespace std;
 
         vector<uint8_t>::iterator it;
@@ -220,15 +238,17 @@ namespace t_udp{
         req.clear();
 
         //Connection ID
-        vector<uint8_t> c_id_v(8);
-        c_id_v = from_int64_to_bint(conn_id);
+        // vector<uint8_t> c_id_v(8);
+        // c_id_v = from_int64_to_bint(conn_id);
+        assert(conn_id_v.size() == 8);
 
         const vector<uint8_t> action = {0,0,0,1};
 
         //Transaction ID
         vector<uint8_t> t_id_v(4);
         t_id_v = from_int_to_bint(trans_id);
-
+        assert(t_id_v.size() == 4);
+       
         //Copy info_hash
         vector<uint8_t> info_hash_v(20);
 
@@ -237,23 +257,27 @@ namespace t_udp{
         }
 
         //Peer ID
-        vector<uint8_t> peer_id_v(param.peer_id.begin(), param.peer_id.begin());
+        vector<uint8_t> peer_id_v(20);
+        for(int i=0; i<20; ++i){
+            peer_id_v[i] = (uint8_t)param.peer_id.at(i);
+        }
+        assert(peer_id_v.size() == 20);
 
         vector<uint8_t> downloaded_v = from_int64_to_bint(param.downloaded);
         vector<uint8_t> left_v = from_int64_to_bint(param.left);
         vector<uint8_t> uploaded_v = from_int64_to_bint(param.uploaded);
 
-        vector<uint8_t> event_v = {0,0,0,2};  //Started
+        vector<uint8_t> event_v = {0,0,0,0};  //Started
         vector<uint8_t> ip_v = {0,0,0,0};  //Default
 
-        vector<uint8_t> key_v = {0,55,1,0};  //Test Key
+        vector<uint8_t> key_v = {0,1,1,1};  //Test Key
 
         vector<uint8_t> numwant_v = from_int_to_bint(param.numwant); 
 
-        vector<uint8_t> port = {25, 255};   //Test Port
+        vector<uint8_t> port = {2, 255};   //Test Port
 
 
-        req.insert( req.end(), c_id_v.begin(), c_id_v.end() );
+        req.insert( req.end(), conn_id_v.begin(), conn_id_v.end() );
         req.insert( req.end(), action.begin(), action.end() );
         req.insert( req.end(), t_id_v.begin(), t_id_v.end() );
         req.insert( req.end(), info_hash_v.begin(), info_hash_v.end() );
@@ -267,9 +291,133 @@ namespace t_udp{
         req.insert( req.end(), numwant_v.begin(), numwant_v.end() );
         req.insert( req.end(), port.begin(), port.end() );
 
+        assert(req.size() == 98);
 
     }
 
+
+
+    void parse_announce_resp(std::vector<uint8_t>& resp, pwp::PeerList peer_list){
+        using namespace std;
+
+        action_type resp_type = static_cast<action_type>(resp[3]);
+        
+        //To check if it's at least 20 bytes len response
+        int n =0;
+
+        switch(resp_type){
+
+            case none:
+                cout << endl << "NONE request received, exiting...";
+                return;
+            
+            case error:
+                cout << endl << "Tracker respond with error" << endl;
+                process_error(resp);
+                return;
+
+            case announce:
+                cout << endl << "Valid Response" << endl;
+                parse_announce_resp_peers(resp, peer_list);
+                cout << endl << "Exiting here" << endl;
+                break;
+
+
+
+        }
+        cout << endl << "Reacher here" << endl;
+        return;
+    }
+
+
+
+/**
+ * In case of a tracker error,
+ *
+ *   server replies packet:
+ *   size 	name 	description
+ *   int32_t 	action 	The action, in this case 3, for error. See actions.
+ *   int32_t 	transaction_id 	Must match the transaction_id sent from the client.
+ *   int8_t[] 	error_string 	The rest of the packet is a string describing the error.
+ * 
+ */
+
+    void process_error(std::vector<uint8_t>& resp){
+        using namespace std;
+
+        string s;
+
+        std::vector<uint8_t>::iterator it = resp.begin() + 8;
+
+        for (; it != resp.end(); ++it)
+        {
+            s += static_cast<char>(*it);
+        }
+
+        cout << endl << "Error string : " << s << endl;
+    }
+
+
+
+    void parse_announce_resp_info(std::vector<uint8_t>& resp){
+
+
+
+    }
+
+
+    void parse_announce_resp_peers(std::vector<uint8_t>& resp, pwp::PeerList peer_list){
+        using namespace std;
+
+        vector<uint8_t>::iterator it = resp.begin() + 20;   //Peers list
+        uint i=0;
+        uint f=0;
+
+        for(; it != resp.end() && (it+6) < resp.end(); it = it +6){
+            i++;
+            if(i<(resp.size()/6 -1)){
+                cout << endl << "Limit reached" << endl;
+                return;
+            }
+
+            bInt raw_ip = {
+                *(it),
+                *(it+1),
+                *(it+2),
+                *(it+3)
+            };
+
+            uint32_t ip_addr_int = make_int(raw_ip);
+            if((it - resp.begin() >= resp.size()))
+                return;
+            boost::asio::ip::address_v4 ip_addr(ip_addr_int);
+
+            if(is_inv_address(ip_addr)){
+                cout << endl << "Invalid address";
+                continue;
+            }
+
+            uint16_t port = (uint16_t) *(it+4) << 8 | *(it+5);
+
+            DLOG(INFO) << ip_addr.to_string() << ":" << to_string(port) <<  " received " << endl;
+
+
+            pwp::peer recv_peer = {
+                boost::asio::ip::address(ip_addr),
+                port,
+                ""
+            };
+
+
+            peer_list->push_back(recv_peer);
+
+            ++i;
+            cout << endl << "Finishing\n";
+        }
+        cout << endl << "Finished";
+
+        return;   //Return valid peer fetched
+    }
 
 
 }

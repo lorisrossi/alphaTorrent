@@ -51,12 +51,21 @@ namespace tracker{
             peer_list = make_shared<vector<pwp::peer>>(10);
 
         for(; it != tracker_list.end(); ++it){
-            LOG(INFO) << "Contacting tracker : " << *it;
-            if(t_udp::is_udp_tracker(*it))
-                t_group.add_thread(new boost::thread(&t_udp::udp_manager, *it, *param));
-            else
+            cout << endl << "Contacting tracker : " << *it;
+            if(t_udp::is_udp_tracker(*it)){
+                cout << endl << "UDP Tracker " << endl;
+                t_group.add_thread(new boost::thread(&t_udp::udp_manager, *it, *param, peer_list));
+            }
+            else if(*it != ""){
+                cout << endl << "HTTP Tracker " << endl;
                 t_group.add_thread(new boost::thread(process_tracker_request, *it, param, peer_list));
+            }
         }
+
+        if(_io_service.stopped()){
+            _io_service.reset();
+            _io_service.run();
+        }         
 
 
         t_group.join_all(); //Sync all thread

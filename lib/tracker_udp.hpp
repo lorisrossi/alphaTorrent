@@ -95,13 +95,23 @@ namespace t_udp{
     }announce_response;
 
 
+    enum action_type{
+        none = 0,
+        announce = 1,
+        scrape = 2,
+        error = 3
+    };
+
+
 
     bool is_udp_tracker(const std::string& tracker_url);
     void get_tracker_domain(std::string tracker_url, std::string& udp_tracker, uint& port);
-    void udp_manager(const std::string tracker_url, tracker::TParameter param);
-    void verify_connect_resp(std::vector<uint8_t>& resp, uint32_t& trans_id, uint64_t& conn_id);
-    void get_announce_req(std::vector<uint8_t>& req, const tracker::TParameter& param, uint64_t conn_id);
-
+    void udp_manager(const std::string tracker_url, tracker::TParameter param, pwp::PeerList peer_list);
+    void verify_connect_resp(std::vector<uint8_t>& resp, uint32_t& trans_id, uint64_t& conn_id, std::vector<uint8_t>& conn_id_v);
+    void get_announce_req(std::vector<uint8_t>& req, const tracker::TParameter& param, std::vector<uint8_t>& conn_id_v);
+    void parse_announce_resp(std::vector<uint8_t>& resp, pwp::PeerList peer_list);
+    void process_error(std::vector<uint8_t>& resp);
+    void parse_announce_resp_peers(std::vector<uint8_t>& resp, pwp::PeerList peer_list);
 }
 
 #endif

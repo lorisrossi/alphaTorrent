@@ -31,6 +31,11 @@ int main(int argc, char* argv[]) {
   }
 
   google::InitGoogleLogging(argv[0]); //Initialize GLog with passed argument
+
+  FLAGS_minloglevel = 0;
+  FLAGS_v = 0;
+  FLAGS_log_dir = "/tmp";
+
   curl_global_init(CURL_GLOBAL_DEFAULT);
 
   Torrent mytorrent;
