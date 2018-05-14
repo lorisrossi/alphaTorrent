@@ -1,3 +1,4 @@
+#include <iomanip>
 #include "pwp.hpp"
 #include "peer.h"
 #include "filehandler.hpp"
@@ -288,7 +289,8 @@ namespace pwp_msg{
                     dead_peer = true;
                     return;
                 }
-                cout << peer_c.peer_t.addr << " PIECE received, index: " << index << ", begin: " << begin << ", length: " << piece_len << endl;
+                cout << setw(15) << left << peer_c.peer_t.addr << " PIECE received, index: "
+                    << index  << ", begin: " << begin << ", length: " << piece_len << endl;
 
                 char *blockdata = reinterpret_cast<char*>(response.data());
                 save_block(blockdata, index, begin, piece_len, torrent);
