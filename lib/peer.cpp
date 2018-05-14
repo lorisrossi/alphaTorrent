@@ -174,10 +174,14 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
             )
         );
 
+        int old_begin = -1; // used to not send the same request multiple times
 
         while(!dead_peer) {
-            pwp_msg::sender(peer_conn, torrent);
-            boost::this_thread::sleep_for(boost::chrono::milliseconds(2000));  // Sleep for 2 seconds
+            if(pwp_msg::sender(peer_conn, torrent, old_begin) < 0) {
+                dead_peer = true;
+            }
+            
+            boost::this_thread::sleep_for(boost::chrono::milliseconds(500));  // Sleep for 0.5 seconds
         
             if(_io_service.stopped()){
                 DLOG(INFO) << endl << "IO-Service stopped, resetting";
@@ -442,10 +446,10 @@ std::vector<uint8_t> from_int_to_bint(uint integer){
     *(uint32_t*)&out = integer;
     
     std::vector<uint8_t> ret(4);
-    ret[0] = out[0];
-    ret[1] = out[1];
-    ret[2] = out[2];
-    ret[3] = out[3];
+    ret[0] = out[3];
+    ret[1] = out[2];
+    ret[2] = out[1];
+    ret[3] = out[0];
     return ret;
 
 }

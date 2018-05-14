@@ -41,7 +41,7 @@ namespace pwp_msg{
 
     int get_bitfield(pwp::peer_connection &peer_c, Torrent &torrent);
     void read_msg_handler(std::vector<uint8_t>& response, pwp::peer_connection& peer_c, Torrent &torrent, bool& dead_peer, const boost::system::error_code& error, size_t bytes_read);
-    void sender(pwp::peer_connection &peer_conn, Torrent &torrent);
+    int sender(pwp::peer_connection &peer_conn, Torrent &torrent, int &old_begin);
 }
 
 #endif
