@@ -63,6 +63,14 @@ namespace t_udp{
     }
 
 
+    void stop_connection(boost::asio::ip::udp::socket &socket){
+
+        cout << endl << "Closing socket for timeout" << endl;
+        socket.close();
+
+    }
+
+
     void udp_manager(const std::string tracker_url, tracker::TParameter param, pwp::PeerList peer_list){
         using namespace std;
         using namespace boost::asio::ip;
@@ -80,8 +88,6 @@ namespace t_udp{
         
         //Start the request
         try{ 
-
-
             udp::resolver resolver(_io_service); //Domain resolve                 
             udp::resolver::query query(tracker_domain, std::to_string(port), boost::asio::ip::resolver_query_base::numeric_service);   //Specify IP and Port
             
@@ -93,8 +99,9 @@ namespace t_udp{
 
             DLOG(INFO) << "Testing : " << recv_endpoint.address().to_string() << "\t " << std::to_string(port);
             
-
+            DLOG(INFO) << endl << tracker_url << " - Connecting socket...";
             socket.connect(recv_endpoint);
+            DLOG(INFO) << endl << tracker_url << " - Connected !!!!";
 
             //Try connection
 
@@ -114,27 +121,27 @@ namespace t_udp{
             }
 
 
-            DLOG(INFO) << "Connect request : ";
+            DLOG(INFO) << tracker_url << " Connect request : ";
             DLOG(INFO) << string_to_hex(req);
             DLOG(INFO) << "Sending request...";
             socket.send_to(boost::asio::buffer(req), recv_endpoint);
 
-            // if(_io_service.stopped()){
-            //     _io_service.reset();
-            //     _io_service.run();
-            // }
 
             LOG(INFO) << "Sended " << "bytes \nWaiting for response...";
             std::vector<uint8_t> recv_buf(16);
             udp::endpoint sender_endpoint;
-            size_t len = socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
+            boost::asio::deadline_timer timer_(_io_service);
 
+            timer_.expires_from_now(boost::posix_time::seconds(15));    //TODO define here
+            //timer_.async_wait(boost::bind(&stop_connection, std::ref(socket)));
 
             if(_io_service.stopped()){
                 _io_service.reset();
                 _io_service.run();
             }
 
+
+            size_t len = socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
 
 
             DLOG(INFO) << "UDP - Reqponse : ";
@@ -157,27 +164,24 @@ namespace t_udp{
 
             socket.send_to(boost::asio::buffer(req), recv_endpoint);
 
-            cout << "Sended announce \nWaiting for response...";
+            DLOG(INFO) << endl << tracker_url << "Sended announce \nWaiting for response...";
             recv_buf.resize(512);
             len = socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
 
 
-            cout << "Response : \n" << string_to_hex(recv_buf);
+            DLOG(INFO) << endl << tracker_url << "Response : \n" << string_to_hex(recv_buf);
 
             parse_announce_resp(recv_buf, peer_list);
-            
-            cout << endl << "LOLOL";
-            
-            
+                 
             
             
             //cout << "Parsed " << num << " peers from " << recv_endpoint.address().to_string() << ":" << std::to_string(port);
 
 
-            if(_io_service.stopped()){
-                _io_service.reset();
-                _io_service.run();
-            }            
+            // if(_io_service.stopped()){
+            //     _io_service.reset();
+            //     _io_service.run();
+            // }            
 
             if (error == boost::asio::error::eof){
                 LOG(ERROR) << "Connection Closed";
@@ -190,8 +194,8 @@ namespace t_udp{
             return;
         }
 
-        cout << "Exiting from ";
-
+        DLOG(INFO) << "Exiting from " << tracker_url << endl;
+        return;
     }
 
 
@@ -317,15 +321,15 @@ namespace t_udp{
                 return;
 
             case announce:
-                cout << endl << "Valid Response" << endl;
+                DLOG(INFO) << endl << "Valid Response" << endl;
                 parse_announce_resp_peers(resp, peer_list);
-                cout << endl << "Exiting here" << endl;
+
                 break;
 
 
 
         }
-        cout << endl << "Reacher here" << endl;
+
         return;
     }
 
@@ -375,10 +379,6 @@ namespace t_udp{
 
         for(; it != resp.end() && (it+6) < resp.end(); it = it +6){
             i++;
-            if(i<(resp.size()/6 -1)){
-                cout << endl << "Limit reached" << endl;
-                return;
-            }
 
             bInt raw_ip = {
                 *(it),
@@ -393,13 +393,13 @@ namespace t_udp{
             boost::asio::ip::address_v4 ip_addr(ip_addr_int);
 
             if(is_inv_address(ip_addr)){
-                cout << endl << "Invalid address";
+                DLOG(INFO) << endl << "Invalid address";
                 continue;
             }
 
             uint16_t port = (uint16_t) *(it+4) << 8 | *(it+5);
 
-            DLOG(INFO) << ip_addr.to_string() << ":" << to_string(port) <<  " received " << endl;
+            //cout << endl << ip_addr.to_string() << ":" << to_string(port) <<  " received " << endl;
 
 
             pwp::peer recv_peer = {
@@ -412,10 +412,7 @@ namespace t_udp{
             peer_list->push_back(recv_peer);
 
             ++i;
-            cout << endl << "Finishing\n";
         }
-        cout << endl << "Finished";
-
         return;   //Return valid peer fetched
     }
 

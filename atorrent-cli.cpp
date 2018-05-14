@@ -31,11 +31,6 @@ int main(int argc, char* argv[]) {
   }
 
   google::InitGoogleLogging(argv[0]); //Initialize GLog with passed argument
-
-  FLAGS_minloglevel = 0;
-  FLAGS_v = 0;
-  FLAGS_log_dir = "/tmp";
-
   curl_global_init(CURL_GLOBAL_DEFAULT);
 
   Torrent mytorrent;
@@ -78,14 +73,13 @@ int main(int argc, char* argv[]) {
 
     for(;it != peer_list->end(); ++it){
         if(!is_inv_address(it->addr)){
-
           cout<< "Starting executing the protocol with " << it->addr.to_string() << ":" << it->port << "... " << endl;
           t_group.add_thread(new boost::thread( pwp_protocol_manager, *it, handshake, param.info_hash_raw, mytorrent));
         }
     }
 
     _io_service.run();
-    boost::this_thread::sleep_for(boost::chrono::seconds(30));  //Sleep for 10 seconds
+    boost::this_thread::sleep_for(boost::chrono::seconds(30));  //Sleep for 30 seconds
 
 
   }while(active_peer < PEER_TREESHOLD);

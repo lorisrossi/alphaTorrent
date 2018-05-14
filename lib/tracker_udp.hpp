@@ -4,6 +4,7 @@
 #include <boost/asio.hpp>
 #include <boost/random.hpp>
 #include <boost/algorithm/string.hpp>   //Replace all '/' in the url
+#include <boost/asio/deadline_timer.hpp>
 #include <string>
 #include <stdlib.h>
 #include <stdint.h>
