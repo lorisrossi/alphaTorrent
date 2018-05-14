@@ -201,10 +201,14 @@ RequestMsg create_request(Torrent &torrent, int piece_index) {
     source.read(piece_str.data(), blocklength);
     string str(piece_str.data(), blocklength);
     // we are assuming that the file doesn't have any NULL string...
-    size_t find_size = 200;
+    size_t find_size = 20;
     char null_string[find_size];
     memset(null_string, EMPTY_CHAR, find_size);
-    request.begin = str.find(null_string, 0, find_size);
+
+    for (size_t i = 0; request.begin != string::npos && (request.begin % MAX_REQUEST_LENGTH) != 0; ++i) {
+      request.begin = str.find(null_string, i * MAX_REQUEST_LENGTH, find_size);
+    }
+
     if (request.begin != string::npos) {
       request.length = min(blocklength - request.begin, (size_t)MAX_REQUEST_LENGTH);
     }
