@@ -42,6 +42,23 @@ void make_file(const string &main_folder, const TorrentFile &tfile) {
 }
 
 /**
+ * Check if a torrent is 100% downloaded.
+ * If that is the case, remove the ".part" suffix from the filename.
+ * WARNING: only single file torrents are supported.
+ * 
+ * @param torrent  Torrent struct
+ */
+void check_file_is_complete(Torrent &torrent)
+{
+  bool is_complete = torrent.bitfield.all();
+  if (is_complete)
+  {
+    cout << torrent.name << " completed!" << endl;
+    boost::filesystem::rename(torrent.name + ".part", torrent.name);
+  }
+}
+
+/**
  * Initialize bitfield of a torrent, checking the pieces already downloaded.
  * 
  * @param torrent  Torrent struct
@@ -79,6 +96,7 @@ void init_bitfield(Torrent &torrent) {
 
       cur_file.close();
       cout << "Bitfield: " << torrent.bitfield << endl;
+      check_file_is_complete(torrent);
     }
   }
   else {
@@ -172,6 +190,7 @@ bool check_bitfield_piece(Torrent &torrent, size_t piece_index) {
 
     if (is_complete) {
       cout << "New piece completed! Piece index: " << piece_index << endl;
+      check_file_is_complete(torrent);
     }
   }
   source.close();
@@ -260,21 +279,6 @@ void save_block(char* blockdata, size_t index, size_t begin, size_t length, Torr
       dest.write(blockdata, length);
     }
     dest.close();
-  }
-}
-
-/**
- * Check if a torrent is 100% downloaded.
- * If that is the case, remove the ".part" suffix from the filename.
- * WARNING: only single file torrents are supported.
- * 
- * @param torrent  Torrent struct
- */
-void check_file_is_complete(Torrent &torrent) {
-  bool is_complete = torrent.bitfield.all();
-  if (is_complete) {
-    cout << torrent.name << " completed!" << endl;
-    boost::filesystem::rename(torrent.name + ".part", torrent.name);
   }
 }
 
