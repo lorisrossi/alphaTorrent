@@ -1,15 +1,26 @@
 #include <iostream>
-#include <fstream>
 #include <string>
 #include <string.h>
 
-#include "bencode.h"
 #include "torrentparser.hpp"
 #include "tracker.h"
 #include "filehandler.hpp"
 #include "peer.h"
+#include "pwp.hpp"  //For is_inv_address
 
 using namespace std;
+
+#define PEER_TREESHOLD 10
+
+tracker::TParameter set_parameter(const string& torrent_str, const Torrent& torr){
+    tracker::TParameter param;
+
+    param.info_hash_raw = get_info_node_hash(&torrent_str, &torr.pieces);  //Extract info_hash
+    param.left = torr.piece_length * torr.pieces.size();
+    get_peer_id(&param.peer_id);
+    
+    return param;
+}
 
 
 int main(int argc, char* argv[]) {
@@ -19,70 +30,73 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-
-
-
   google::InitGoogleLogging(argv[0]); //Initialize GLog with passed argument
+
+  FLAGS_minloglevel = 0;
+  FLAGS_v = 0;
+  FLAGS_log_dir = "/tmp";
 
   curl_global_init(CURL_GLOBAL_DEFAULT);
 
-  ifstream myfile(argv[1]);
-  if (!myfile.is_open()){
-    cout << "Unable to open the file." << endl;
-    return -1;  //Exit the progra,m
-  }
-
-
-  // parsing .torrent file as a string
-  string line;
-  string torrent_str;
-  while (getline(myfile, line))
-  torrent_str += line + '\n';
-  myfile.close();
-
-  // decoding
-  be_node *node;
-  long long len = torrent_str.length();
-  node = be_decoden(torrent_str.c_str(), len);
-  if (!node) {
-    cout << "Parsing of " << argv[1] << " failed!" << endl;
-    return -2;    //Exit the program
-  }
-
-  //Start processing the file
-
   Torrent mytorrent;
-  parse_torrent(node, mytorrent);
-  be_free(node);
-  print_torrent(mytorrent);
-
-  tracker::TParameter param;
-
-  param.info_hash_raw = get_info_node_hash(&torrent_str, &mytorrent.pieces);  //Extract info_hash
-  param.left = mytorrent.piece_length * mytorrent.pieces.size();
-  get_peer_id(&param.peer_id);
-
-
-  pwp::PeerList peer_list = make_shared<vector<pwp::peer>>(10); //Pre-Allocate the peers list
-
-  //Start contacting the tracker
-  int error_code = start_tracker_request(&param, mytorrent.trackers, peer_list);  
-  if(error_code < 0){
-    return -3;  //Error while encoding param, exit 
+  string torrent_str;
+  // parse .torrent file
+  int success = parse_torrent(mytorrent, torrent_str, argv[1]);
+  if(success < 0) {
+    return success;
   }
 
-  //Once finished manage all peer
-  manage_peer_connection(peer_list, param.info_hash_raw);
+  check_files(mytorrent);
+
+  //Populate the torrent parameter
+  tracker::TParameter param = set_parameter(torrent_str, mytorrent);
+
+  pwp::PeerList peer_list = make_shared<vector<pwp::peer>>(); //Pre-Allocate the peers list
+  boost::thread_group t_group;  //Thread Group for managing the peers
+
+  do{
+
+    peer_list->clear();
+    peer_list->resize(10);
+    
+    //Start contacting the tracker
+    int error_code = start_tracker_request(&param, mytorrent.trackers, peer_list);  
+    if(error_code < 0){
+      return -3;  //Error while encoding param, exit 
+    }
+
+    remove_invalid_peer(peer_list);
+
+    cout << "Building handshake...";
+    std::vector<uint8_t> handshake = std::vector<uint8_t>();
+    build_handshake(param.info_hash_raw, handshake);
 
 
+    //Start the PWP protocol with the peers
+
+    vector<pwp::peer>::iterator it = peer_list->begin();
+
+    for(;it != peer_list->end(); ++it){
+        if(!is_inv_address(it->addr)){
+
+          cout<< "Starting executing the protocol with " << it->addr.to_string() << ":" << it->port << "... " << endl;
+          t_group.add_thread(new boost::thread( pwp_protocol_manager, *it, handshake, param.info_hash_raw, mytorrent));
+        }
+    }
+
+    _io_service.run();
+    boost::this_thread::sleep_for(boost::chrono::seconds(30));  //Sleep for 10 seconds
+
+
+  }while(active_peer < PEER_TREESHOLD);
+
+  t_group.join_all();
 
 
   if(param.info_hash_raw != nullptr)
     free(param.info_hash_raw);
 
       
-  
-
   curl_global_cleanup();
   return 0;
 }

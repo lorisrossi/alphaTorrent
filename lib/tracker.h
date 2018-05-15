@@ -39,15 +39,19 @@ namespace tracker{
 
     //Struct that contains all tracker param
 
-    struct TParameter{
-        string info_hash;
-        string peer_id;
+    typedef struct {
+        string info_hash;      //Strings for urlencode
+        string peer_id;        //parameters
+
         uint port;
         uint uploaded;
         uint downloaded;
-        uint left;
-        char* info_hash_raw;
-    };
+        uint left;              //Bytes left to download
+        bool compact;
+        uint16_t numwant;       //Number of peer requested
+        string key;             //Key used in the request
+        char* info_hash_raw;    //Raw Bytes
+    }TParameter;
 
 
     enum event_type{ 
@@ -83,7 +87,8 @@ namespace tracker{
 
     int tracker_send_request(shared_ptr<string> url, string  *response, CURL *curl = NULL);
     bool check_url(const string &url, CURL *curl=NULL);
-    shared_ptr<string> url_builder(const string &tracker_url, const TParameter &t_param, event_type event, CURL *curl=NULL,  bool tls = false);
+    
+    shared_ptr<string> url_builder(const string& tracker_url, const TParameter& t_param, event_type event, const string& tracker_key, CURL *curl = NULL, bool tls = false);
     int urlencode_paramenter(TParameter *param, CURL *curl = NULL);
     int start_tracker_request(TParameter *param, const TList &tracker_list, pwp::PeerList peer_list);
     void process_tracker_request(const string& tracker_url, const TParameter *param, pwp::PeerList peer_list);

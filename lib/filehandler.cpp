@@ -11,6 +11,7 @@
 #include "filehandler.hpp"
 
 #define MAX_REQUEST_LENGTH 16384 // 2^14
+#define EMPTY_CHAR '\001'
 
 using namespace std;
 
@@ -32,11 +33,36 @@ void make_file(const string &main_folder, const TorrentFile &tfile) {
   }
   temp_path += '/' + tfile.path.back() + ".part";
   // create file
-  ofstream new_file(temp_path);
+  ofstream new_file;
+  new_file.open(temp_path);
+  for (size_t i=0; i < tfile.length; ++i) {
+    new_file.put(EMPTY_CHAR);
+  }
   new_file.close();
-  boost::filesystem::resize_file(temp_path, tfile.length);
 }
 
+/**
+ * Check if a torrent is 100% downloaded.
+ * If that is the case, remove the ".part" suffix from the filename.
+ * WARNING: only single file torrents are supported.
+ * 
+ * @param torrent  Torrent struct
+ */
+void check_file_is_complete(Torrent &torrent)
+{
+  bool is_complete = torrent.bitfield.all();
+  if (is_complete)
+  {
+    cout << torrent.name << " completed!" << endl;
+    boost::filesystem::rename(torrent.name + ".part", torrent.name);
+  }
+}
+
+/**
+ * Initialize bitfield of a torrent, checking the pieces already downloaded.
+ * 
+ * @param torrent  Torrent struct
+ */
 void init_bitfield(Torrent &torrent) {
   if (torrent.is_single) {
     string path = torrent.name + ".part";
@@ -70,6 +96,7 @@ void init_bitfield(Torrent &torrent) {
 
       cur_file.close();
       cout << "Bitfield: " << torrent.bitfield << endl;
+      check_file_is_complete(torrent);
     }
   }
   else {
@@ -109,26 +136,40 @@ void check_files(Torrent &torrent) {
   // }
 }
 
-// return index of a piece that the peer can give to us
-// return -1 if the peer doesn't have any piece we need
-int compare_bitfields(string peer_bitfield, string own_bitfield) {
+/**
+ * Get the index of a piece the peer can give to us
+ * 
+ * @param peer_bitfield 
+ * @param own_bitfield 
+ * @return int          Index of a needed piece, or -1 if no piece available 
+ */
+int compare_bitfields(boost::dynamic_bitset<> peer_bitfield, boost::dynamic_bitset<> own_bitfield) {
+  // peer_bitfield can be longer because of the 0 bits in the last byte
+  if (peer_bitfield.size() > own_bitfield.size()
+    && peer_bitfield.size() - own_bitfield.size() < 8)
+  {
+    peer_bitfield.resize(own_bitfield.size());
+  }
   assert(peer_bitfield.size() == own_bitfield.size());
-  boost::dynamic_bitset<unsigned char> own(own_bitfield), peer(peer_bitfield);
-  boost::dynamic_bitset<unsigned char> needed_pieces = ~own & peer;
+  boost::dynamic_bitset<> needed_pieces = ~own_bitfield & peer_bitfield;
   size_t block_index = needed_pieces.find_first();
   if (block_index != boost::dynamic_bitset<>::npos) {
-    // find_first() start from the right, but bitfield has 0-index on the left,
-    // so we need to reverse the value
-    return own_bitfield.size() - 1 - block_index;
+    return block_index;
   }
   else return -1;
 }
 
-// check the value of the bitfield at index "piece_index"
+/**
+ * Check the value of the bitfield at index "piece_index", and change it accordingly.
+ * 
+ * @param torrent      Torrent struct
+ * @param piece_index  Index to check
+ * @return true        If the piece is completed, otherwise false
+ */
 bool check_bitfield_piece(Torrent &torrent, size_t piece_index) {
   bool is_complete = false;
   // single file torrent only
-  string path = torrent.files[0].path[0] + ".part";
+  string path = torrent.name + ".part";
   ifstream source(path);
   if (source.is_open()) {
     int hashlength = torrent.piece_length;
@@ -138,27 +179,35 @@ bool check_bitfield_piece(Torrent &torrent, size_t piece_index) {
     }
 
     string piece_hash = torrent.pieces.substr(piece_index*20, 20);
-    char file_hash[hashlength];
+    std::vector<char> file_hash(hashlength);
     unsigned char digest[20];
     source.seekg(piece_index * torrent.piece_length);
-    source.read(file_hash, hashlength);
-    SHA1((unsigned char*)(file_hash), hashlength, digest);
+    source.read(file_hash.data(), hashlength);
+    SHA1((unsigned char*)(file_hash.data()), hashlength, digest);
 
     is_complete = memcmp(piece_hash.c_str(), digest, 20) == 0;
     torrent.bitfield.set(piece_index, is_complete);
 
     if (is_complete) {
       cout << "New piece completed! Piece index: " << piece_index << endl;
+      check_file_is_complete(torrent);
     }
   }
   source.close();
   return is_complete;
 }
 
-RequestMsg compose_request_msg(string &path, Torrent &torrent, size_t piece_index) {
+/**
+ * Create a RequestMsg struct starting from "piece_index".
+ * 
+ * @param torrent    
+ * @param piece_index  
+ * @return RequestMsg 
+ */
+RequestMsg create_request(Torrent &torrent, int piece_index) {
   RequestMsg request;
   request.index = piece_index;
-  fstream source(path);
+  fstream source(torrent.name + ".part");
   if (source.is_open()) {
     int blocklength = torrent.piece_length;
     // check if last piece
@@ -166,28 +215,35 @@ RequestMsg compose_request_msg(string &path, Torrent &torrent, size_t piece_inde
       blocklength = torrent.files[0].length % torrent.piece_length;
     }
 
-    char piece_str[blocklength];
+    std::vector<char> piece_str(blocklength);
     source.seekg(request.index * torrent.piece_length);
-    source.read(piece_str, blocklength);
-    string str(piece_str, blocklength);
+    source.read(piece_str.data(), blocklength);
+    string str(piece_str.data(), blocklength);
     // we are assuming that the file doesn't have any NULL string...
-    request.begin = str.find("\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 0, 16);
+    size_t find_size = 20;
+    char null_string[find_size];
+    memset(null_string, EMPTY_CHAR, find_size);
+
+    for (size_t i = 0; request.begin != string::npos && (request.begin % MAX_REQUEST_LENGTH) != 0; ++i) {
+      request.begin = str.find(null_string, i * MAX_REQUEST_LENGTH, find_size);
+    }
+
     if (request.begin != string::npos) {
       request.length = min(blocklength - request.begin, (size_t)MAX_REQUEST_LENGTH);
-
-      cout << "Requesting block, index: " << request.index << ", begin:"
-        << request.begin << ", length: " << request.length << endl;
     }
     else {
       // nothing to request, maybe the piece is complete or it contains wrong data
       if (!check_bitfield_piece(torrent, piece_index)) {
         cout << "Data corrupted, deleting all the block" << endl;
         source.seekp(request.index * torrent.piece_length);
-        char null_string[torrent.piece_length];
-        memset(null_string, '\0', blocklength);
-        source.write(null_string, blocklength);
+        std::vector<char> null_string(torrent.piece_length);
+        memset(null_string.data(), EMPTY_CHAR, blocklength);
+        source.write(null_string.data(), blocklength);
       }
     }
+  }
+  else {
+    cout << "Error: can't create request for " << torrent.name + ".part" << endl;
   }
   source.close();
   return request;
@@ -205,51 +261,24 @@ void get_block_from_request(string &path, Torrent &torrent, RequestMsg request, 
   source.close();
 }
 
-void save_block(char* blockdata, string path, RequestMsg request, Torrent &torrent) {
-  fstream dest(path);
-  if (dest.is_open()) {
-    cout << "Writing block,    index: " << request.index << ", begin:"
-      << request.begin << ", length: " << request.length << endl;
-    dest.seekp(request.index * torrent.piece_length + request.begin);
-    dest.write(blockdata, request.length);
-  }
-  dest.close();
-}
-
 /**
- * Check if a torrent is 100% downloaded.
- * If that is the case, remove the ".part" suffix from the filename.
- * WARNING: only single file torrents are supported.
+ * Save a blockdata received from a "piece" message.
+ * WARNING: only single file torrents are supported. 
  * 
- * @param torrent  Torrent struct
+ * @param blockdata  Byte-array of data
+ * @param index      Piece index 
+ * @param begin      Block index (within the piece)
+ * @param length     Length of blockdata
+ * @param torrent    Torrent struct
  */
-void check_file_is_complete(Torrent &torrent) {
-  // If the bitfield is all set, ~bitfield is all 0s,
-  // and find_first() doesn't find any set bit
-  size_t found = (~torrent.bitfield).find_first();
-  if (found == string::npos) {
-    cout << torrent.name << " completed!" << endl;
-    boost::filesystem::rename(torrent.name + ".part", torrent.name);
+void save_block(char* blockdata, size_t index, size_t begin, size_t length, Torrent &torrent) {
+  if (index < torrent.bitfield.size() && !torrent.bitfield.test(index)) {
+    fstream dest(torrent.name + ".part");
+    if (dest.is_open()) {
+      dest.seekp(index * torrent.piece_length + begin);
+      dest.write(blockdata, length);
+    }
+    dest.close();
   }
 }
 
-void save_piece(Torrent &torrent, size_t piece_index)
-{
-  // save piece in the file.part
-
-  // compare_bitfields("101110", "000110");
-  string source_path = "real/Raccolta.Ebook.29.11.2017-iCV.rar";
-  string dest_path = "Raccolta.Ebook.29.11.2017-iCV.rar.part";
-  
-  RequestMsg request = compose_request_msg(dest_path, torrent, piece_index);
-  
-  if (request.begin != string::npos) {
-    char block[request.length];
-    get_block_from_request(source_path, torrent, request, block);
-    save_block(block, dest_path, request, torrent);
-  }
-  
-  // if(check_bitfield_piece(torrent, request.index)) {
-  //   is_(torrent);
-  // }
-}

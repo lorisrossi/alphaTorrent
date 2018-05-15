@@ -5,3 +5,5 @@ atorrent-cli
 .vscode/
 
 *.txt
+
+*.part

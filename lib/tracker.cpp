@@ -1,5 +1,5 @@
 #include "tracker.h"
-
+#include "tracker_udp.hpp"
 
 
 //#include <algorithm>    //Lower String
@@ -7,16 +7,12 @@
 
 #include "peer.h"
 
-
-
-
 namespace tracker{
 
     using namespace std;
 
     
     boost::mutex peer_list_mutex;
-    
     
     
     /**
@@ -35,7 +31,10 @@ namespace tracker{
         param->port = 8999;
         param->uploaded = 0;
         param->downloaded = 0;
+        param->numwant = 50;
+        param->compact = true;
         //-------------------------------------
+
 
 
         if(urlencode_paramenter(param) < 0){
@@ -52,9 +51,21 @@ namespace tracker{
             peer_list = make_shared<vector<pwp::peer>>(10);
 
         for(; it != tracker_list.end(); ++it){
-            LOG(INFO) << "Contacting tracker : " << *it;
-            t_group.add_thread(new boost::thread(process_tracker_request, *it, param, peer_list));
+            cout << endl << "Contacting tracker : " << *it;
+            if(t_udp::is_udp_tracker(*it)){
+                cout << endl << "UDP Tracker " << endl;
+                t_group.add_thread(new boost::thread(&t_udp::udp_manager, *it, *param, peer_list));
+            }
+            else if(*it != ""){
+                cout << endl << "HTTP Tracker " << endl;
+                t_group.add_thread(new boost::thread(process_tracker_request, *it, param, peer_list));
+            }
         }
+
+        if(_io_service.stopped()){
+            _io_service.reset();
+            _io_service.run();
+        }         
 
 
         t_group.join_all(); //Sync all thread
@@ -63,7 +74,7 @@ namespace tracker{
         remove_duplicate_peers(peer_list);
 
         
-        std::cout << endl << "Found " << peer_list->size() << " available peers";
+        std::cout << endl << endl << "Found " << peer_list->size() << " available peers" << endl;
 
         return 0;
     }
@@ -110,11 +121,11 @@ namespace tracker{
         int error_code;
         bool second_trying = false;
 
-
+        string tracker_key = create_tracker_key();
         event_type event_status = STARTED;
 
         do{
-            enc_url = url_builder(tracker_url.c_str(), *param, event_status);
+            enc_url = url_builder(tracker_url.c_str(), *param, event_status, tracker_key);
 
             LOG(INFO) << endl << "URL : " << *enc_url << endl;
 
@@ -229,7 +240,7 @@ namespace tracker{
      *  @return Un puntatore ad una stringa contenente l'url
     */
 
-    shared_ptr<string> url_builder(const string& tracker_url, const TParameter& t_param, event_type event, CURL *curl, bool tls){
+    shared_ptr<string> url_builder(const string& tracker_url, const TParameter& t_param, event_type event, const string& tracker_key, CURL *curl, bool tls){
 
         /*
         *   TODO : Improve this function parmeters, since trakcer_url is already inside TParameter
@@ -245,7 +256,7 @@ namespace tracker{
             return NULL;
 
 
-        struct TParameter param = t_param;
+        TParameter param = t_param;
 
         shared_ptr<string> url_req(new string(""));
 
@@ -268,12 +279,16 @@ namespace tracker{
         *url_req += "&uploaded=" + to_string(param.uploaded);
         *url_req += "&downloaded=" + to_string(param.downloaded);
         *url_req += "&left=" + to_string(param.left);
-        *url_req += "&compact=1";   //Always prefer the compact resonse
+        if(param.compact)
+            *url_req += "&compact=1";   //Is a compact request?
+        else
+            *url_req += "&compact=0";   //Is a compact request?
+
         *url_req += "&no_peer_ids=1&supportcrypto=1&redundant=0";
 
         //Optional
-        *url_req += "&numwant=50";
-        *url_req += "&key=" + create_tracker_key();
+        *url_req += "&numwant=" + to_string(param.numwant);
+        *url_req += "&key=" + tracker_key;
 
         switch(event){
             case STARTED:
@@ -287,6 +302,8 @@ namespace tracker{
         if(!curl_passed){
             curl_easy_cleanup(curl);
         }
+
+        cout << endl << *url_req << endl;
 
         return url_req;
     }
@@ -491,7 +508,8 @@ namespace tracker{
         if(scrap_url == nullptr)
             return -1;
         
-        shared_ptr<string> final_url = url_builder(*scrap_url, param, STARTED);
+        //FIX ME - Send less parameters
+        shared_ptr<string> final_url = url_builder(*scrap_url, param, STARTED, "");
 
         if(tracker_send_request(final_url, response) < 0){
             cout << endl << "Error in Scraping Request" << endl;

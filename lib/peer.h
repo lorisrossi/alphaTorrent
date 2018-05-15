@@ -10,6 +10,8 @@
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
 #include <boost/thread.hpp>
+#include <boost/chrono.hpp>
+#include <boost/dynamic_bitset.hpp>
 
 #include <glog/logging.h>   //Logging Library
 
@@ -20,24 +22,36 @@
 #include <boost/endian/conversion.hpp>
 #include <cmath>
 
+#include "torrentparser.hpp"
 
 #define DEFAULT_BUFF_SIZE 128
+
+
+extern boost::asio::io_service _io_service;
+extern int active_peer;
+extern boost::mutex mtx_peer_num;
+
+
+
+inline void add_active_peer();
+inline void rm_active_peer();
 
 //Namespace Peer Wire Protocol
 namespace pwp{
 
     using namespace boost::asio;
 
+    
 
-    enum client_state{
-        am_choking,
-        am_interested
-    };
+    typedef struct{
+        bool am_choking = true;
+        bool am_interested = true;
+    }client_state ;
 
-    enum peer_state{
-        peer_choking,
-        peer_interested
-    };
+    typedef struct {
+        bool peer_choking = true;  
+        bool peer_interested = false;
+    }peer_state;
 
     struct peer{
         ip::address addr;
@@ -62,34 +76,45 @@ namespace pwp{
         struct peer peer_t;
         client_state cstate;
         peer_state pstate;
+        boost::dynamic_bitset<> bitfield;
         std::shared_ptr<boost::asio::ip::tcp::socket> socket;
+        //boost::mutex bitfield_mutex;
     };
 
 
 
-    struct bInt{
-        uint8_t i1;
-        uint8_t i2;
-        uint8_t i3;
-        uint8_t i4;
-    };
+
 
 
     typedef std::shared_ptr<std::vector<pwp::peer>> PeerList;
     typedef std::shared_ptr<std::vector<pwp::peer_connection>> PeerConnected;
-    typedef struct bInt bInt;
 }
 
+
+struct bInt{
+    uint8_t i1;
+    uint8_t i2;
+    uint8_t i3;
+    uint8_t i4;
+};
+
+typedef struct bInt bInt;
 
 
 void manage_peer_connection(pwp::PeerList peer_list, char *info_hash);
 void get_peer_id(std::string *id);
-void build_handshake(char *info_hash, std::array<char, 256> &handshake);
-int send_handshake(pwp::peer_connection& peerc_t, const std::array<char, 256> handshake, std::array<char, 256> &response);
+void build_handshake(char *info_hash, std::vector<uint8_t> &handshake);
+int send_handshake(pwp::peer_connection& peerc_t, const std::vector<uint8_t> handshake, std::vector<uint8_t> &response);
 void handshake_request_manager(const std::array<char, 256> &handshake, const pwp::peer t_peer, const char *info_hash, pwp::PeerConnected valid_peer);
-int verify_handshake(const std::array<char, 256> handshake, const pwp::peer t_peer, const char *info_hash);
+int verify_handshake(const std::vector<uint8_t> handshake, size_t len,  const pwp::peer t_peer, const char *info_hash);
 
-uint32_t make_int(pwp::bInt bint);
-std::vector<uint8_t> from_int_to_bint(int integer);
+void remove_invalid_peer(pwp::PeerList peer_list);
+void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshake, const char *info_hash, Torrent &torrent);
+uint32_t make_int(bInt bint);
+uint32_t make_int(std::vector<uint8_t> v);
+std::vector<uint8_t> from_int_to_bint(uint integer);
+std::vector<uint8_t> from_int64_to_bint(uint64_t integer);
+
+std::string string_to_hex(const std::vector<uint8_t>& input);
 
 #endif

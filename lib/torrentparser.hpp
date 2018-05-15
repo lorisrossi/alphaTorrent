@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 #include <boost/dynamic_bitset.hpp>
+#include <string.h> //For memcpy
+
+
 
 #include "bencode.h"
 
@@ -23,12 +26,11 @@ typedef struct {
   std::string pieces;
   size_t num_pieces;
   std::vector<TorrentFile> files;
-  boost::dynamic_bitset<unsigned char> bitfield;
+  boost::dynamic_bitset<> bitfield;
   bool is_single = false; // true if single file torrent
 } Torrent;
 
-void parse_torrent(const be_node *node, Torrent &new_torrent);
-void print_torrent(const Torrent &torrent);
+int parse_torrent(Torrent &new_torrent, std::string &torrent_str, const char* filename);
 char *get_info_node_hash(const std::string *file, const std::string *pieces_string);
 
 #endif

@@ -1,6 +1,7 @@
 #ifndef FILEHANDLER_HPP
 #define FILEHANDLER_HPP
 
+#include <boost/dynamic_bitset.hpp>
 #include "torrentparser.hpp"
 
 typedef struct {
@@ -10,5 +11,8 @@ typedef struct {
 } RequestMsg;
 
 void check_files(Torrent &torrent);
+int compare_bitfields(boost::dynamic_bitset<> peer_bitfield, boost::dynamic_bitset<> own_bitfield);
+RequestMsg create_request(Torrent &torrent, int piece_index);
+void save_block(char *blockdata, size_t index, size_t begin, size_t length, Torrent &torrent);
 
 #endif
