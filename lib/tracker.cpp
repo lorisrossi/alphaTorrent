@@ -24,7 +24,9 @@ namespace tracker{
      */
     int start_tracker_request(TParameter *param, const TList &tracker_list, pwp::PeerList peer_list){
 
-
+        cout << endl << "----------------------------------------------------------------------";
+        cout << endl << "--------------Peer fetching from tracker------------------------------";
+        cout << endl << "----------------------------------------------------------------------";
 
         //TODO Read this info from config files
         param->info_hash = "";
@@ -67,9 +69,13 @@ namespace tracker{
         //     _io_service.run();
         // }         
 
-
+        cout << "Waiting for joining" << endl;
         t_group.join_all(); //Sync all thread
 
+        cout << "Joinned" << endl;
+
+        _io_service.stop();
+        _io_service.reset();
 
         remove_duplicate_peers(peer_list);
 

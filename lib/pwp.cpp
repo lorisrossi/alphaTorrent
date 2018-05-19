@@ -4,6 +4,14 @@
 #include "filehandler.hpp"
 
 
+/**
+ *  Checks if the address is equal to "0.0.0.0"
+ *  
+ *  @param addr :   the address to verify
+ *  @return true if it's invalid, false otherwise
+ * 
+ */
+
 bool is_inv_address(const boost::asio::ip::address& addr){
     const boost::asio::ip::address inv_address = boost::asio::ip::address::from_string("0.0.0.0");  //from_string deprecated function
 
@@ -16,7 +24,6 @@ bool is_inv_address(const boost::asio::ip::address& addr){
 
 /**
  *  This namespace contains all the function that are related to the messages of the PWP Protocol
- * 
  */
 namespace pwp_msg{
 
@@ -191,7 +198,7 @@ namespace pwp_msg{
         return 0;
     }
 
-    void read_msg_handler(std::vector<uint8_t>& response, pwp::peer_connection& peer_c, Torrent &torrent, bool& dead_peer, const boost::system::error_code& error, size_t bytes_read){
+    void read_msg_handler(std::vector<uint8_t>& response, pwp::peer_connection& peer_c, Torrent &torrent, bool& dead_peer,  boost::asio::deadline_timer &timer_, const boost::system::error_code& error, size_t bytes_read){
         using namespace std;
         using namespace boost::asio;
 
@@ -210,6 +217,9 @@ namespace pwp_msg{
         else {
             msg_id = 255; // random value
         }
+
+        timer_.expires_at(boost::posix_time::pos_infin);
+
 
         switch(msg_id){
 
@@ -334,10 +344,13 @@ namespace pwp_msg{
         boost::this_thread::sleep_for(boost::chrono::milliseconds(200));
 
         try{
+
+            timer_.expires_from_now(boost::posix_time::seconds(15));
+
             boost::asio::async_read(*(peer_c.socket), boost::asio::buffer(response, sizeof(uint8_t)*4), 
                 boost::asio::transfer_exactly(4),
                 boost::bind(&pwp_msg::read_msg_handler, boost::ref(response), 
-                            boost::ref(peer_c), boost::ref(torrent), boost::ref(dead_peer), 
+                            boost::ref(peer_c), boost::ref(torrent), boost::ref(dead_peer), boost::ref(timer_),
                             boost::asio::placeholders::error,
                             boost::asio::placeholders::bytes_transferred
                 )
@@ -372,7 +385,7 @@ namespace pwp_msg{
 
                 if (request.begin != std::string::npos) {
                     std::vector<uint8_t> msg = make_request_msg(request);
-                    // std::cout << peer_conn.peer_t.addr << " sending REQUEST: " << string_to_hex(msg) << std::endl;
+                    std::cout << peer_conn.peer_t.addr << " sending REQUEST: " << string_to_hex(msg) << std::endl;
                     return send_msg(peer_conn, msg);                    
                 }
             }

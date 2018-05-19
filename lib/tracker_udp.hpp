@@ -13,22 +13,29 @@
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
 
+/**
+ *  Namespace related to the Tracker UDP protocol
+ * 
+ */
 
 namespace t_udp{
 
     typedef struct{ 
-        int64_t protocol_id = 0x41727101980; //Magic Constant
-        int32_t action = 0; //Connect value
+        int64_t protocol_id = 0x41727101980; /*!< Magic Constant */
+        int32_t action = 0;                  /*!< Connection Value */
         int32_t transaction_id;
     }connect_request;
 
     typedef struct{ 
-        int32_t action = 0; //Connect value
+        int32_t action = 0;     /*!< Connection Value */
         int32_t transaction_id;
         int64_t connection_id;
     }connect_response;
 
 /**
+ * announce_request struct is built according to the UDP tracker protocol
+ * Each int is in network notation (big-endian)
+ * 
  * IPv4 announce request:
 
         Offset  Size    Name    Value
@@ -114,5 +121,7 @@ namespace t_udp{
     void process_error(std::vector<uint8_t>& resp);
     void parse_announce_resp_peers(std::vector<uint8_t>& resp, pwp::PeerList peer_list);
 }
+
+static void handle_receive(const boost::system::error_code& ec, std::size_t length, boost::system::error_code* out_ec, std::size_t* out_length);
 
 #endif

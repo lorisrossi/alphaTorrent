@@ -1,3 +1,12 @@
+/**
+ * @file peer.h
+ *
+ * Peer's data and PWP protocol interface
+ *
+ * This define the basic PWP protocol structure along with peer interface
+ * 
+ */
+
 #ifndef PEER_H
 #define PEER_H
 
@@ -22,6 +31,8 @@
 #include <boost/endian/conversion.hpp>
 #include <cmath>
 
+#include <boost/lambda/lambda.hpp>
+
 #include "torrentparser.hpp"
 
 #define DEFAULT_BUFF_SIZE 128
@@ -36,7 +47,10 @@ extern boost::mutex mtx_peer_num;
 inline void add_active_peer();
 inline void rm_active_peer();
 
-//Namespace Peer Wire Protocol
+/**
+ * Namespace used to define all peer's related data and PWP protocol
+ * 
+ */
 namespace pwp{
 
     using namespace boost::asio;
@@ -54,9 +68,9 @@ namespace pwp{
     }peer_state;
 
     struct peer{
-        ip::address addr;
+        ip::address addr;       /*!< Peer's IP address (both v4 and v6) */
         uint port;
-        std::string peer_id;
+        std::string peer_id;    /*!< 20 bytes peer id string */
 
         bool operator==(peer const & rhs) const {
             if(this->addr == rhs.addr && this->port == rhs.port)
@@ -78,7 +92,6 @@ namespace pwp{
         peer_state pstate;
         boost::dynamic_bitset<> bitfield;
         std::shared_ptr<boost::asio::ip::tcp::socket> socket;
-        //boost::mutex bitfield_mutex;
     };
 
 
@@ -116,5 +129,10 @@ std::vector<uint8_t> from_int_to_bint(uint integer);
 std::vector<uint8_t> from_int64_to_bint(uint64_t integer);
 
 std::string string_to_hex(const std::vector<uint8_t>& input);
+
+
+static void handle_receive(const boost::system::error_code& ec, std::size_t length, boost::system::error_code* out_ec, std::size_t* out_length);
+void check_deadline_udp(boost::asio::ip::udp::socket &socket, boost::asio::deadline_timer &timer_);
+void check_deadline_tcp(std::shared_ptr<boost::asio::ip::tcp::socket> socket, boost::asio::deadline_timer &timer_);
 
 #endif
