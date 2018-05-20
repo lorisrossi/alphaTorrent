@@ -101,6 +101,18 @@ namespace pwp{
 
     typedef std::shared_ptr<std::vector<pwp::peer>> PeerList;
     typedef std::shared_ptr<std::vector<pwp::peer_connection>> PeerConnected;
+
+
+    void manage_peer_connection(pwp::PeerList peer_list, char *info_hash);
+    void get_peer_id(std::string *id);
+    void build_handshake(char *info_hash, std::vector<uint8_t> &handshake);
+    int send_handshake(pwp::peer_connection& peerc_t, const std::vector<uint8_t> handshake, std::vector<uint8_t> &response);
+    void handshake_request_manager(const std::array<char, 256> &handshake, const pwp::peer t_peer, const char *info_hash, pwp::PeerConnected valid_peer);
+    int verify_handshake(const std::vector<uint8_t> handshake, size_t len, const pwp::peer t_peer, const char *info_hash);
+
+    void remove_invalid_peer(pwp::PeerList peer_list);
+    void pwp_protocol_manager(pwp::peer peer_, const std::vector<uint8_t> &handshake, const char *info_hash, Torrent &torrent);
+
 }
 
 
@@ -114,15 +126,8 @@ struct bInt{
 typedef struct bInt bInt;
 
 
-void manage_peer_connection(pwp::PeerList peer_list, char *info_hash);
-void get_peer_id(std::string *id);
-void build_handshake(char *info_hash, std::vector<uint8_t> &handshake);
-int send_handshake(pwp::peer_connection& peerc_t, const std::vector<uint8_t> handshake, std::vector<uint8_t> &response);
-void handshake_request_manager(const std::array<char, 256> &handshake, const pwp::peer t_peer, const char *info_hash, pwp::PeerConnected valid_peer);
-int verify_handshake(const std::vector<uint8_t> handshake, size_t len,  const pwp::peer t_peer, const char *info_hash);
 
-void remove_invalid_peer(pwp::PeerList peer_list);
-void pwp_protocol_manager(pwp::peer peer_, const std::vector<uint8_t> &handshake, const char *info_hash, Torrent &torrent);
+
 uint32_t make_int(bInt bint);
 uint32_t make_int(std::vector<uint8_t> v);
 std::vector<uint8_t> from_int_to_bint(uint integer);

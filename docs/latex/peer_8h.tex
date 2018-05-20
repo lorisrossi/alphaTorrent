@@ -77,27 +77,26 @@ void {\bfseries add\+\_\+active\+\_\+peer} ()
 \mbox{\Hypertarget{peer_8h_a536da2a1a4821536d1ae07a26a96e60a}\label{peer_8h_a536da2a1a4821536d1ae07a26a96e60a}} 
 void {\bfseries rm\+\_\+active\+\_\+peer} ()
 \item 
-\mbox{\Hypertarget{peer_8h_a29d8b5f6c1ca5ea0c6e32a9f43b9aec9}\label{peer_8h_a29d8b5f6c1ca5ea0c6e32a9f43b9aec9}} 
-void {\bfseries manage\+\_\+peer\+\_\+connection} (pwp\+::\+Peer\+List peer\+\_\+list, char $\ast$info\+\_\+hash)
+\mbox{\Hypertarget{namespacepwp_ab82c0d015f6ba23e766c4b942a125b5f}\label{namespacepwp_ab82c0d015f6ba23e766c4b942a125b5f}} 
+void {\bfseries pwp\+::manage\+\_\+peer\+\_\+connection} (pwp\+::\+Peer\+List peer\+\_\+list, char $\ast$info\+\_\+hash)
 \item 
-\mbox{\Hypertarget{peer_8h_acebde99cb0a5bfcba8e20324a0de6b19}\label{peer_8h_acebde99cb0a5bfcba8e20324a0de6b19}} 
-void {\bfseries get\+\_\+peer\+\_\+id} (std\+::string $\ast$id)
+\mbox{\Hypertarget{namespacepwp_a5f03cde749af88a393c999545830b192}\label{namespacepwp_a5f03cde749af88a393c999545830b192}} 
+void {\bfseries pwp\+::get\+\_\+peer\+\_\+id} (std\+::string $\ast$id)
 \item 
-void \hyperlink{peer_8h_a9416f761e4aa96699fa5410745bc937c}{build\+\_\+handshake} (char $\ast$info\+\_\+hash, std\+::vector$<$ uint8\+\_\+t $>$ \&handshake)
+void \hyperlink{namespacepwp_a6062876f4d4d4d6ee19341a79a797864}{pwp\+::build\+\_\+handshake} (char $\ast$info\+\_\+hash, std\+::vector$<$ uint8\+\_\+t $>$ \&handshake)
 \item 
-int \hyperlink{peer_8h_a41ff37b7b0572d5c5b3c904585687d01}{send\+\_\+handshake} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peerc\+\_\+t, const std\+::vector$<$ uint8\+\_\+t $>$ handshake, std\+::vector$<$ uint8\+\_\+t $>$ \&response)
+int \hyperlink{namespacepwp_a851ddc0e8fb2eb0a86317cc944c4a927}{pwp\+::send\+\_\+handshake} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peerc\+\_\+t, const std\+::vector$<$ uint8\+\_\+t $>$ handshake, std\+::vector$<$ uint8\+\_\+t $>$ \&response)
 \item 
-\mbox{\Hypertarget{peer_8h_ae65b4f1fe5b035257ac0d8e13af8cf05}\label{peer_8h_ae65b4f1fe5b035257ac0d8e13af8cf05}} 
-void {\bfseries handshake\+\_\+request\+\_\+manager} (const std\+::array$<$ char, 256 $>$ \&handshake, const \hyperlink{structpwp_1_1peer}{pwp\+::peer} t\+\_\+peer, const char $\ast$info\+\_\+hash, pwp\+::\+Peer\+Connected valid\+\_\+peer)
+\mbox{\Hypertarget{namespacepwp_ae2eeca61e271fabff5fa45308396009e}\label{namespacepwp_ae2eeca61e271fabff5fa45308396009e}} 
+void {\bfseries pwp\+::handshake\+\_\+request\+\_\+manager} (const std\+::array$<$ char, 256 $>$ \&handshake, const \hyperlink{structpwp_1_1peer}{pwp\+::peer} t\+\_\+peer, const char $\ast$info\+\_\+hash, pwp\+::\+Peer\+Connected valid\+\_\+peer)
 \item 
-\mbox{\Hypertarget{peer_8h_a4175d21bcf7b81e4307fd51d2ab7ae63}\label{peer_8h_a4175d21bcf7b81e4307fd51d2ab7ae63}} 
-int {\bfseries verify\+\_\+handshake} (const std\+::vector$<$ uint8\+\_\+t $>$ handshake, size\+\_\+t len, const \hyperlink{structpwp_1_1peer}{pwp\+::peer} t\+\_\+peer, const char $\ast$info\+\_\+hash)
+\mbox{\Hypertarget{namespacepwp_aed118903b8345e62507ade49c6032d32}\label{namespacepwp_aed118903b8345e62507ade49c6032d32}} 
+int {\bfseries pwp\+::verify\+\_\+handshake} (const std\+::vector$<$ uint8\+\_\+t $>$ handshake, size\+\_\+t len, const \hyperlink{structpwp_1_1peer}{pwp\+::peer} t\+\_\+peer, const char $\ast$info\+\_\+hash)
 \item 
-\mbox{\Hypertarget{peer_8h_a9fa408c11d50d66cf11cda719dd53695}\label{peer_8h_a9fa408c11d50d66cf11cda719dd53695}} 
-void {\bfseries remove\+\_\+invalid\+\_\+peer} (pwp\+::\+Peer\+List peer\+\_\+list)
-\item 
-\mbox{\Hypertarget{peer_8h_a95073c0304f78a1ba62f98a35efba065}\label{peer_8h_a95073c0304f78a1ba62f98a35efba065}} 
-void {\bfseries pwp\+\_\+protocol\+\_\+manager} (\hyperlink{structpwp_1_1peer}{pwp\+::peer} peer\+\_\+, const std\+::vector$<$ uint8\+\_\+t $>$ \&handshake, const char $\ast$info\+\_\+hash, \hyperlink{structTorrent}{Torrent} \&torrent)
+void \hyperlink{namespacepwp_ae8331eb5e3c98deddc6022dad92352f6}{pwp\+::remove\+\_\+invalid\+\_\+peer} (pwp\+::\+Peer\+List peer\+\_\+list)
+\begin{DoxyCompactList}\small\item\em Find invalid peers and remove it. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{namespacepwp_a62060bdcdc80541b0892e26fbeab1e91}\label{namespacepwp_a62060bdcdc80541b0892e26fbeab1e91}} 
+void {\bfseries pwp\+::pwp\+\_\+protocol\+\_\+manager} (\hyperlink{structpwp_1_1peer}{pwp\+::peer} peer\+\_\+, const std\+::vector$<$ uint8\+\_\+t $>$ \&handshake, const char $\ast$info\+\_\+hash, \hyperlink{structTorrent}{Torrent} \&torrent)
 \item 
 \mbox{\Hypertarget{peer_8h_a271dd525a536a4182946e975569203bd}\label{peer_8h_a271dd525a536a4182946e975569203bd}} 
 uint32\+\_\+t {\bfseries make\+\_\+int} (\hyperlink{structbInt}{b\+Int} bint)
@@ -138,45 +137,6 @@ boost\+::mutex {\bfseries mtx\+\_\+peer\+\_\+num}
 This define the basic P\+WP protocol structure along with peer interface 
 
 \subsection{Function Documentation}
-\mbox{\Hypertarget{peer_8h_a9416f761e4aa96699fa5410745bc937c}\label{peer_8h_a9416f761e4aa96699fa5410745bc937c}} 
-\index{peer.\+h@{peer.\+h}!build\+\_\+handshake@{build\+\_\+handshake}}
-\index{build\+\_\+handshake@{build\+\_\+handshake}!peer.\+h@{peer.\+h}}
-\subsubsection{\texorpdfstring{build\+\_\+handshake()}{build\_handshake()}}
-{\footnotesize\ttfamily void build\+\_\+handshake (\begin{DoxyParamCaption}\item[{char $\ast$}]{info\+\_\+hash,  }\item[{std\+::vector$<$ uint8\+\_\+t $>$ \&}]{handshake }\end{DoxyParamCaption})}
-
-Create the handshake for a file
-
-
-\begin{DoxyParams}{Parameters}
-{\em info\+\_\+hash} & \+: the info\+\_\+hash of the file \\
-\hline
-{\em handshake} & \+: the destination array for the handshake \\
-\hline
-\end{DoxyParams}
-\mbox{\Hypertarget{peer_8h_a41ff37b7b0572d5c5b3c904585687d01}\label{peer_8h_a41ff37b7b0572d5c5b3c904585687d01}} 
-\index{peer.\+h@{peer.\+h}!send\+\_\+handshake@{send\+\_\+handshake}}
-\index{send\+\_\+handshake@{send\+\_\+handshake}!peer.\+h@{peer.\+h}}
-\subsubsection{\texorpdfstring{send\+\_\+handshake()}{send\_handshake()}}
-{\footnotesize\ttfamily int send\+\_\+handshake (\begin{DoxyParamCaption}\item[{\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&}]{peerc\+\_\+t,  }\item[{const std\+::vector$<$ uint8\+\_\+t $>$}]{handshake,  }\item[{std\+::vector$<$ uint8\+\_\+t $>$ \&}]{response }\end{DoxyParamCaption})}
-
-Contact the peer with handshake and download the response
-
-
-\begin{DoxyParams}{Parameters}
-{\em t\+\_\+peer} & the peer to contact \\
-\hline
-{\em handshake} & the handshake to send \\
-\hline
-{\em response} & a pointer to an array used to store the response\\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-0 on success, $<$ 0 on failure
-\end{DoxyReturn}
-Return error code ~\newline
- -\/1 Unimplemented ~\newline
- -\/2 Socket Error ~\newline
- -\/3 Invalid IP Address ~\newline
 \mbox{\Hypertarget{peer_8h_a9a16c464cd63530a7fbd80134c32f264}\label{peer_8h_a9a16c464cd63530a7fbd80134c32f264}} 
 \index{peer.\+h@{peer.\+h}!string\+\_\+to\+\_\+hex@{string\+\_\+to\+\_\+hex}}
 \index{string\+\_\+to\+\_\+hex@{string\+\_\+to\+\_\+hex}!peer.\+h@{peer.\+h}}

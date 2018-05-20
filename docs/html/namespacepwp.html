@@ -60,7 +60,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#typedef-members">Typedefs</a>  </div>
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">pwp Namespace Reference</div>  </div>
 </div><!--header-->
@@ -85,10 +86,289 @@ typedef std::shared_ptr&lt; std::vector&lt; <a class="el" href="structpwp_1_1pee
 <tr class="memitem:a174e8f020062fa10258b0d28f00d79ff"><td class="memItemLeft" align="right" valign="top"><a id="a174e8f020062fa10258b0d28f00d79ff"></a>
 typedef std::shared_ptr&lt; std::vector&lt; <a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>PeerConnected</b></td></tr>
 <tr class="separator:a174e8f020062fa10258b0d28f00d79ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ae8331eb5e3c98deddc6022dad92352f6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp.html#ae8331eb5e3c98deddc6022dad92352f6">remove_invalid_peer</a> (pwp::PeerList peer_list)</td></tr>
+<tr class="memdesc:ae8331eb5e3c98deddc6022dad92352f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find invalid peers and remove it.  <a href="#ae8331eb5e3c98deddc6022dad92352f6">More...</a><br /></td></tr>
+<tr class="separator:ae8331eb5e3c98deddc6022dad92352f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73acf05b954e39825a88036d5793db6b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp.html#a73acf05b954e39825a88036d5793db6b">create_socket</a> (<a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;peer_conn_p)</td></tr>
+<tr class="memdesc:a73acf05b954e39825a88036d5793db6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the socket and connect to the peer.  <a href="#a73acf05b954e39825a88036d5793db6b">More...</a><br /></td></tr>
+<tr class="separator:a73acf05b954e39825a88036d5793db6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62060bdcdc80541b0892e26fbeab1e91"><td class="memItemLeft" align="right" valign="top"><a id="a62060bdcdc80541b0892e26fbeab1e91"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>pwp_protocol_manager</b> (<a class="el" href="structpwp_1_1peer.html">pwp::peer</a> peer_, const std::vector&lt; uint8_t &gt; &amp;handshake, const char *info_hash, <a class="el" href="structTorrent.html">Torrent</a> &amp;torrent)</td></tr>
+<tr class="separator:a62060bdcdc80541b0892e26fbeab1e91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6062876f4d4d4d6ee19341a79a797864"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp.html#a6062876f4d4d4d6ee19341a79a797864">build_handshake</a> (char *info_hash, std::vector&lt; uint8_t &gt; &amp;handshake)</td></tr>
+<tr class="separator:a6062876f4d4d4d6ee19341a79a797864"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a851ddc0e8fb2eb0a86317cc944c4a927"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp.html#a851ddc0e8fb2eb0a86317cc944c4a927">send_handshake</a> (<a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;peerc_t, const std::vector&lt; uint8_t &gt; handshake, std::vector&lt; uint8_t &gt; &amp;response)</td></tr>
+<tr class="separator:a851ddc0e8fb2eb0a86317cc944c4a927"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada6a8613896dbbfd6fba63b17d51684c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp.html#ada6a8613896dbbfd6fba63b17d51684c">get_peer_id</a> (string *id)</td></tr>
+<tr class="memdesc:ada6a8613896dbbfd6fba63b17d51684c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Put into "id" the string that conrespond to the client ID.  <a href="#ada6a8613896dbbfd6fba63b17d51684c">More...</a><br /></td></tr>
+<tr class="separator:ada6a8613896dbbfd6fba63b17d51684c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58c780495f2139a56b95662dc7c0345f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp.html#a58c780495f2139a56b95662dc7c0345f">verify_handshake</a> (const vector&lt; uint8_t &gt; handshake, size_t len, const <a class="el" href="structpwp_1_1peer.html">pwp::peer</a> t_peer, const char *info_hash)</td></tr>
+<tr class="separator:a58c780495f2139a56b95662dc7c0345f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab82c0d015f6ba23e766c4b942a125b5f"><td class="memItemLeft" align="right" valign="top"><a id="ab82c0d015f6ba23e766c4b942a125b5f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>manage_peer_connection</b> (pwp::PeerList peer_list, char *info_hash)</td></tr>
+<tr class="separator:ab82c0d015f6ba23e766c4b942a125b5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f03cde749af88a393c999545830b192"><td class="memItemLeft" align="right" valign="top"><a id="a5f03cde749af88a393c999545830b192"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>get_peer_id</b> (std::string *id)</td></tr>
+<tr class="separator:a5f03cde749af88a393c999545830b192"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2eeca61e271fabff5fa45308396009e"><td class="memItemLeft" align="right" valign="top"><a id="ae2eeca61e271fabff5fa45308396009e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>handshake_request_manager</b> (const std::array&lt; char, 256 &gt; &amp;handshake, const <a class="el" href="structpwp_1_1peer.html">pwp::peer</a> t_peer, const char *info_hash, pwp::PeerConnected valid_peer)</td></tr>
+<tr class="separator:ae2eeca61e271fabff5fa45308396009e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed118903b8345e62507ade49c6032d32"><td class="memItemLeft" align="right" valign="top"><a id="aed118903b8345e62507ade49c6032d32"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>verify_handshake</b> (const std::vector&lt; uint8_t &gt; handshake, size_t len, const <a class="el" href="structpwp_1_1peer.html">pwp::peer</a> t_peer, const char *info_hash)</td></tr>
+<tr class="separator:aed118903b8345e62507ade49c6032d32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Namespace used to define all peer's related data and PWP protocol </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="a6062876f4d4d4d6ee19341a79a797864"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6062876f4d4d4d6ee19341a79a797864">&#9670;&nbsp;</a></span>build_handshake()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void pwp::build_handshake </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>info_hash</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; uint8_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>handshake</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Create the handshake for a file</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">info_hash</td><td>the info_hash of the file </td></tr>
+    <tr><td class="paramname">handshake</td><td>the destination array for the handshake </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a73acf05b954e39825a88036d5793db6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73acf05b954e39825a88036d5793db6b">&#9670;&nbsp;</a></span>create_socket()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int pwp::create_socket </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;&#160;</td>
+          <td class="paramname"><em>peer_conn_p</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create the socket and connect to the peer. </p>
+<table class="doxtable">
+<tr>
+<th>Error Code </th><th>Meaning  </th></tr>
+<tr>
+<td>-1 </td><td>Connection Closed </td></tr>
+<tr>
+<td>-2 </td><td>Generic Error (see the output) </td></tr>
+<tr>
+<td>-3 </td><td>Invalid Address </td></tr>
+</table>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname"><a class="el" href="structpwp_1_1peer__connection.html">peer_connection</a></td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ada6a8613896dbbfd6fba63b17d51684c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada6a8613896dbbfd6fba63b17d51684c">&#9670;&nbsp;</a></span>get_peer_id()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void pwp::get_peer_id </td>
+          <td>(</td>
+          <td class="paramtype">string *&#160;</td>
+          <td class="paramname"><em>id</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Put into "id" the string that conrespond to the client ID. </p>
+<p>Find a new way to generate the ID:</p><ol type="1">
+<li>Using MAC address.</li>
+<li>Initially random and then writtend o a file.</li>
+</ol>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>A pointer to the string that will contains the Peer-ID </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae8331eb5e3c98deddc6022dad92352f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8331eb5e3c98deddc6022dad92352f6">&#9670;&nbsp;</a></span>remove_invalid_peer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void pwp::remove_invalid_peer </td>
+          <td>(</td>
+          <td class="paramtype">pwp::PeerList&#160;</td>
+          <td class="paramname"><em>peer_list</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Find invalid peers and remove it. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">peer_list</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a851ddc0e8fb2eb0a86317cc944c4a927"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a851ddc0e8fb2eb0a86317cc944c4a927">&#9670;&nbsp;</a></span>send_handshake()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int pwp::send_handshake </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;&#160;</td>
+          <td class="paramname"><em>peerc_t</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; uint8_t &gt;&#160;</td>
+          <td class="paramname"><em>handshake</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; uint8_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>response</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Contact the peer with handshake and download the response</p>
+<table class="doxtable">
+<tr>
+<th>Error code </th><th>Meaning  </th></tr>
+<tr>
+<td>-1 </td><td>Unimplemented. </td></tr>
+<tr>
+<td>-2 </td><td>Socket Error. </td></tr>
+<tr>
+<td>-3 </td><td>Invalid IP Address. </td></tr>
+</table>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t_peer</td><td>the peer to contact </td></tr>
+    <tr><td class="paramname">handshake</td><td>the handshake to send </td></tr>
+    <tr><td class="paramname">response</td><td>a pointer to an array used to store the response</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success, &lt; 0 on failure </dd></dl>
+
+</div>
+</div>
+<a id="a58c780495f2139a56b95662dc7c0345f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58c780495f2139a56b95662dc7c0345f">&#9670;&nbsp;</a></span>verify_handshake()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int pwp::verify_handshake </td>
+          <td>(</td>
+          <td class="paramtype">const vector&lt; uint8_t &gt;&#160;</td>
+          <td class="paramname"><em>handshake</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structpwp_1_1peer.html">pwp::peer</a>&#160;</td>
+          <td class="paramname"><em>t_peer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>info_hash</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Verify if an handshake (received) is correct</p>
+<table class="doxtable">
+<tr>
+<th>Error Code </th><th>Meaning  </th></tr>
+<tr>
+<td>-1 </td><td>First byte is not 19 </td></tr>
+<tr>
+<td>-2 </td><td>Invalid protocol string </td></tr>
+<tr>
+<td>-3 </td><td>Info hash does not match (with the one sended) </td></tr>
+<tr>
+<td>-4 </td><td><a class="el" href="classPeer.html">Peer</a> ID does not match (Bypassed) </td></tr>
+</table>
+<dl class="section warning"><dt>Warning</dt><dd>The comparison of the <em>peer-ID</em> often fail so it's skipped (no return -4)</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handshake</td><td>: the handshake to check </td></tr>
+    <tr><td class="paramname">t_peer</td><td>: the peer who sended the handshake </td></tr>
+    <tr><td class="paramname">info_hash</td><td>: the info_hash of the file </td></tr>
+  </table>
+  </dd>
+</dl>
+<p>If the initiator of the connection receives a handshake in which the peer_id does not match the expected peerid, then the initiator is expected to drop the connection. Note that the initiator presumably received the peer information from the tracker, which includes the peer_id that was registered by the peer. The peer_id from the tracker and in the handshake are expected to match.</p>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

@@ -28,13 +28,18 @@ bool is_inv_address(const boost::asio::ip::address& addr){
 namespace pwp_msg{
 
     /**
-     *  Handler that is executed every KEEP_ALIVE_TIME and send a keep-alive message
+     *  Handler that is executed every KEEP_ALIVE_TIME and send a keep-alive message.
      * 
-     *  @param peer_c   The peer connection structure
-     *  
+     *  If the peer_c's socket is closed, then the periodic routine is stopped by calling.\n
+     *      `timer.cancel()`
+     *  So the handler is calcelled from [_io_service](@ref _io_service) 
+     *
+     * 
+     *  @param peer_c   The peer connection structure.
+     *  @param timer    The deadline_timer that call the handler. 
      */
 
-    void send_keep_alive(const pwp::peer_connection& peer_c){
+    void send_keep_alive(const pwp::peer_connection& peer_c, boost::asio::deadline_timer& timer){
         using namespace boost::asio;
         using namespace boost::asio::ip;
 
@@ -46,19 +51,20 @@ namespace pwp_msg{
         try{ 
 
             if(!peer_c.socket->is_open()){
-                LOG(ERROR) << "Keep-Alive routine : Error socket not opened!!!!!";
+                LOG(ERROR) << "Keep-Alive routine : Error socket not opened, cancelling keep-alive routine";
+                timer.cancel();
                 return;
             }
 
             boost::system::error_code error;
-            size_t len;
             std::array<uint8_t, 4> keep_alive_msg;
 
             keep_alive_msg.fill(0);
 
             LOG(INFO) << "Sending keep-alive";
-            len = peer_c.socket->send(buffer(keep_alive_msg));
+            peer_c.socket->send(buffer(keep_alive_msg),0, error);
         
+
             if (error == boost::asio::error::eof){
                 LOG(ERROR) << "Connection Closed";
                 return;
@@ -72,10 +78,17 @@ namespace pwp_msg{
     }
 
 
-    void enable_keep_alive_message(pwp::peer_connection& peerc_t){
+    /**
+     *  Start the timer that each KEEP_ALIVE_TIME send a Keep-alive request
+     * 
+     *  @param peer_c   The peer's connection structure
+     * 
+     */
+
+    void enable_keep_alive_message(pwp::peer_connection& peer_c){
         boost::asio::deadline_timer timer(_io_service, boost::posix_time::seconds(KEEP_ALIVE_TIME));
 
-        timer.async_wait(boost::bind(send_keep_alive, peerc_t));
+        timer.async_wait(boost::bind(send_keep_alive, peer_c, std::ref(timer)));
 
         if(_io_service.stopped()){
             DLOG(INFO) << "IO-Service stopped, resetting";
@@ -86,12 +99,29 @@ namespace pwp_msg{
         }
     }
 
+
+    /**
+     *  @brief Send `msg` to the peer specified in `peer_c`
+     * 
+     *  Error code list
+     *  
+     *  Error Code | Explaination
+     *  -----------|-------------
+     *  -1         | Invalid Address
+     *  -2         | Cannot open socket
+     *  -3         | Connection closed
+     *  -4         | Exception (see the output)
+     *  
+     *  @param peer_c   Peer connection structure
+     *  @param msg      Message to send
+     *  @return 0 on success, <0 otherwise
+     */
     
-    int send_msg(pwp::peer_connection& peerc_t, std::vector<uint8_t> msg){
+    int send_msg(pwp::peer_connection& peer_c, std::vector<uint8_t> msg){
         using namespace boost::asio;
         using namespace boost::asio::ip;
         
-        if(is_inv_address(peerc_t.peer_.addr)){  //Check if it's invalid IP
+        if(is_inv_address(peer_c.peer_.addr)){  //Check if it's invalid IP
             return -1;
         }
 
@@ -99,9 +129,9 @@ namespace pwp_msg{
         try{ 
 
             LOG(INFO) << "Checking connection";
-            if(!peerc_t.socket->is_open()){
+            if(!peer_c.socket->is_open()){
                 std::cout << std::endl << "Error socket not opened!!!!!";
-                return -1;
+                return -2;
             }
 
             
@@ -109,18 +139,18 @@ namespace pwp_msg{
             size_t len;
 
             LOG(INFO) << "Sending message";
-            len = peerc_t.socket->send(buffer(msg));
+            len = peer_c.socket->send(buffer(msg));
 
             if (error == boost::asio::error::eof){
                 LOG(ERROR) << "Connection Closed";
-                return -1;
+                return -3;
             }else if (error){
                 throw boost::system::system_error(error); // Some other error.
             }
             
         }catch (std::exception& e){
-            LOG(ERROR) << peerc_t.peer_.addr.to_string() << " " << e.what() << std::endl;
-            return -2;
+            LOG(ERROR) << peer_c.peer_.addr.to_string() << " " << e.what() << std::endl;
+            return -4;
         }
         return 0;
     }

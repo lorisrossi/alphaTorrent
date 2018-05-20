@@ -76,7 +76,7 @@ Enumerations</h2></td></tr>
 <b>not_interested</b> = 0x03, 
 <br />
 &#160;&#160;<b>have</b> = 0x04, 
-<b>bitfield</b> = 0x05, 
+<a class="el" href="namespacepwp__msg.html#a0b9a29508f00a30e5138d2b78f4b1dafac3a2343a7b67a371e241ae2184bfe9cd">bitfield</a> = 0x05, 
 <b>request</b> = 0x06, 
 <b>piece</b> = 0x07, 
 <br />
@@ -88,14 +88,13 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a705398f44211d9aa47d9559c5fb405e1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp__msg.html#a705398f44211d9aa47d9559c5fb405e1">send_keep_alive</a> (const <a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;peer_c)</td></tr>
-<tr class="separator:a705398f44211d9aa47d9559c5fb405e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf8c4889b5b58efb38f203afacefa3f6"><td class="memItemLeft" align="right" valign="top"><a id="acf8c4889b5b58efb38f203afacefa3f6"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>enable_keep_alive_message</b> (<a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;peerc_t)</td></tr>
-<tr class="separator:acf8c4889b5b58efb38f203afacefa3f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b2185bbd26718703c13fed900d440f0"><td class="memItemLeft" align="right" valign="top"><a id="a3b2185bbd26718703c13fed900d440f0"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>send_msg</b> (<a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;peerc_t, std::vector&lt; uint8_t &gt; msg)</td></tr>
-<tr class="separator:a3b2185bbd26718703c13fed900d440f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a577f5a53b823d83bb4694f1ebf141e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp__msg.html#a9a577f5a53b823d83bb4694f1ebf141e">send_keep_alive</a> (const <a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;peer_c, boost::asio::deadline_timer &amp;timer)</td></tr>
+<tr class="separator:a9a577f5a53b823d83bb4694f1ebf141e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30c14bc06a8bb851ca79781cb9686b4f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp__msg.html#a30c14bc06a8bb851ca79781cb9686b4f">enable_keep_alive_message</a> (<a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;peer_c)</td></tr>
+<tr class="separator:a30c14bc06a8bb851ca79781cb9686b4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca807c6281879abef952f8feecccb6e8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp__msg.html#aca807c6281879abef952f8feecccb6e8">send_msg</a> (<a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;peer_c, std::vector&lt; uint8_t &gt; msg)</td></tr>
+<tr class="memdesc:aca807c6281879abef952f8feecccb6e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send <code>msg</code> to the peer specified in <code>peer_c</code>  <a href="#aca807c6281879abef952f8feecccb6e8">More...</a><br /></td></tr>
+<tr class="separator:aca807c6281879abef952f8feecccb6e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a529a3db7938ccfaab85579d58e24061e"><td class="memItemLeft" align="right" valign="top"><a id="a529a3db7938ccfaab85579d58e24061e"></a>
 std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>craft_have_msg</b> (int piece_index)</td></tr>
 <tr class="separator:a529a3db7938ccfaab85579d58e24061e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -142,17 +141,44 @@ enum <a class="el" href="namespacepwp__msg.html#a0b9a29508f00a30e5138d2b78f4b1da
 </div><div class="memdoc">
 <p>PWP Message ID </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a0b9a29508f00a30e5138d2b78f4b1dafae1d8b3754d66ec7fcad827fb54eaeea2"></a>chocked&#160;</td><td class="fielddoc"><p>Chocked </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a0b9a29508f00a30e5138d2b78f4b1dafae1d8b3754d66ec7fcad827fb54eaeea2"></a>chocked&#160;</td><td class="fielddoc"><p>Chocked state </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a0b9a29508f00a30e5138d2b78f4b1dafa55689e288bf71e7737faaf385b1c528b"></a>unchocked&#160;</td><td class="fielddoc"><p>Unchocked </p>
+<tr><td class="fieldname"><a id="a0b9a29508f00a30e5138d2b78f4b1dafa55689e288bf71e7737faaf385b1c528b"></a>unchocked&#160;</td><td class="fielddoc"><p>Unchocked state </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a0b9a29508f00a30e5138d2b78f4b1dafac3a2343a7b67a371e241ae2184bfe9cd"></a>bitfield&#160;</td><td class="fielddoc"><p>Bitfield sended/received </p>
 </td></tr>
 </table>
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a705398f44211d9aa47d9559c5fb405e1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a705398f44211d9aa47d9559c5fb405e1">&#9670;&nbsp;</a></span>send_keep_alive()</h2>
+<a id="a30c14bc06a8bb851ca79781cb9686b4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30c14bc06a8bb851ca79781cb9686b4f">&#9670;&nbsp;</a></span>enable_keep_alive_message()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void pwp_msg::enable_keep_alive_message </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;&#160;</td>
+          <td class="paramname"><em>peer_c</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Start the timer that each KEEP_ALIVE_TIME send a Keep-alive request</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">peer_c</td><td>The peer's connection structure </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a9a577f5a53b823d83bb4694f1ebf141e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a577f5a53b823d83bb4694f1ebf141e">&#9670;&nbsp;</a></span>send_keep_alive()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -161,18 +187,82 @@ enum <a class="el" href="namespacepwp__msg.html#a0b9a29508f00a30e5138d2b78f4b1da
           <td class="memname">void pwp_msg::send_keep_alive </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;&#160;</td>
-          <td class="paramname"><em>peer_c</em></td><td>)</td>
+          <td class="paramname"><em>peer_c</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">boost::asio::deadline_timer &amp;&#160;</td>
+          <td class="paramname"><em>timer</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Handler that is executed every KEEP_ALIVE_TIME and send a keep-alive message</p>
+<p>Handler that is executed every KEEP_ALIVE_TIME and send a keep-alive message.</p>
+<p>If the peer_c's socket is closed, then the periodic routine is stopped by calling.<br />
+ <code>timer.cancel()</code> So the handler is calcelled from <a class="el" href="pwp_8hpp.html#a7efe93eb3d4e0f0c9ab96fa5ae443fcd">_io_service</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">peer_c</td><td>The peer connection structure </td></tr>
+    <tr><td class="paramname">peer_c</td><td>The peer connection structure. </td></tr>
+    <tr><td class="paramname">timer</td><td>The deadline_timer that call the handler. </td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="aca807c6281879abef952f8feecccb6e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca807c6281879abef952f8feecccb6e8">&#9670;&nbsp;</a></span>send_msg()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int pwp_msg::send_msg </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;&#160;</td>
+          <td class="paramname"><em>peer_c</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; uint8_t &gt;&#160;</td>
+          <td class="paramname"><em>msg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Send <code>msg</code> to the peer specified in <code>peer_c</code> </p>
+<p>Error code list</p>
+<table class="doxtable">
+<tr>
+<th>Error Code </th><th>Explaination  </th></tr>
+<tr>
+<td>-1 </td><td>Invalid Address </td></tr>
+<tr>
+<td>-2 </td><td>Cannot open socket </td></tr>
+<tr>
+<td>-3 </td><td>Connection closed </td></tr>
+<tr>
+<td>-4 </td><td>Exception (see the output) </td></tr>
+</table>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">peer_c</td><td><a class="el" href="classPeer.html">Peer</a> connection structure </td></tr>
+    <tr><td class="paramname">msg</td><td>Message to send </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success, &lt;0 otherwise </dd></dl>
 
 </div>
 </div>

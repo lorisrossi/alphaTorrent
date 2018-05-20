@@ -1,3 +1,18 @@
+/*! \mainpage alphaTorrent Documentation
+ *
+ * \section intro_sec Introduction
+ *
+ * alphaTorrent is a CLI program that allow to download files by passing a .torrent file.
+ *
+ * \section install_sec Installation
+ *
+ * \subsection step1 Step 1: Clone the repository
+ *
+ * 
+ */
+
+
+
 #include <iostream>
 #include <string>
 #include <string.h>
@@ -17,7 +32,7 @@ tracker::TParameter set_parameter(const string& torrent_str, const Torrent& torr
 
     param.info_hash_raw = get_info_node_hash(&torrent_str, &torr.pieces);  //Extract info_hash
     param.left = torr.piece_length * torr.pieces.size();
-    get_peer_id(&param.peer_id);
+    pwp::get_peer_id(&param.peer_id);
     
     return param;
 }
@@ -60,11 +75,11 @@ int main(int argc, char* argv[]) {
       return -3;  //Error while encoding param, exit 
     }
 
-    remove_invalid_peer(peer_list);
+    pwp::remove_invalid_peer(peer_list);
 
     cout << "Building handshake...";
     std::vector<uint8_t> handshake = std::vector<uint8_t>();
-    build_handshake(param.info_hash_raw, handshake);
+    pwp::build_handshake(param.info_hash_raw, handshake);
 
 
     //Start the PWP protocol with the peers
@@ -74,7 +89,7 @@ int main(int argc, char* argv[]) {
     for(;it != peer_list->end(); ++it){
         if(!is_inv_address(it->addr)){
           cout<< "Starting executing the protocol with " << it->addr.to_string() << ":" << it->port << "... " << endl;
-          t_group.add_thread(new boost::thread( pwp_protocol_manager, *it, handshake, param.info_hash_raw, mytorrent));
+          t_group.add_thread(new boost::thread( &pwp::pwp_protocol_manager, *it, handshake, param.info_hash_raw, mytorrent));
         }
     }
 

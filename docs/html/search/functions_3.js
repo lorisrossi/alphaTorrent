@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['parse_5fannounce_5fresp',['parse_announce_resp',['../namespacet__udp.html#a1f2a0ab9801cbc55002e67c166895a0e',1,'t_udp']]],
-  ['parse_5fannounce_5fresp_5finfo',['parse_announce_resp_info',['../namespacet__udp.html#a42ced8af1acd3fb2bc46358effe48dbc',1,'t_udp']]],
-  ['parse_5fannounce_5fresp_5fpeers',['parse_announce_resp_peers',['../namespacet__udp.html#a8aa6906fdd81689928634df34688fed1',1,'t_udp']]],
-  ['process_5ferror',['process_error',['../namespacet__udp.html#aab582ebbfac6fd929e811527e44384c1',1,'t_udp']]]
+  ['get_5fannounce_5freq',['get_announce_req',['../namespacet__udp.html#a5e968355a7c45dae0749b80e1be8308a',1,'t_udp']]],
+  ['get_5fconnect_5frequest',['get_connect_request',['../namespacet__udp.html#adb2cdd5090cae67a7de482be4e281f23',1,'t_udp']]],
+  ['get_5fpeer_5fid',['get_peer_id',['../namespacepwp.html#ada6a8613896dbbfd6fba63b17d51684c',1,'pwp']]],
+  ['get_5ftracker_5fdomain',['get_tracker_domain',['../namespacet__udp.html#a0e87c0151a7bceaace19434206566199',1,'t_udp']]],
+  ['get_5ftransaction_5fid',['get_transaction_id',['../namespacet__udp.html#a8ff6ed3deaee00a35cc7afd4b37456d6',1,'t_udp']]]
 ];

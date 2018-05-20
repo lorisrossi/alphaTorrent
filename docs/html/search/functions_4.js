@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['send_5fhandshake',['send_handshake',['../peer_8h.html#a41ff37b7b0572d5c5b3c904585687d01',1,'peer.cpp']]],
-  ['send_5fkeep_5falive',['send_keep_alive',['../namespacepwp__msg.html#a705398f44211d9aa47d9559c5fb405e1',1,'pwp_msg']]],
-  ['string_5fto_5fhex',['string_to_hex',['../peer_8h.html#a9a16c464cd63530a7fbd80134c32f264',1,'peer.cpp']]]
+  ['is_5finv_5faddress',['is_inv_address',['../pwp_8hpp.html#a0bcf004164275de8518de37de3823f1c',1,'pwp.cpp']]],
+  ['is_5fudp_5ftracker',['is_udp_tracker',['../namespacet__udp.html#af6fbd38370a6f5f7d8520144de7104c4',1,'t_udp']]]
 ];

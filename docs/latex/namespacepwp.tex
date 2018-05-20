@@ -20,7 +20,193 @@ typedef std\+::shared\+\_\+ptr$<$ std\+::vector$<$ \hyperlink{structpwp_1_1peer}
 \mbox{\Hypertarget{namespacepwp_a174e8f020062fa10258b0d28f00d79ff}\label{namespacepwp_a174e8f020062fa10258b0d28f00d79ff}} 
 typedef std\+::shared\+\_\+ptr$<$ std\+::vector$<$ \hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} $>$ $>$ {\bfseries Peer\+Connected}
 \end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{namespacepwp_ae8331eb5e3c98deddc6022dad92352f6}{remove\+\_\+invalid\+\_\+peer} (pwp\+::\+Peer\+List peer\+\_\+list)
+\begin{DoxyCompactList}\small\item\em Find invalid peers and remove it. \end{DoxyCompactList}\item 
+int \hyperlink{namespacepwp_a73acf05b954e39825a88036d5793db6b}{create\+\_\+socket} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+conn\+\_\+p)
+\begin{DoxyCompactList}\small\item\em Create the socket and connect to the peer. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{namespacepwp_a62060bdcdc80541b0892e26fbeab1e91}\label{namespacepwp_a62060bdcdc80541b0892e26fbeab1e91}} 
+void {\bfseries pwp\+\_\+protocol\+\_\+manager} (\hyperlink{structpwp_1_1peer}{pwp\+::peer} peer\+\_\+, const std\+::vector$<$ uint8\+\_\+t $>$ \&handshake, const char $\ast$info\+\_\+hash, \hyperlink{structTorrent}{Torrent} \&torrent)
+\item 
+void \hyperlink{namespacepwp_a6062876f4d4d4d6ee19341a79a797864}{build\+\_\+handshake} (char $\ast$info\+\_\+hash, std\+::vector$<$ uint8\+\_\+t $>$ \&handshake)
+\item 
+int \hyperlink{namespacepwp_a851ddc0e8fb2eb0a86317cc944c4a927}{send\+\_\+handshake} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peerc\+\_\+t, const std\+::vector$<$ uint8\+\_\+t $>$ handshake, std\+::vector$<$ uint8\+\_\+t $>$ \&response)
+\item 
+void \hyperlink{namespacepwp_ada6a8613896dbbfd6fba63b17d51684c}{get\+\_\+peer\+\_\+id} (string $\ast$id)
+\begin{DoxyCompactList}\small\item\em Put into \char`\"{}id\char`\"{} the string that conrespond to the client ID. \end{DoxyCompactList}\item 
+int \hyperlink{namespacepwp_a58c780495f2139a56b95662dc7c0345f}{verify\+\_\+handshake} (const vector$<$ uint8\+\_\+t $>$ handshake, size\+\_\+t len, const \hyperlink{structpwp_1_1peer}{pwp\+::peer} t\+\_\+peer, const char $\ast$info\+\_\+hash)
+\item 
+\mbox{\Hypertarget{namespacepwp_ab82c0d015f6ba23e766c4b942a125b5f}\label{namespacepwp_ab82c0d015f6ba23e766c4b942a125b5f}} 
+void {\bfseries manage\+\_\+peer\+\_\+connection} (pwp\+::\+Peer\+List peer\+\_\+list, char $\ast$info\+\_\+hash)
+\item 
+\mbox{\Hypertarget{namespacepwp_a5f03cde749af88a393c999545830b192}\label{namespacepwp_a5f03cde749af88a393c999545830b192}} 
+void {\bfseries get\+\_\+peer\+\_\+id} (std\+::string $\ast$id)
+\item 
+\mbox{\Hypertarget{namespacepwp_ae2eeca61e271fabff5fa45308396009e}\label{namespacepwp_ae2eeca61e271fabff5fa45308396009e}} 
+void {\bfseries handshake\+\_\+request\+\_\+manager} (const std\+::array$<$ char, 256 $>$ \&handshake, const \hyperlink{structpwp_1_1peer}{pwp\+::peer} t\+\_\+peer, const char $\ast$info\+\_\+hash, pwp\+::\+Peer\+Connected valid\+\_\+peer)
+\item 
+\mbox{\Hypertarget{namespacepwp_aed118903b8345e62507ade49c6032d32}\label{namespacepwp_aed118903b8345e62507ade49c6032d32}} 
+int {\bfseries verify\+\_\+handshake} (const std\+::vector$<$ uint8\+\_\+t $>$ handshake, size\+\_\+t len, const \hyperlink{structpwp_1_1peer}{pwp\+::peer} t\+\_\+peer, const char $\ast$info\+\_\+hash)
+\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
 Namespace used to define all peer\textquotesingle{}s related data and P\+WP protocol 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespacepwp_a6062876f4d4d4d6ee19341a79a797864}\label{namespacepwp_a6062876f4d4d4d6ee19341a79a797864}} 
+\index{pwp@{pwp}!build\+\_\+handshake@{build\+\_\+handshake}}
+\index{build\+\_\+handshake@{build\+\_\+handshake}!pwp@{pwp}}
+\subsubsection{\texorpdfstring{build\+\_\+handshake()}{build\_handshake()}}
+{\footnotesize\ttfamily void pwp\+::build\+\_\+handshake (\begin{DoxyParamCaption}\item[{char $\ast$}]{info\+\_\+hash,  }\item[{std\+::vector$<$ uint8\+\_\+t $>$ \&}]{handshake }\end{DoxyParamCaption})}
+
+Create the handshake for a file
+
+
+\begin{DoxyParams}{Parameters}
+{\em info\+\_\+hash} & the info\+\_\+hash of the file \\
+\hline
+{\em handshake} & the destination array for the handshake \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacepwp_a73acf05b954e39825a88036d5793db6b}\label{namespacepwp_a73acf05b954e39825a88036d5793db6b}} 
+\index{pwp@{pwp}!create\+\_\+socket@{create\+\_\+socket}}
+\index{create\+\_\+socket@{create\+\_\+socket}!pwp@{pwp}}
+\subsubsection{\texorpdfstring{create\+\_\+socket()}{create\_socket()}}
+{\footnotesize\ttfamily int pwp\+::create\+\_\+socket (\begin{DoxyParamCaption}\item[{\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&}]{peer\+\_\+conn\+\_\+p }\end{DoxyParamCaption})}
+
+
+
+Create the socket and connect to the peer. 
+
+\tabulinesep=1mm
+\begin{longtabu} spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Error Code }&\textbf{ Meaning  }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Error Code }&\textbf{ Meaning  }\\\cline{1-2}
+\endhead
+-\/1 &Connection Closed \\\cline{1-2}
+-\/2 &Generic Error (see the output) \\\cline{1-2}
+-\/3 &Invalid Address \\\cline{1-2}
+\end{longtabu}
+
+
+
+\begin{DoxyParams}{Parameters}
+{\em \hyperlink{structpwp_1_1peer__connection}{peer\+\_\+connection}} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacepwp_ada6a8613896dbbfd6fba63b17d51684c}\label{namespacepwp_ada6a8613896dbbfd6fba63b17d51684c}} 
+\index{pwp@{pwp}!get\+\_\+peer\+\_\+id@{get\+\_\+peer\+\_\+id}}
+\index{get\+\_\+peer\+\_\+id@{get\+\_\+peer\+\_\+id}!pwp@{pwp}}
+\subsubsection{\texorpdfstring{get\+\_\+peer\+\_\+id()}{get\_peer\_id()}}
+{\footnotesize\ttfamily void pwp\+::get\+\_\+peer\+\_\+id (\begin{DoxyParamCaption}\item[{string $\ast$}]{id }\end{DoxyParamCaption})}
+
+
+
+Put into \char`\"{}id\char`\"{} the string that conrespond to the client ID. 
+
+Find a new way to generate the ID\+:
+\begin{DoxyEnumerate}
+\item Using M\+AC address.
+\item Initially random and then writtend o a file.
+\end{DoxyEnumerate}
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & A pointer to the string that will contains the Peer-\/\+ID \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacepwp_ae8331eb5e3c98deddc6022dad92352f6}\label{namespacepwp_ae8331eb5e3c98deddc6022dad92352f6}} 
+\index{pwp@{pwp}!remove\+\_\+invalid\+\_\+peer@{remove\+\_\+invalid\+\_\+peer}}
+\index{remove\+\_\+invalid\+\_\+peer@{remove\+\_\+invalid\+\_\+peer}!pwp@{pwp}}
+\subsubsection{\texorpdfstring{remove\+\_\+invalid\+\_\+peer()}{remove\_invalid\_peer()}}
+{\footnotesize\ttfamily void pwp\+::remove\+\_\+invalid\+\_\+peer (\begin{DoxyParamCaption}\item[{pwp\+::\+Peer\+List}]{peer\+\_\+list }\end{DoxyParamCaption})}
+
+
+
+Find invalid peers and remove it. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em peer\+\_\+list} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacepwp_a851ddc0e8fb2eb0a86317cc944c4a927}\label{namespacepwp_a851ddc0e8fb2eb0a86317cc944c4a927}} 
+\index{pwp@{pwp}!send\+\_\+handshake@{send\+\_\+handshake}}
+\index{send\+\_\+handshake@{send\+\_\+handshake}!pwp@{pwp}}
+\subsubsection{\texorpdfstring{send\+\_\+handshake()}{send\_handshake()}}
+{\footnotesize\ttfamily int pwp\+::send\+\_\+handshake (\begin{DoxyParamCaption}\item[{\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&}]{peerc\+\_\+t,  }\item[{const std\+::vector$<$ uint8\+\_\+t $>$}]{handshake,  }\item[{std\+::vector$<$ uint8\+\_\+t $>$ \&}]{response }\end{DoxyParamCaption})}
+
+Contact the peer with handshake and download the response
+
+\tabulinesep=1mm
+\begin{longtabu} spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Error code }&\textbf{ Meaning  }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Error code }&\textbf{ Meaning  }\\\cline{1-2}
+\endhead
+-\/1 &Unimplemented. \\\cline{1-2}
+-\/2 &Socket Error. \\\cline{1-2}
+-\/3 &Invalid IP Address. \\\cline{1-2}
+\end{longtabu}
+
+
+
+\begin{DoxyParams}{Parameters}
+{\em t\+\_\+peer} & the peer to contact \\
+\hline
+{\em handshake} & the handshake to send \\
+\hline
+{\em response} & a pointer to an array used to store the response\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success, $<$ 0 on failure 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacepwp_a58c780495f2139a56b95662dc7c0345f}\label{namespacepwp_a58c780495f2139a56b95662dc7c0345f}} 
+\index{pwp@{pwp}!verify\+\_\+handshake@{verify\+\_\+handshake}}
+\index{verify\+\_\+handshake@{verify\+\_\+handshake}!pwp@{pwp}}
+\subsubsection{\texorpdfstring{verify\+\_\+handshake()}{verify\_handshake()}}
+{\footnotesize\ttfamily int pwp\+::verify\+\_\+handshake (\begin{DoxyParamCaption}\item[{const vector$<$ uint8\+\_\+t $>$}]{handshake,  }\item[{size\+\_\+t}]{len,  }\item[{const \hyperlink{structpwp_1_1peer}{pwp\+::peer}}]{t\+\_\+peer,  }\item[{const char $\ast$}]{info\+\_\+hash }\end{DoxyParamCaption})}
+
+Verify if an handshake (received) is correct
+
+\tabulinesep=1mm
+\begin{longtabu} spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Error Code }&\textbf{ Meaning  }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Error Code }&\textbf{ Meaning  }\\\cline{1-2}
+\endhead
+-\/1 &First byte is not 19 \\\cline{1-2}
+-\/2 &Invalid protocol string \\\cline{1-2}
+-\/3 &Info hash does not match (with the one sended) \\\cline{1-2}
+-\/4 &\hyperlink{classPeer}{Peer} ID does not match (Bypassed) \\\cline{1-2}
+\end{longtabu}
+\begin{DoxyWarning}{Warning}
+The comparison of the {\itshape peer-\/\+ID} often fail so it\textquotesingle{}s skipped (no return -\/4)
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+{\em handshake} & \+: the handshake to check \\
+\hline
+{\em t\+\_\+peer} & \+: the peer who sended the handshake \\
+\hline
+{\em info\+\_\+hash} & \+: the info\+\_\+hash of the file \\
+\hline
+\end{DoxyParams}
+If the initiator of the connection receives a handshake in which the peer\+\_\+id does not match the expected peerid, then the initiator is expected to drop the connection. Note that the initiator presumably received the peer information from the tracker, which includes the peer\+\_\+id that was registered by the peer. The peer\+\_\+id from the tracker and in the handshake are expected to match.

@@ -10,7 +10,7 @@ enum \hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1daf}{msg\+\_\+id
 {\bfseries not\+\_\+interested} = 0x03, 
 \newline
 {\bfseries have} = 0x04, 
-{\bfseries bitfield} = 0x05, 
+\hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafac3a2343a7b67a371e241ae2184bfe9cd}{bitfield} = 0x05, 
 {\bfseries request} = 0x06, 
 {\bfseries piece} = 0x07, 
 \newline
@@ -21,14 +21,12 @@ enum \hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1daf}{msg\+\_\+id
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \hyperlink{namespacepwp__msg_a705398f44211d9aa47d9559c5fb405e1}{send\+\_\+keep\+\_\+alive} (const \hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+c)
+void \hyperlink{namespacepwp__msg_a9a577f5a53b823d83bb4694f1ebf141e}{send\+\_\+keep\+\_\+alive} (const \hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+c, boost\+::asio\+::deadline\+\_\+timer \&timer)
 \item 
-\mbox{\Hypertarget{namespacepwp__msg_acf8c4889b5b58efb38f203afacefa3f6}\label{namespacepwp__msg_acf8c4889b5b58efb38f203afacefa3f6}} 
-void {\bfseries enable\+\_\+keep\+\_\+alive\+\_\+message} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peerc\+\_\+t)
+void \hyperlink{namespacepwp__msg_a30c14bc06a8bb851ca79781cb9686b4f}{enable\+\_\+keep\+\_\+alive\+\_\+message} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+c)
 \item 
-\mbox{\Hypertarget{namespacepwp__msg_a3b2185bbd26718703c13fed900d440f0}\label{namespacepwp__msg_a3b2185bbd26718703c13fed900d440f0}} 
-int {\bfseries send\+\_\+msg} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peerc\+\_\+t, std\+::vector$<$ uint8\+\_\+t $>$ msg)
-\item 
+int \hyperlink{namespacepwp__msg_aca807c6281879abef952f8feecccb6e8}{send\+\_\+msg} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+c, std\+::vector$<$ uint8\+\_\+t $>$ msg)
+\begin{DoxyCompactList}\small\item\em Send {\ttfamily msg} to the peer specified in {\ttfamily peer\+\_\+c} \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{namespacepwp__msg_a529a3db7938ccfaab85579d58e24061e}\label{namespacepwp__msg_a529a3db7938ccfaab85579d58e24061e}} 
 std\+::vector$<$ uint8\+\_\+t $>$ {\bfseries craft\+\_\+have\+\_\+msg} (int piece\+\_\+index)
 \item 
@@ -72,30 +70,89 @@ This namespace contains all the function that are related to the messages of the
 
 P\+WP Message ID \begin{DoxyEnumFields}{Enumerator}
 \raisebox{\heightof{T}}[0pt][0pt]{\index{chocked@{chocked}!pwp\+\_\+msg@{pwp\+\_\+msg}}\index{pwp\+\_\+msg@{pwp\+\_\+msg}!chocked@{chocked}}}\mbox{\Hypertarget{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafae1d8b3754d66ec7fcad827fb54eaeea2}\label{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafae1d8b3754d66ec7fcad827fb54eaeea2}} 
-chocked&Chocked \\
+chocked&Chocked state \\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{unchocked@{unchocked}!pwp\+\_\+msg@{pwp\+\_\+msg}}\index{pwp\+\_\+msg@{pwp\+\_\+msg}!unchocked@{unchocked}}}\mbox{\Hypertarget{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafa55689e288bf71e7737faaf385b1c528b}\label{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafa55689e288bf71e7737faaf385b1c528b}} 
-unchocked&Unchocked \\
+unchocked&Unchocked state \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{bitfield@{bitfield}!pwp\+\_\+msg@{pwp\+\_\+msg}}\index{pwp\+\_\+msg@{pwp\+\_\+msg}!bitfield@{bitfield}}}\mbox{\Hypertarget{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafac3a2343a7b67a371e241ae2184bfe9cd}\label{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafac3a2343a7b67a371e241ae2184bfe9cd}} 
+bitfield&Bitfield sended/received \\
 \hline
 
 \end{DoxyEnumFields}
 
 
 \subsection{Function Documentation}
-\mbox{\Hypertarget{namespacepwp__msg_a705398f44211d9aa47d9559c5fb405e1}\label{namespacepwp__msg_a705398f44211d9aa47d9559c5fb405e1}} 
-\index{pwp\+\_\+msg@{pwp\+\_\+msg}!send\+\_\+keep\+\_\+alive@{send\+\_\+keep\+\_\+alive}}
-\index{send\+\_\+keep\+\_\+alive@{send\+\_\+keep\+\_\+alive}!pwp\+\_\+msg@{pwp\+\_\+msg}}
-\subsubsection{\texorpdfstring{send\+\_\+keep\+\_\+alive()}{send\_keep\_alive()}}
-{\footnotesize\ttfamily void pwp\+\_\+msg\+::send\+\_\+keep\+\_\+alive (\begin{DoxyParamCaption}\item[{const \hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&}]{peer\+\_\+c }\end{DoxyParamCaption})}
+\mbox{\Hypertarget{namespacepwp__msg_a30c14bc06a8bb851ca79781cb9686b4f}\label{namespacepwp__msg_a30c14bc06a8bb851ca79781cb9686b4f}} 
+\index{pwp\+\_\+msg@{pwp\+\_\+msg}!enable\+\_\+keep\+\_\+alive\+\_\+message@{enable\+\_\+keep\+\_\+alive\+\_\+message}}
+\index{enable\+\_\+keep\+\_\+alive\+\_\+message@{enable\+\_\+keep\+\_\+alive\+\_\+message}!pwp\+\_\+msg@{pwp\+\_\+msg}}
+\subsubsection{\texorpdfstring{enable\+\_\+keep\+\_\+alive\+\_\+message()}{enable\_keep\_alive\_message()}}
+{\footnotesize\ttfamily void pwp\+\_\+msg\+::enable\+\_\+keep\+\_\+alive\+\_\+message (\begin{DoxyParamCaption}\item[{\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&}]{peer\+\_\+c }\end{DoxyParamCaption})}
 
-Handler that is executed every K\+E\+E\+P\+\_\+\+A\+L\+I\+V\+E\+\_\+\+T\+I\+ME and send a keep-\/alive message
+Start the timer that each K\+E\+E\+P\+\_\+\+A\+L\+I\+V\+E\+\_\+\+T\+I\+ME send a Keep-\/alive request
 
 
 \begin{DoxyParams}{Parameters}
-{\em peer\+\_\+c} & The peer connection structure \\
+{\em peer\+\_\+c} & The peer\textquotesingle{}s connection structure \\
 \hline
 \end{DoxyParams}
+\mbox{\Hypertarget{namespacepwp__msg_a9a577f5a53b823d83bb4694f1ebf141e}\label{namespacepwp__msg_a9a577f5a53b823d83bb4694f1ebf141e}} 
+\index{pwp\+\_\+msg@{pwp\+\_\+msg}!send\+\_\+keep\+\_\+alive@{send\+\_\+keep\+\_\+alive}}
+\index{send\+\_\+keep\+\_\+alive@{send\+\_\+keep\+\_\+alive}!pwp\+\_\+msg@{pwp\+\_\+msg}}
+\subsubsection{\texorpdfstring{send\+\_\+keep\+\_\+alive()}{send\_keep\_alive()}}
+{\footnotesize\ttfamily void pwp\+\_\+msg\+::send\+\_\+keep\+\_\+alive (\begin{DoxyParamCaption}\item[{const \hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&}]{peer\+\_\+c,  }\item[{boost\+::asio\+::deadline\+\_\+timer \&}]{timer }\end{DoxyParamCaption})}
+
+Handler that is executed every K\+E\+E\+P\+\_\+\+A\+L\+I\+V\+E\+\_\+\+T\+I\+ME and send a keep-\/alive message.
+
+If the peer\+\_\+c\textquotesingle{}s socket is closed, then the periodic routine is stopped by calling.~\newline
+ {\ttfamily timer.\+cancel()} So the handler is calcelled from \hyperlink{pwp_8hpp_a7efe93eb3d4e0f0c9ab96fa5ae443fcd}{\+\_\+io\+\_\+service}
+
+
+\begin{DoxyParams}{Parameters}
+{\em peer\+\_\+c} & The peer connection structure. \\
+\hline
+{\em timer} & The deadline\+\_\+timer that call the handler. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacepwp__msg_aca807c6281879abef952f8feecccb6e8}\label{namespacepwp__msg_aca807c6281879abef952f8feecccb6e8}} 
+\index{pwp\+\_\+msg@{pwp\+\_\+msg}!send\+\_\+msg@{send\+\_\+msg}}
+\index{send\+\_\+msg@{send\+\_\+msg}!pwp\+\_\+msg@{pwp\+\_\+msg}}
+\subsubsection{\texorpdfstring{send\+\_\+msg()}{send\_msg()}}
+{\footnotesize\ttfamily int pwp\+\_\+msg\+::send\+\_\+msg (\begin{DoxyParamCaption}\item[{\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&}]{peer\+\_\+c,  }\item[{std\+::vector$<$ uint8\+\_\+t $>$}]{msg }\end{DoxyParamCaption})}
+
+
+
+Send {\ttfamily msg} to the peer specified in {\ttfamily peer\+\_\+c} 
+
+Error code list
+
+\tabulinesep=1mm
+\begin{longtabu} spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Error Code }&\textbf{ Explaination  }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Error Code }&\textbf{ Explaination  }\\\cline{1-2}
+\endhead
+-\/1 &Invalid Address \\\cline{1-2}
+-\/2 &Cannot open socket \\\cline{1-2}
+-\/3 &Connection closed \\\cline{1-2}
+-\/4 &Exception (see the output) \\\cline{1-2}
+\end{longtabu}
+
+\begin{DoxyParams}{Parameters}
+{\em peer\+\_\+c} & \hyperlink{classPeer}{Peer} connection structure \\
+\hline
+{\em msg} & Message to send \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success, $<$0 otherwise 
+\end{DoxyReturn}
 
 
 \subsection{Variable Documentation}
