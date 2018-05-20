@@ -1,0 +1,127 @@
+\hypertarget{pwp_8hpp}{}\section{lib/pwp.hpp File Reference}
+\label{pwp_8hpp}\index{lib/pwp.\+hpp@{lib/pwp.\+hpp}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$boost/asio.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/date\+\_\+time/posix\+\_\+time/posix\+\_\+time.\+hpp$>$}\newline
+{\ttfamily \#include \char`\"{}torrentparser.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}peer.\+h\char`\"{}}\newline
+Include dependency graph for pwp.\+hpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{pwp_8hpp__incl}
+\end{center}
+\end{figure}
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespacepwp__msg}{pwp\+\_\+msg}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{pwp_8hpp_ada8ab189068d244326935c6e7926801f}{K\+E\+E\+P\+\_\+\+A\+L\+I\+V\+E\+\_\+\+T\+I\+ME}~75
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1daf}{pwp\+\_\+msg\+::msg\+\_\+id} \{ \newline
+\hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafae1d8b3754d66ec7fcad827fb54eaeea2}{pwp\+\_\+msg\+::chocked} = 0x00, 
+\hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafa55689e288bf71e7737faaf385b1c528b}{pwp\+\_\+msg\+::unchocked} = 0x01, 
+{\bfseries interested} = 0x02, 
+{\bfseries not\+\_\+interested} = 0x03, 
+\newline
+{\bfseries have} = 0x04, 
+{\bfseries bitfield} = 0x05, 
+{\bfseries request} = 0x06, 
+{\bfseries piece} = 0x07, 
+\newline
+{\bfseries cancel} = 0x08, 
+{\bfseries port} = 0x09
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{pwp_8hpp_a0bcf004164275de8518de37de3823f1c}{is\+\_\+inv\+\_\+address} (const boost\+::asio\+::ip\+::address \&addr)
+\item 
+\mbox{\Hypertarget{namespacepwp__msg_acf8c4889b5b58efb38f203afacefa3f6}\label{namespacepwp__msg_acf8c4889b5b58efb38f203afacefa3f6}} 
+void {\bfseries pwp\+\_\+msg\+::enable\+\_\+keep\+\_\+alive\+\_\+message} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peerc\+\_\+t)
+\item 
+\mbox{\Hypertarget{namespacepwp__msg_a3b2185bbd26718703c13fed900d440f0}\label{namespacepwp__msg_a3b2185bbd26718703c13fed900d440f0}} 
+int {\bfseries pwp\+\_\+msg\+::send\+\_\+msg} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peerc\+\_\+t, std\+::vector$<$ uint8\+\_\+t $>$ msg)
+\item 
+\mbox{\Hypertarget{namespacepwp__msg_aa9cc2ccac70638ed59075f27f938b8ec}\label{namespacepwp__msg_aa9cc2ccac70638ed59075f27f938b8ec}} 
+int {\bfseries pwp\+\_\+msg\+::get\+\_\+bitfield} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+c, \hyperlink{structTorrent}{Torrent} \&torrent)
+\item 
+\mbox{\Hypertarget{namespacepwp__msg_aec35de04a2f2d9cb6abdd777917cfaae}\label{namespacepwp__msg_aec35de04a2f2d9cb6abdd777917cfaae}} 
+void {\bfseries pwp\+\_\+msg\+::read\+\_\+msg\+\_\+handler} (std\+::vector$<$ uint8\+\_\+t $>$ \&response, \hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+c, \hyperlink{structTorrent}{Torrent} \&torrent, bool \&dead\+\_\+peer, boost\+::asio\+::deadline\+\_\+timer \&timer\+\_\+, const boost\+::system\+::error\+\_\+code \&error, size\+\_\+t bytes\+\_\+read)
+\item 
+\mbox{\Hypertarget{namespacepwp__msg_ab578b213d293636d33efc24382f16b25}\label{namespacepwp__msg_ab578b213d293636d33efc24382f16b25}} 
+int {\bfseries pwp\+\_\+msg\+::sender} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+conn, \hyperlink{structTorrent}{Torrent} \&torrent, int \&old\+\_\+begin)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+boost\+::asio\+::io\+\_\+service \hyperlink{pwp_8hpp_a7efe93eb3d4e0f0c9ab96fa5ae443fcd}{\+\_\+io\+\_\+service}
+\item 
+\mbox{\Hypertarget{pwp_8hpp_afd3bb609482f388199b44f364c870321}\label{pwp_8hpp_afd3bb609482f388199b44f364c870321}} 
+int {\bfseries active\+\_\+peer}
+\item 
+\mbox{\Hypertarget{pwp_8hpp_a821fac971970c19e5d4f57dd0486f019}\label{pwp_8hpp_a821fac971970c19e5d4f57dd0486f019}} 
+boost\+::mutex {\bfseries mtx\+\_\+peer\+\_\+num}
+\item 
+\mbox{\Hypertarget{namespacepwp__msg_ae962e65b1871714756b6aeb4722a8caf}\label{namespacepwp__msg_ae962e65b1871714756b6aeb4722a8caf}} 
+enum \hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1daf}{pwp\+\_\+msg\+::msg\+\_\+id} {\bfseries pwp\+\_\+msg\+::\+Peer\+List}
+\item 
+const std\+::vector$<$ uint8\+\_\+t $>$ \hyperlink{namespacepwp__msg_a695ee2efb59a7c258559f19440fe6998}{pwp\+\_\+msg\+::choke\+\_\+msg} = \{0,0,0,1,0\}
+\item 
+const std\+::vector$<$ uint8\+\_\+t $>$ \hyperlink{namespacepwp__msg_acdc5eb698534e84a15db0e061c511e7c}{pwp\+\_\+msg\+::unchoke\+\_\+msg} = \{0,0,0,1,1\}
+\item 
+const std\+::vector$<$ uint8\+\_\+t $>$ \hyperlink{namespacepwp__msg_afc68b17ce131c52fa0beb0cc7185778b}{pwp\+\_\+msg\+::interested\+\_\+msg} = \{0,0,0,1,2\}
+\item 
+const std\+::vector$<$ uint8\+\_\+t $>$ \hyperlink{namespacepwp__msg_a16a5f22f784d872342a82af9f6b77830}{pwp\+\_\+msg\+::non\+\_\+interested\+\_\+msg} = \{0,0,0,1,3\}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+P\+WP protocol function
+
+P\+WP protocol messagge specification and implementation 
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{pwp_8hpp_ada8ab189068d244326935c6e7926801f}\label{pwp_8hpp_ada8ab189068d244326935c6e7926801f}} 
+\index{pwp.\+hpp@{pwp.\+hpp}!K\+E\+E\+P\+\_\+\+A\+L\+I\+V\+E\+\_\+\+T\+I\+ME@{K\+E\+E\+P\+\_\+\+A\+L\+I\+V\+E\+\_\+\+T\+I\+ME}}
+\index{K\+E\+E\+P\+\_\+\+A\+L\+I\+V\+E\+\_\+\+T\+I\+ME@{K\+E\+E\+P\+\_\+\+A\+L\+I\+V\+E\+\_\+\+T\+I\+ME}!pwp.\+hpp@{pwp.\+hpp}}
+\subsubsection{\texorpdfstring{K\+E\+E\+P\+\_\+\+A\+L\+I\+V\+E\+\_\+\+T\+I\+ME}{KEEP\_ALIVE\_TIME}}
+{\footnotesize\ttfamily \#define K\+E\+E\+P\+\_\+\+A\+L\+I\+V\+E\+\_\+\+T\+I\+ME~75}
+
+Default chocked message 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{pwp_8hpp_a0bcf004164275de8518de37de3823f1c}\label{pwp_8hpp_a0bcf004164275de8518de37de3823f1c}} 
+\index{pwp.\+hpp@{pwp.\+hpp}!is\+\_\+inv\+\_\+address@{is\+\_\+inv\+\_\+address}}
+\index{is\+\_\+inv\+\_\+address@{is\+\_\+inv\+\_\+address}!pwp.\+hpp@{pwp.\+hpp}}
+\subsubsection{\texorpdfstring{is\+\_\+inv\+\_\+address()}{is\_inv\_address()}}
+{\footnotesize\ttfamily bool is\+\_\+inv\+\_\+address (\begin{DoxyParamCaption}\item[{const boost\+::asio\+::ip\+::address \&}]{addr }\end{DoxyParamCaption})}
+
+Checks if the address is equal to \char`\"{}0.\+0.\+0.\+0\char`\"{}
+
+
+\begin{DoxyParams}{Parameters}
+{\em addr} & \+: the address to verify \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if it\textquotesingle{}s invalid, false otherwise 
+\end{DoxyReturn}
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{pwp_8hpp_a7efe93eb3d4e0f0c9ab96fa5ae443fcd}\label{pwp_8hpp_a7efe93eb3d4e0f0c9ab96fa5ae443fcd}} 
+\index{pwp.\+hpp@{pwp.\+hpp}!\+\_\+io\+\_\+service@{\+\_\+io\+\_\+service}}
+\index{\+\_\+io\+\_\+service@{\+\_\+io\+\_\+service}!pwp.\+hpp@{pwp.\+hpp}}
+\subsubsection{\texorpdfstring{\+\_\+io\+\_\+service}{\_io\_service}}
+{\footnotesize\ttfamily boost\+::asio\+::io\+\_\+service \+\_\+io\+\_\+service}
+
+Global I\+O-\/\+Service 

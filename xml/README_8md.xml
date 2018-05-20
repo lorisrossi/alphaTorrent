@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="README_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>αTorrent</highlight></codeline>
+<codeline><highlight class="normal">A<sp/>simple<sp/>BitTorrent<sp/>Client.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Project<sp/>for<sp/>the<sp/>Computer<sp/>Networks<sp/>course<sp/>held<sp/>by<sp/>A.<sp/>Mancini<sp/>at<sp/>Univpm</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Dependencies</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>client<sp/>needs<sp/>OpenSSL,<sp/>Boost<sp/>libraries<sp/>and<sp/>glog.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Mac<sp/>OS<sp/>X**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">OpenSSL</highlight></codeline>
+<codeline><highlight class="normal">```bash</highlight></codeline>
+<codeline><highlight class="normal">brew<sp/>install<sp/>openssl</highlight></codeline>
+<codeline><highlight class="normal">cd<sp/>/usr/local/include</highlight></codeline>
+<codeline><highlight class="normal">ln<sp/>-s<sp/>../opt/openssl/include/openssl<sp/>.</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Boost</highlight></codeline>
+<codeline><highlight class="normal">```bash</highlight></codeline>
+<codeline><highlight class="normal">brew<sp/>install<sp/>boost</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Glog</highlight></codeline>
+<codeline><highlight class="normal">```bash</highlight></codeline>
+<codeline><highlight class="normal">brew<sp/>install<sp/>glog</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Troubleshooting</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>OS<sp/>X<sp/>users<sp/>who<sp/>have<sp/>this<sp/>error:</highlight></codeline>
+<codeline><highlight class="normal">&gt;<sp/>fatal<sp/>error:<sp/>‘openssl/sha.h’<sp/>file<sp/>not<sp/>found</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">please<sp/>install<sp/>the<sp/>OpenSSL<sp/>library<sp/>as<sp/>shown<sp/>above</highlight></codeline>
+    </programlisting>
+    <location file="README.md"/>
+  </compounddef>
+</doxygen>

@@ -78,8 +78,11 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    _io_service.run();
-    boost::this_thread::sleep_for(boost::chrono::seconds(30));  //Sleep for 30 seconds
+    if(_io_service.stopped()){
+        _io_service.reset();
+        _io_service.run();
+    }
+    boost::this_thread::sleep_for(boost::chrono::seconds(20));  //Sleep for 30 seconds
 
 
   }while(active_peer < PEER_TREESHOLD);

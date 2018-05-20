@@ -87,7 +87,7 @@ namespace pwp{
 
 
     struct peer_connection{
-        struct peer peer_t;
+        struct peer peer_;
         client_state cstate;
         peer_state pstate;
         boost::dynamic_bitset<> bitfield;
@@ -122,7 +122,7 @@ void handshake_request_manager(const std::array<char, 256> &handshake, const pwp
 int verify_handshake(const std::vector<uint8_t> handshake, size_t len,  const pwp::peer t_peer, const char *info_hash);
 
 void remove_invalid_peer(pwp::PeerList peer_list);
-void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshake, const char *info_hash, Torrent &torrent);
+void pwp_protocol_manager(pwp::peer peer_, const std::vector<uint8_t> &handshake, const char *info_hash, Torrent &torrent);
 uint32_t make_int(bInt bint);
 uint32_t make_int(std::vector<uint8_t> v);
 std::vector<uint8_t> from_int_to_bint(uint integer);

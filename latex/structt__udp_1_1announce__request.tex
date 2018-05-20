@@ -1,0 +1,73 @@
+\hypertarget{structt__udp_1_1announce__request}{}\section{t\+\_\+udp\+:\+:announce\+\_\+request Struct Reference}
+\label{structt__udp_1_1announce__request}\index{t\+\_\+udp\+::announce\+\_\+request@{t\+\_\+udp\+::announce\+\_\+request}}
+
+
+{\ttfamily \#include $<$tracker\+\_\+udp.\+hpp$>$}
+
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structt__udp_1_1announce__request_a1daf1aff59d4e4061dc90deff3a07119}\label{structt__udp_1_1announce__request_a1daf1aff59d4e4061dc90deff3a07119}} 
+int64\+\_\+t {\bfseries connection\+\_\+id}
+\item 
+\mbox{\Hypertarget{structt__udp_1_1announce__request_a75a0d8d81ce170a16301549822774445}\label{structt__udp_1_1announce__request_a75a0d8d81ce170a16301549822774445}} 
+int32\+\_\+t {\bfseries action}
+\item 
+\mbox{\Hypertarget{structt__udp_1_1announce__request_a0e68c76c036e588342843ab71127911b}\label{structt__udp_1_1announce__request_a0e68c76c036e588342843ab71127911b}} 
+int32\+\_\+t {\bfseries transaction\+\_\+id}
+\item 
+\mbox{\Hypertarget{structt__udp_1_1announce__request_a177ed60da46299915733f148ed40698f}\label{structt__udp_1_1announce__request_a177ed60da46299915733f148ed40698f}} 
+char {\bfseries info\+\_\+hash} \mbox{[}20\mbox{]}
+\item 
+\mbox{\Hypertarget{structt__udp_1_1announce__request_a8896ff01c5461e7ab37207e99eeb7c73}\label{structt__udp_1_1announce__request_a8896ff01c5461e7ab37207e99eeb7c73}} 
+char {\bfseries peer\+\_\+id} \mbox{[}20\mbox{]}
+\item 
+\mbox{\Hypertarget{structt__udp_1_1announce__request_aa3d7e9a19acc2be647a9136c51d15f08}\label{structt__udp_1_1announce__request_aa3d7e9a19acc2be647a9136c51d15f08}} 
+int64\+\_\+t {\bfseries downloaded}
+\item 
+\mbox{\Hypertarget{structt__udp_1_1announce__request_a10783305bf9bec9f5fc4f1e74fb6c5a6}\label{structt__udp_1_1announce__request_a10783305bf9bec9f5fc4f1e74fb6c5a6}} 
+int64\+\_\+t {\bfseries left}
+\item 
+\mbox{\Hypertarget{structt__udp_1_1announce__request_a721e8aa39b84774e00b09a49f3ae49f1}\label{structt__udp_1_1announce__request_a721e8aa39b84774e00b09a49f3ae49f1}} 
+int64\+\_\+t {\bfseries uploaded}
+\item 
+\mbox{\Hypertarget{structt__udp_1_1announce__request_aede8d35b95c9665c31ec87db2151c1d0}\label{structt__udp_1_1announce__request_aede8d35b95c9665c31ec87db2151c1d0}} 
+int32\+\_\+t {\bfseries event}
+\item 
+\mbox{\Hypertarget{structt__udp_1_1announce__request_a4de2f6e241950ef3e80f021e3db981c0}\label{structt__udp_1_1announce__request_a4de2f6e241950ef3e80f021e3db981c0}} 
+int32\+\_\+t {\bfseries ip\+\_\+address}
+\item 
+\mbox{\Hypertarget{structt__udp_1_1announce__request_a4303273fb6add36551bc11dce8217c49}\label{structt__udp_1_1announce__request_a4303273fb6add36551bc11dce8217c49}} 
+int32\+\_\+t {\bfseries key}
+\item 
+\mbox{\Hypertarget{structt__udp_1_1announce__request_ad206bd9fee8496a1232c00d9415d6887}\label{structt__udp_1_1announce__request_ad206bd9fee8496a1232c00d9415d6887}} 
+int32\+\_\+t {\bfseries num\+\_\+want}
+\item 
+\mbox{\Hypertarget{structt__udp_1_1announce__request_a7aecf590db2a1358b3a623521c94db71}\label{structt__udp_1_1announce__request_a7aecf590db2a1358b3a623521c94db71}} 
+int16\+\_\+t {\bfseries port}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{structt__udp_1_1announce__request}{announce\+\_\+request} struct is built according to the U\+DP tracker protocol Each int is in network notation (big-\/endian)
+
+I\+Pv4 announce request\+: \begin{DoxyVerb} Offset  Size    Name    Value
+ 0       64-bit integer  connection_id
+ 8       32-bit integer  action          1 // announce
+ 12      32-bit integer  transaction_id
+ 16      20-byte string  info_hash
+ 36      20-byte string  peer_id
+ 56      64-bit integer  downloaded
+ 64      64-bit integer  left
+ 72      64-bit integer  uploaded
+ 80      32-bit integer  event           0 // 0: none; 1: completed; 2: started; 3: stopped
+ 84      32-bit integer  IP address      0 // default
+ 88      32-bit integer  key
+ 92      32-bit integer  num_want        -1 // default
+ 96      16-bit integer  port
+ 98\end{DoxyVerb}
+ 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+lib/\hyperlink{tracker__udp_8hpp}{tracker\+\_\+udp.\+hpp}\end{DoxyCompactItemize}

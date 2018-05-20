@@ -1,0 +1,241 @@
+\hypertarget{namespacet__udp}{}\section{t\+\_\+udp Namespace Reference}
+\label{namespacet__udp}\index{t\+\_\+udp@{t\+\_\+udp}}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structt__udp_1_1announce__request}{announce\+\_\+request}
+\item 
+struct \hyperlink{structt__udp_1_1announce__response}{announce\+\_\+response}
+\item 
+struct \hyperlink{structt__udp_1_1connect__request}{connect\+\_\+request}
+\item 
+struct \hyperlink{structt__udp_1_1connect__response}{connect\+\_\+response}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{namespacet__udp_a6196aec9debc020a36ee358692339614}\label{namespacet__udp_a6196aec9debc020a36ee358692339614}} 
+enum {\bfseries action\+\_\+type} \{ {\bfseries none} = 0, 
+{\bfseries announce} = 1, 
+{\bfseries scrape} = 2, 
+{\bfseries error} = 3
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int32\+\_\+t \hyperlink{namespacet__udp_a8ff6ed3deaee00a35cc7afd4b37456d6}{get\+\_\+transaction\+\_\+id} ()
+\item 
+bool \hyperlink{namespacet__udp_af6fbd38370a6f5f7d8520144de7104c4}{is\+\_\+udp\+\_\+tracker} (const std\+::string \&tracker\+\_\+url)
+\item 
+void \hyperlink{namespacet__udp_a0e87c0151a7bceaace19434206566199}{get\+\_\+tracker\+\_\+domain} (std\+::string tracker\+\_\+url, std\+::string \&udp\+\_\+tracker, uint \&port)
+\item 
+void \hyperlink{namespacet__udp_adb2cdd5090cae67a7de482be4e281f23}{get\+\_\+connect\+\_\+request} (\hyperlink{structt__udp_1_1connect__request}{connect\+\_\+request} c, std\+::vector$<$ uint8\+\_\+t $>$ \&req)
+\item 
+void \hyperlink{namespacet__udp_af26a254f05566a7066b6930ad998a656}{udp\+\_\+manager} (const std\+::string tracker\+\_\+url, \hyperlink{structtracker_1_1TParameter}{tracker\+::\+T\+Parameter} param, pwp\+::\+Peer\+List peer\+\_\+list)
+\item 
+void \hyperlink{namespacet__udp_af6b2788d8ce8ab98f367838a7e3b7b09}{verify\+\_\+connect\+\_\+resp} (const std\+::vector$<$ uint8\+\_\+t $>$ \&resp, uint32\+\_\+t \&trans\+\_\+id, uint64\+\_\+t \&conn\+\_\+id, std\+::vector$<$ uint8\+\_\+t $>$ \&conn\+\_\+id\+\_\+v)
+\item 
+void \hyperlink{namespacet__udp_a5e968355a7c45dae0749b80e1be8308a}{get\+\_\+announce\+\_\+req} (std\+::vector$<$ uint8\+\_\+t $>$ \&req, const \hyperlink{structtracker_1_1TParameter}{tracker\+::\+T\+Parameter} \&param, std\+::vector$<$ uint8\+\_\+t $>$ \&conn\+\_\+id\+\_\+v)
+\item 
+void \hyperlink{namespacet__udp_a1f2a0ab9801cbc55002e67c166895a0e}{parse\+\_\+announce\+\_\+resp} (std\+::vector$<$ uint8\+\_\+t $>$ \&resp, pwp\+::\+Peer\+List peer\+\_\+list)
+\item 
+void \hyperlink{namespacet__udp_aab582ebbfac6fd929e811527e44384c1}{process\+\_\+error} (std\+::vector$<$ uint8\+\_\+t $>$ \&resp)
+\item 
+void \hyperlink{namespacet__udp_a42ced8af1acd3fb2bc46358effe48dbc}{parse\+\_\+announce\+\_\+resp\+\_\+info} (std\+::vector$<$ uint8\+\_\+t $>$ \&resp)
+\item 
+void \hyperlink{namespacet__udp_a8aa6906fdd81689928634df34688fed1}{parse\+\_\+announce\+\_\+resp\+\_\+peers} (std\+::vector$<$ uint8\+\_\+t $>$ \&resp, pwp\+::\+Peer\+List peer\+\_\+list)
+\begin{DoxyCompactList}\small\item\em Peer-\/\+ID string are setted to \char`\"{}\char`\"{} since it\textquotesingle{}s not sendend with this procotol. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Namespace related to the Tracker U\+DP protocol 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespacet__udp_a5e968355a7c45dae0749b80e1be8308a}\label{namespacet__udp_a5e968355a7c45dae0749b80e1be8308a}} 
+\index{t\+\_\+udp@{t\+\_\+udp}!get\+\_\+announce\+\_\+req@{get\+\_\+announce\+\_\+req}}
+\index{get\+\_\+announce\+\_\+req@{get\+\_\+announce\+\_\+req}!t\+\_\+udp@{t\+\_\+udp}}
+\subsubsection{\texorpdfstring{get\+\_\+announce\+\_\+req()}{get\_announce\_req()}}
+{\footnotesize\ttfamily void t\+\_\+udp\+::get\+\_\+announce\+\_\+req (\begin{DoxyParamCaption}\item[{std\+::vector$<$ uint8\+\_\+t $>$ \&}]{req,  }\item[{const \hyperlink{structtracker_1_1TParameter}{tracker\+::\+T\+Parameter} \&}]{param,  }\item[{std\+::vector$<$ uint8\+\_\+t $>$ \&}]{conn\+\_\+id\+\_\+v }\end{DoxyParamCaption})}
+
+Generate the announce request from tracker param.
+
+
+\begin{DoxyParams}{Parameters}
+{\em req} & The array where the request will be stored \\
+\hline
+{\em param} & Tracker parameters (Port, info\+\_\+hash etc..) \\
+\hline
+{\em conn\+\_\+id\+\_\+v} & The connection ID sended from trakcer in a previous connect request \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacet__udp_adb2cdd5090cae67a7de482be4e281f23}\label{namespacet__udp_adb2cdd5090cae67a7de482be4e281f23}} 
+\index{t\+\_\+udp@{t\+\_\+udp}!get\+\_\+connect\+\_\+request@{get\+\_\+connect\+\_\+request}}
+\index{get\+\_\+connect\+\_\+request@{get\+\_\+connect\+\_\+request}!t\+\_\+udp@{t\+\_\+udp}}
+\subsubsection{\texorpdfstring{get\+\_\+connect\+\_\+request()}{get\_connect\_request()}}
+{\footnotesize\ttfamily void t\+\_\+udp\+::get\+\_\+connect\+\_\+request (\begin{DoxyParamCaption}\item[{\hyperlink{structt__udp_1_1connect__request}{connect\+\_\+request}}]{c,  }\item[{std\+::vector$<$ uint8\+\_\+t $>$ \&}]{req }\end{DoxyParamCaption})}
+
+N\+O\+TE \+: It\textquotesingle{}s not very useful to pass a struct just to use one of it\textquotesingle{}s value \mbox{\Hypertarget{namespacet__udp_a0e87c0151a7bceaace19434206566199}\label{namespacet__udp_a0e87c0151a7bceaace19434206566199}} 
+\index{t\+\_\+udp@{t\+\_\+udp}!get\+\_\+tracker\+\_\+domain@{get\+\_\+tracker\+\_\+domain}}
+\index{get\+\_\+tracker\+\_\+domain@{get\+\_\+tracker\+\_\+domain}!t\+\_\+udp@{t\+\_\+udp}}
+\subsubsection{\texorpdfstring{get\+\_\+tracker\+\_\+domain()}{get\_tracker\_domain()}}
+{\footnotesize\ttfamily void t\+\_\+udp\+::get\+\_\+tracker\+\_\+domain (\begin{DoxyParamCaption}\item[{std\+::string}]{tracker\+\_\+url,  }\item[{std\+::string \&}]{udp\+\_\+tracker,  }\item[{uint \&}]{port }\end{DoxyParamCaption})}
+
+Take the tracker url and extract the corrensponding domain. This function only work on U\+DP tracker U\+RL, if an H\+T\+TP url is passed it returns empty udp\+\_\+tracker and port equal to zero
+
+
+\begin{DoxyParams}{Parameters}
+{\em tracker\+\_\+url} & The U\+RL to parse \\
+\hline
+{\em udp\+\_\+tracker} & The extracted tracker domain \\
+\hline
+{\em port} & The port extracted\\
+\hline
+\end{DoxyParams}
+Example
+
+tracker\+\_\+url = udp\+://example.com\+:1337
+
+udp\+\_\+tracker = example.\+com port = 1337 \mbox{\Hypertarget{namespacet__udp_a8ff6ed3deaee00a35cc7afd4b37456d6}\label{namespacet__udp_a8ff6ed3deaee00a35cc7afd4b37456d6}} 
+\index{t\+\_\+udp@{t\+\_\+udp}!get\+\_\+transaction\+\_\+id@{get\+\_\+transaction\+\_\+id}}
+\index{get\+\_\+transaction\+\_\+id@{get\+\_\+transaction\+\_\+id}!t\+\_\+udp@{t\+\_\+udp}}
+\subsubsection{\texorpdfstring{get\+\_\+transaction\+\_\+id()}{get\_transaction\_id()}}
+{\footnotesize\ttfamily int32\+\_\+t t\+\_\+udp\+::get\+\_\+transaction\+\_\+id (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Get a random number that will be used as a transaction ID
+
+\begin{DoxyReturn}{Returns}
+transaction ID 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacet__udp_af6fbd38370a6f5f7d8520144de7104c4}\label{namespacet__udp_af6fbd38370a6f5f7d8520144de7104c4}} 
+\index{t\+\_\+udp@{t\+\_\+udp}!is\+\_\+udp\+\_\+tracker@{is\+\_\+udp\+\_\+tracker}}
+\index{is\+\_\+udp\+\_\+tracker@{is\+\_\+udp\+\_\+tracker}!t\+\_\+udp@{t\+\_\+udp}}
+\subsubsection{\texorpdfstring{is\+\_\+udp\+\_\+tracker()}{is\_udp\_tracker()}}
+{\footnotesize\ttfamily bool t\+\_\+udp\+::is\+\_\+udp\+\_\+tracker (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{tracker\+\_\+url }\end{DoxyParamCaption})}
+
+Check the tracker url for understand which protocol should be used. In this case, it check\textquotesingle{}s if the tracker support U\+DP Tracker protocol.
+
+
+\begin{DoxyParams}{Parameters}
+{\em tracker\+\_\+url} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if it support U\+DP protocol, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacet__udp_a1f2a0ab9801cbc55002e67c166895a0e}\label{namespacet__udp_a1f2a0ab9801cbc55002e67c166895a0e}} 
+\index{t\+\_\+udp@{t\+\_\+udp}!parse\+\_\+announce\+\_\+resp@{parse\+\_\+announce\+\_\+resp}}
+\index{parse\+\_\+announce\+\_\+resp@{parse\+\_\+announce\+\_\+resp}!t\+\_\+udp@{t\+\_\+udp}}
+\subsubsection{\texorpdfstring{parse\+\_\+announce\+\_\+resp()}{parse\_announce\_resp()}}
+{\footnotesize\ttfamily void t\+\_\+udp\+::parse\+\_\+announce\+\_\+resp (\begin{DoxyParamCaption}\item[{std\+::vector$<$ uint8\+\_\+t $>$ \&}]{resp,  }\item[{pwp\+::\+Peer\+List}]{peer\+\_\+list }\end{DoxyParamCaption})}
+
+Parse the first byte of the announce response and parse data.
+
+
+\begin{DoxyParams}{Parameters}
+{\em resp} & The announce response \\
+\hline
+{\em peer\+\_\+list} & The peer\+\_\+list where to store fetched peers in case of a positive response\\
+\hline
+\end{DoxyParams}
+Three types of response~\newline
+1-\/ None -\/$>$ Ingnored~\newline
+2-\/ Error -\/$>$ Print error~\newline
+3-\/ Announce -\/$>$ Parse peers and add to peer\+\_\+list~\newline
+\mbox{\Hypertarget{namespacet__udp_a42ced8af1acd3fb2bc46358effe48dbc}\label{namespacet__udp_a42ced8af1acd3fb2bc46358effe48dbc}} 
+\index{t\+\_\+udp@{t\+\_\+udp}!parse\+\_\+announce\+\_\+resp\+\_\+info@{parse\+\_\+announce\+\_\+resp\+\_\+info}}
+\index{parse\+\_\+announce\+\_\+resp\+\_\+info@{parse\+\_\+announce\+\_\+resp\+\_\+info}!t\+\_\+udp@{t\+\_\+udp}}
+\subsubsection{\texorpdfstring{parse\+\_\+announce\+\_\+resp\+\_\+info()}{parse\_announce\_resp\_info()}}
+{\footnotesize\ttfamily void t\+\_\+udp\+::parse\+\_\+announce\+\_\+resp\+\_\+info (\begin{DoxyParamCaption}\item[{std\+::vector$<$ uint8\+\_\+t $>$ \&}]{resp }\end{DoxyParamCaption})}
+
+This function parse the tracker announce response to extract information like seeder, leechers and interval
+
+
+\begin{DoxyParams}{Parameters}
+{\em resp} & The tracker response\\
+\hline
+\end{DoxyParams}
+\begin{DoxyWarning}{Warning}
+W\+A\+R\+N\+I\+N\+G!!! Unimplemented function!!! 
+\end{DoxyWarning}
+\mbox{\Hypertarget{namespacet__udp_a8aa6906fdd81689928634df34688fed1}\label{namespacet__udp_a8aa6906fdd81689928634df34688fed1}} 
+\index{t\+\_\+udp@{t\+\_\+udp}!parse\+\_\+announce\+\_\+resp\+\_\+peers@{parse\+\_\+announce\+\_\+resp\+\_\+peers}}
+\index{parse\+\_\+announce\+\_\+resp\+\_\+peers@{parse\+\_\+announce\+\_\+resp\+\_\+peers}!t\+\_\+udp@{t\+\_\+udp}}
+\subsubsection{\texorpdfstring{parse\+\_\+announce\+\_\+resp\+\_\+peers()}{parse\_announce\_resp\_peers()}}
+{\footnotesize\ttfamily void t\+\_\+udp\+::parse\+\_\+announce\+\_\+resp\+\_\+peers (\begin{DoxyParamCaption}\item[{std\+::vector$<$ uint8\+\_\+t $>$ \&}]{resp,  }\item[{pwp\+::\+Peer\+List}]{peer\+\_\+list }\end{DoxyParamCaption})}
+
+
+
+Peer-\/\+ID string are setted to \char`\"{}\char`\"{} since it\textquotesingle{}s not sendend with this procotol. 
+
+Parse a successfull tracker announce response and put peers into peer\+\_\+list
+
+
+\begin{DoxyParams}{Parameters}
+{\em resp} & Full tracker response (It\textquotesingle{}s automatically positioned at correct index) \\
+\hline
+{\em peer\+\_\+list} & List with parsed peers \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacet__udp_aab582ebbfac6fd929e811527e44384c1}\label{namespacet__udp_aab582ebbfac6fd929e811527e44384c1}} 
+\index{t\+\_\+udp@{t\+\_\+udp}!process\+\_\+error@{process\+\_\+error}}
+\index{process\+\_\+error@{process\+\_\+error}!t\+\_\+udp@{t\+\_\+udp}}
+\subsubsection{\texorpdfstring{process\+\_\+error()}{process\_error()}}
+{\footnotesize\ttfamily void t\+\_\+udp\+::process\+\_\+error (\begin{DoxyParamCaption}\item[{std\+::vector$<$ uint8\+\_\+t $>$ \&}]{resp }\end{DoxyParamCaption})}
+
+Process the tracker error response according to the protocol
+
+
+\begin{DoxyParams}{Parameters}
+{\em resp} & The tracker response\\
+\hline
+\end{DoxyParams}
+In case of a tracker error server replies with\+:~\newline
+ size name description~\newline
+ int32\+\_\+t action The action, in this case 3, for error.~\newline
+ int32\+\_\+t transaction\+\_\+id Must match the transaction\+\_\+id sent from the client.~\newline
+ int8\+\_\+t\mbox{[}\mbox{]} error\+\_\+string The rest of the packet is a string describing the error.~\newline
+\mbox{\Hypertarget{namespacet__udp_af26a254f05566a7066b6930ad998a656}\label{namespacet__udp_af26a254f05566a7066b6930ad998a656}} 
+\index{t\+\_\+udp@{t\+\_\+udp}!udp\+\_\+manager@{udp\+\_\+manager}}
+\index{udp\+\_\+manager@{udp\+\_\+manager}!t\+\_\+udp@{t\+\_\+udp}}
+\subsubsection{\texorpdfstring{udp\+\_\+manager()}{udp\_manager()}}
+{\footnotesize\ttfamily void t\+\_\+udp\+::udp\+\_\+manager (\begin{DoxyParamCaption}\item[{const std\+::string}]{tracker\+\_\+url,  }\item[{\hyperlink{structtracker_1_1TParameter}{tracker\+::\+T\+Parameter}}]{param,  }\item[{pwp\+::\+Peer\+List}]{peer\+\_\+list }\end{DoxyParamCaption})}
+
+Manage the entire U\+DP tracker protocol procedure and automatically add parsed peers in the passed peer\+\_\+list.
+
+
+\begin{DoxyParams}{Parameters}
+{\em tracker\+\_\+url} & the tracker to contact \\
+\hline
+{\em param} & struct containing tracker, metainfo and client options \\
+\hline
+{\em peer\+\_\+list} & the peers list where to store new extracted peers\\
+\hline
+\end{DoxyParams}
+A simple description of the protocol
+
+1-\/ Extract Domain~\newline
+2-\/ Connect and Send Connect Request~\newline
+3-\/ Check Connect Response~\newline
+4-\/ Send Announce Request~\newline
+5-\/ Check and Parse Announce Response~\newline
+6-\/ Put peers in peer\+\_\+list~\newline
+\mbox{\Hypertarget{namespacet__udp_af6b2788d8ce8ab98f367838a7e3b7b09}\label{namespacet__udp_af6b2788d8ce8ab98f367838a7e3b7b09}} 
+\index{t\+\_\+udp@{t\+\_\+udp}!verify\+\_\+connect\+\_\+resp@{verify\+\_\+connect\+\_\+resp}}
+\index{verify\+\_\+connect\+\_\+resp@{verify\+\_\+connect\+\_\+resp}!t\+\_\+udp@{t\+\_\+udp}}
+\subsubsection{\texorpdfstring{verify\+\_\+connect\+\_\+resp()}{verify\_connect\_resp()}}
+{\footnotesize\ttfamily void t\+\_\+udp\+::verify\+\_\+connect\+\_\+resp (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{resp,  }\item[{uint32\+\_\+t \&}]{trans\+\_\+id,  }\item[{uint64\+\_\+t \&}]{conn\+\_\+id,  }\item[{std\+::vector$<$ uint8\+\_\+t $>$ \&}]{conn\+\_\+id\+\_\+v }\end{DoxyParamCaption})}
+
+Verify and reconstruct the connection ID bytes from tracker\textquotesingle{}s response.
+
+
+\begin{DoxyParams}{Parameters}
+{\em resp} & The tracker response \\
+\hline
+{\em trans\+\_\+id} & Protocol transaction ID (Unused) \\
+\hline
+{\em conn\+\_\+id} & Connection ID (Unused) \\
+\hline
+{\em conn\+\_\+id\+\_\+v} & The destination array where connection id will be written \\
+\hline
+\end{DoxyParams}

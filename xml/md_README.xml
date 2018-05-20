@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="md_README" kind="page">
+    <compoundname>md_README</compoundname>
+    <title>αTorrent</title>
+    <detaileddescription>
+<para>A simple BitTorrent Client.</para><para>Project for the Computer Networks course held by A. Mancini at Univpm</para><para><heading level="3">Dependencies</heading>
+</para><para>The client needs OpenSSL, Boost libraries and glog.</para><para><bold>Mac OS X</bold></para><para>OpenSSL <programlisting><codeline><highlight class="normal">brew<sp/>install<sp/>openssl</highlight></codeline>
+<codeline><highlight class="normal">cd<sp/>/usr/local/include</highlight></codeline>
+<codeline><highlight class="normal">ln<sp/>-s<sp/>../opt/openssl/include/openssl<sp/>.</highlight></codeline>
+</programlisting></para><para>Boost <programlisting><codeline><highlight class="normal">brew<sp/>install<sp/>boost</highlight></codeline>
+</programlisting></para><para>Glog <programlisting><codeline><highlight class="normal">brew<sp/>install<sp/>glog</highlight></codeline>
+</programlisting></para><para><heading level="3">Troubleshooting</heading>
+</para><para>For OS X users who have this error: <blockquote><para>fatal error: ‘openssl/sha.h’ file not found </para></blockquote></para><para>please install the OpenSSL library as shown above </para>    </detaileddescription>
+  </compounddef>
+</doxygen>

@@ -3,8 +3,30 @@
 #include "peer.h" //from int to bint
 #include "pwp.hpp" //for is_inv_address
 
+
+
+void handle_receive(
+    const boost::system::error_code& ec, std::size_t length,
+    boost::system::error_code* out_ec, std::size_t* out_length)
+{
+    *out_ec = ec;
+    *out_length = length;
+    std::cout << std::endl << "Response Received\t EC : " << out_ec->value() << "\tLen " << *out_length << std::endl;
+}
+
+
+
+
+
 namespace t_udp{
     using namespace std;
+
+    /**
+     *  Get a random number that will be used as a transaction ID
+     * 
+     *  @return transaction ID
+     * 
+     */
 
     int32_t get_transaction_id(){
         using namespace boost::random;
@@ -16,6 +38,13 @@ namespace t_udp{
     }
 
 
+    /**
+     *  Check the tracker url for understand which protocol should be used.
+     *  In this case, it check's if the tracker support UDP Tracker protocol.
+     * 
+     *  @param tracker_url
+     *  @return true if it support UDP protocol, false otherwise
+     */
 
     bool is_udp_tracker(const std::string& tracker_url){
         if(tracker_url.length() < 6)
@@ -25,7 +54,36 @@ namespace t_udp{
         return false;
     }
 
+
+
+    /**
+     *  Take the tracker url and extract the corrensponding domain.
+     *  This function only work on UDP tracker URL, if an HTTP url is passed
+     *  it returns empty udp_tracker and port equal to zero
+     * 
+     *  @param tracker_url  The URL to parse
+     *  @param udp_tracker  The extracted tracker domain
+     *  @param port         The port extracted
+     * 
+     *  Example
+     * 
+     *  tracker_url = udp://example.com:1337
+     * 
+     *  udp_tracker = example.com
+     *  port = 1337
+     * 
+     */
+
     void get_tracker_domain(std::string tracker_url, std::string& udp_tracker, uint& port){
+
+
+        if(!is_udp_tracker(tracker_url)){
+            udp_tracker = "";
+            port = 0;
+            LOG(FATAL) << "Passed a non UDP tracker url";
+            return;
+        }
+
         tracker_url.erase(0, 6);    // udp://
 
         std::string s_port;
@@ -47,11 +105,18 @@ namespace t_udp{
     }
 
 
+    /**
+     * 
+     * 
+     * 
+     * NOTE : It's not very useful to pass a struct just to use one of it's value
+     * 
+     */
 
 
     void get_connect_request(connect_request c, std::vector<uint8_t>& req){
        
-        std::vector<uint8_t> pid_action = {0,0,4,23,39,16,25,128,0,0, 0,0,0,0};
+        std::vector<uint8_t> pid_action = {0,0,4,23,39,16,25,128,0,0, 0,0,0,0}; //Protocol Constandt
        
         //std::vector<uint8_t> pid = from_int_to_bint(c.protocol_id);
         //std::vector<uint8_t> action = {0,0,0,0};
@@ -63,20 +128,33 @@ namespace t_udp{
     }
 
 
-    void stop_connection(boost::asio::ip::udp::socket &socket){
 
-        cout << endl << "Closing socket for timeout" << endl;
-        socket.close();
 
-    }
-
+    /**
+     *  Manage the entire UDP tracker protocol procedure and automatically add parsed peers in the passed
+     *  peer_list.
+     * 
+     *  @param tracker_url  the tracker to contact
+     *  @param param        struct containing tracker, metainfo and client options      
+     *  @param peer_list    the peers list where to store new extracted peers
+     * 
+     *  A simple description of the protocol
+     * 
+     *  1- Extract Domain\n
+     *  2- Connect and Send Connect Request\n
+     *  3- Check Connect Response\n
+     *  4- Send Announce Request\n
+     *  5- Check and Parse Announce Response\n
+     *  6- Put peers in peer_list\n
+     * 
+     */
 
     void udp_manager(const std::string tracker_url, tracker::TParameter param, pwp::PeerList peer_list){
         using namespace std;
         using namespace boost::asio::ip;
 
 
-        DLOG(INFO) << "Called UDP procedure " << endl;
+        DLOG(INFO) << "Called UDP procedure on " << tracker_url << endl;
 
 
         uint port;
@@ -86,9 +164,11 @@ namespace t_udp{
 
         uint32_t trans_id = get_transaction_id();
         
-        //Start the request
+        boost::system::error_code ec = boost::asio::error::would_block;
+
+        //Start the request procedure
         try{ 
-            udp::resolver resolver(_io_service); //Domain resolve                 
+            udp::resolver resolver(_io_service); //Domain resolver                 
             udp::resolver::query query(tracker_domain, std::to_string(port), boost::asio::ip::resolver_query_base::numeric_service);   //Specify IP and Port
             
             udp::endpoint recv_endpoint = *resolver.resolve(query);
@@ -98,10 +178,16 @@ namespace t_udp{
             boost::system::error_code error;
 
             DLOG(INFO) << "Testing : " << recv_endpoint.address().to_string() << "\t " << std::to_string(port);
-            
             DLOG(INFO) << endl << tracker_url << " - Connecting socket...";
+
             socket.connect(recv_endpoint);
+            
             DLOG(INFO) << endl << tracker_url << " - Connected !!!!";
+
+            if(!socket.is_open()){
+                LOG(ERROR) << "Socket closed";
+                return;
+            }
 
             //Try connection
 
@@ -110,41 +196,25 @@ namespace t_udp{
             connect_request c;
             c.transaction_id = trans_id;
 
-
             get_connect_request(c, req);
 
-            //assert(req.size() == 16);
-
-            if(!socket.is_open()){
-                LOG(ERROR) << "Socket closed";
-                return;
-            }
+            assert(req.size() == 16);
 
 
-            DLOG(INFO) << tracker_url << " Connect request : ";
-            DLOG(INFO) << string_to_hex(req);
-            DLOG(INFO) << "Sending request...";
+            DLOG(INFO) << tracker_url << " Connect request : " << string_to_hex(req);
+
             socket.send_to(boost::asio::buffer(req), recv_endpoint);
 
+            LOG(INFO) << "Waiting for response...";
 
-            LOG(INFO) << "Sended " << "bytes \nWaiting for response...";
             std::vector<uint8_t> recv_buf(16);
             udp::endpoint sender_endpoint;
-            boost::asio::deadline_timer timer_(_io_service);
 
-            timer_.expires_from_now(boost::posix_time::seconds(15));    //TODO define here
-            //timer_.async_wait(boost::bind(&stop_connection, std::ref(socket)));
-
-            if(_io_service.stopped()){
-                _io_service.reset();
-                _io_service.run();
-            }
+            std::size_t length = 0;
 
 
-            size_t len = socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
-
-
-            DLOG(INFO) << "UDP - Reqponse : ";
+            socket.receive(boost::asio::buffer(recv_buf));
+            
 
             uint32_t trans_id_peer;
             uint64_t conn_id;
@@ -156,32 +226,24 @@ namespace t_udp{
             DLOG(INFO) << "Transaction ID : " << std::to_string(trans_id_peer) << "\nConnection ID : " << std::to_string(conn_id);
 
             
-            LOG(INFO) << "Sending announce...";
+            cout << "Sending announce...";
 
             req.resize(98);
             get_announce_req(req, param, conn_id_v);
-            DLOG(INFO) << string_to_hex(req);
 
             socket.send_to(boost::asio::buffer(req), recv_endpoint);
 
-            DLOG(INFO) << endl << tracker_url << "Sended announce \nWaiting for response...";
+            DLOG(INFO) << tracker_url << "Sended announce \nWaiting for response...";
             recv_buf.resize(512);
-            len = socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
 
+            socket.receive(boost::asio::buffer(recv_buf));
 
             DLOG(INFO) << endl << tracker_url << "Response : \n" << string_to_hex(recv_buf);
 
             parse_announce_resp(recv_buf, peer_list);
-                 
-            
-            
-            //cout << "Parsed " << num << " peers from " << recv_endpoint.address().to_string() << ":" << std::to_string(port);
+                             
+            DLOG(INFO) << endl <<  "Parsed  peers from " << recv_endpoint.address().to_string() << ":" << std::to_string(port) << endl;
 
-
-            // if(_io_service.stopped()){
-            //     _io_service.reset();
-            //     _io_service.run();
-            // }            
 
             if (error == boost::asio::error::eof){
                 LOG(ERROR) << "Connection Closed";
@@ -194,19 +256,30 @@ namespace t_udp{
             return;
         }
 
-        DLOG(INFO) << "Exiting from " << tracker_url << endl;
+        DLOG(INFO) << "Exiting from " << tracker_url;
+
         return;
     }
 
 
 
+    /**
+     *  Verify and reconstruct the connection ID bytes from tracker's response.
+     * 
+     *  @param resp         The tracker response
+     *  @param trans_id     Protocol transaction ID (Unused)
+     *  @param conn_id      Connection ID (Unused)
+     *  @param conn_id_v    The destination array where connection id will be written
+     * 
+     */
 
-    void verify_connect_resp(std::vector<uint8_t>& resp, uint32_t& trans_id, uint64_t& conn_id, std::vector<uint8_t>& conn_id_v){
 
-        if(resp[0] == 0 && resp[1] == 0 && resp[2] == 0 && resp[3] == 0)
-            ;
-        else
+    void verify_connect_resp(const std::vector<uint8_t>& resp, uint32_t& trans_id, uint64_t& conn_id, std::vector<uint8_t>& conn_id_v){
+
+        if( !(resp[0] == 0 && resp[1] == 0 && resp[2] == 0 && resp[3] == 0) ){
+            LOG(ERROR) << "Wrong Connect response from tracker";
             return;
+        }
 
 
         vector<uint8_t>::const_iterator first = resp.begin() + 4;
@@ -216,11 +289,10 @@ namespace t_udp{
         trans_id = make_int(trans_id_v);
 
         vector<uint8_t>::const_iterator first1 = resp.begin() + 8;
-        vector<uint8_t>::const_iterator last1 = resp.begin() + 12;
-        vector<uint8_t>::const_iterator first2 = resp.begin() + 12; //Not needed
+        vector<uint8_t>::const_iterator mid = resp.begin() + 12;
         vector<uint8_t>::const_iterator last2 = resp.begin() + 16;
-        vector<uint8_t> conn_id_v1(first1, last1);
-        vector<uint8_t> conn_id_v2(first2, last2);
+        vector<uint8_t> conn_id_v1(first1, mid);
+        vector<uint8_t> conn_id_v2(mid, last2);
 
         uint32_t conn_id_1 = make_int(conn_id_v1);
         uint32_t conn_id_2 = make_int(conn_id_v2);
@@ -233,6 +305,17 @@ namespace t_udp{
 
     }
 
+
+    /**
+     *  Generate the announce request from tracker param.
+     * 
+     *  @param req          The array where the request will be stored
+     *  @param param        Tracker parameters (Port, info_hash etc..)
+     *  @param conn_id_v    The connection ID sended from trakcer in a previous connect request
+     * 
+     * 
+     * 
+     */
 
     void get_announce_req(std::vector<uint8_t>& req, const tracker::TParameter& param, std::vector<uint8_t>& conn_id_v){
         using namespace std;
@@ -278,7 +361,7 @@ namespace t_udp{
 
         vector<uint8_t> numwant_v = from_int_to_bint(param.numwant); 
 
-        vector<uint8_t> port = {2, 255};   //Test Port
+        vector<uint8_t> port = {2, 255};   //Test Port, TODO read from config files
 
 
         req.insert( req.end(), conn_id_v.begin(), conn_id_v.end() );
@@ -300,34 +383,42 @@ namespace t_udp{
     }
 
 
+    /**
+     *  Parse the first byte of the announce response and parse data.
+     *  
+     *  @param resp         The announce response
+     *  @param peer_list    The peer_list where to store fetched peers in case of a positive response
+     * 
+     *  
+     *  Three types of response\n
+     *  1- None     -> Ingnored\n
+     *  2- Error    -> Print error\n
+     *  3- Announce -> Parse peers and add to peer_list\n
+     * 
+     */
 
     void parse_announce_resp(std::vector<uint8_t>& resp, pwp::PeerList peer_list){
         using namespace std;
 
         action_type resp_type = static_cast<action_type>(resp[3]);
         
-        //To check if it's at least 20 bytes len response
-        int n =0;
+        //TODO Check if it's at least 20 bytes len response
 
         switch(resp_type){
 
             case none:
-                cout << endl << "NONE request received, exiting...";
+                LOG(WARNING) << "NONE request received, exiting...";
                 return;
             
             case error:
-                cout << endl << "Tracker respond with error" << endl;
+                LOG(ERROR) << "Tracker respond with error";
                 process_error(resp);
                 return;
 
             case announce:
                 DLOG(INFO) << endl << "Valid Response" << endl;
                 parse_announce_resp_peers(resp, peer_list);
-
                 break;
-
-
-
         }
 
         return;
@@ -336,13 +427,15 @@ namespace t_udp{
 
 
 /**
- * In case of a tracker error,
- *
- *   server replies packet:
- *   size 	name 	description
- *   int32_t 	action 	The action, in this case 3, for error. See actions.
- *   int32_t 	transaction_id 	Must match the transaction_id sent from the client.
- *   int8_t[] 	error_string 	The rest of the packet is a string describing the error.
+ *  Process the tracker error response according to the protocol
+ * 
+ *  @param resp The tracker response
+ * 
+ *   In case of a tracker error server replies with:\n
+ *   size 	    name 	        description\n
+ *   int32_t 	action 	           The action, in this case 3, for error.\n
+ *   int32_t 	transaction_id 	Must match the transaction_id sent from the client.\n
+ *   int8_t[] 	error_string 	The rest of the packet is a string describing the error.\n
  * 
  */
 
@@ -363,6 +456,17 @@ namespace t_udp{
 
 
 
+    /**
+     *  This function parse the tracker announce response to extract information 
+     *  like seeder, leechers and interval
+     * 
+     *  @param resp The tracker response
+     * 
+     *  \warning WARNING!!! Unimplemented function!!!
+     * 
+     */
+
+
     void parse_announce_resp_info(std::vector<uint8_t>& resp){
 
 
@@ -370,15 +474,22 @@ namespace t_udp{
     }
 
 
+    /**
+     *  Parse a successfull tracker announce response and put peers into peer_list
+     * 
+     *  @param resp Full    tracker response (It's automatically positioned at correct index)
+     *  @param peer_list    List with parsed peers
+     * 
+     *  @brief Peer-ID string are setted to "" since it's not sendend with this procotol.
+     *  
+     */
+
     void parse_announce_resp_peers(std::vector<uint8_t>& resp, pwp::PeerList peer_list){
         using namespace std;
 
         vector<uint8_t>::iterator it = resp.begin() + 20;   //Peers list
-        uint i=0;
-        uint f=0;
 
         for(; it != resp.end() && (it+6) < resp.end(); it = it +6){
-            i++;
 
             bInt raw_ip = {
                 *(it),
@@ -399,7 +510,7 @@ namespace t_udp{
 
             uint16_t port = (uint16_t) *(it+4) << 8 | *(it+5);
 
-            //cout << endl << ip_addr.to_string() << ":" << to_string(port) <<  " received " << endl;
+            DLOG(INFO) << ip_addr.to_string() << ":" << to_string(port) <<  " received ";
 
 
             pwp::peer recv_peer = {
@@ -411,9 +522,8 @@ namespace t_udp{
 
             peer_list->push_back(recv_peer);
 
-            ++i;
         }
-        return;   //Return valid peer fetched
+        return;
     }
 
 

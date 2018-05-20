@@ -1,10 +1,19 @@
+/**
+ * @file tracker_udp.hpp
+ *
+ * Tracker UDP protocol function 
+ *
+ * Tracker UDP protocol messagge specification and implementation
+ * 
+ */
+
 #ifndef TRACKER_UDP_H
 #define TRACKER_UDP_H
 
 #include <boost/asio.hpp>
 #include <boost/random.hpp>
 #include <boost/algorithm/string.hpp>   //Replace all '/' in the url
-#include <boost/asio/deadline_timer.hpp>
+//#include <boost/asio/deadline_timer.hpp>
 #include <string>
 #include <stdlib.h>
 #include <stdint.h>
@@ -91,7 +100,7 @@ namespace t_udp{
 
 
     typedef struct{
-        int32_t action; //Must Be 1
+        int32_t action; /*!< Must be 1 following the protocol */
         int32_t transaction_id;
         int32_t interval;
         int32_t leechers;
@@ -115,13 +124,12 @@ namespace t_udp{
     bool is_udp_tracker(const std::string& tracker_url);
     void get_tracker_domain(std::string tracker_url, std::string& udp_tracker, uint& port);
     void udp_manager(const std::string tracker_url, tracker::TParameter param, pwp::PeerList peer_list);
-    void verify_connect_resp(std::vector<uint8_t>& resp, uint32_t& trans_id, uint64_t& conn_id, std::vector<uint8_t>& conn_id_v);
+    void verify_connect_resp(const std::vector<uint8_t>& resp, uint32_t& trans_id, uint64_t& conn_id, std::vector<uint8_t>& conn_id_v);
     void get_announce_req(std::vector<uint8_t>& req, const tracker::TParameter& param, std::vector<uint8_t>& conn_id_v);
     void parse_announce_resp(std::vector<uint8_t>& resp, pwp::PeerList peer_list);
     void process_error(std::vector<uint8_t>& resp);
     void parse_announce_resp_peers(std::vector<uint8_t>& resp, pwp::PeerList peer_list);
 }
 
-static void handle_receive(const boost::system::error_code& ec, std::size_t length, boost::system::error_code* out_ec, std::size_t* out_length);
 
 #endif

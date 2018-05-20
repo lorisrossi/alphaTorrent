@@ -10,6 +10,8 @@ boost::asio::io_service _io_service;    /*!< Global IO-Service */
 int active_peer =0;
 boost::mutex mtx_peer_num;
 
+
+
 //DEBUG FUNCTION
 void write_to_file(pwp::PeerList peer_list){
     
@@ -54,84 +56,60 @@ void handle_receive(
 }
 
 
+/**
+ *  Create the socket and connect to the peer
+ * 
+ *  @param peer_connection
+ * 
+ * 
+ * 
+ * 
+ */
 
 int create_socket(pwp::peer_connection& peer_conn_p){
     using namespace boost::asio;
     using namespace boost::asio::ip;
-    using boost::lambda::var;
-    using boost::lambda::_1; 
 
     //Start the request
-        boost::asio::deadline_timer timer_(_io_service);
-
 
     try{ 
         tcp::resolver resolver(_io_service); //Domain resolver
 
-        if(is_inv_address(peer_conn_p.peer_t.addr)){  //Check if it's invalid IP
-            //LOG(ERROR) << "Invalid Address";
+        if(is_inv_address(peer_conn_p.peer_.addr)){  //Check if it's invalid IP
+            DLOG(ERROR) << "Invalid Address";
             return -3;
         }
                                  
-        tcp::resolver::query query(peer_conn_p.peer_t.addr.to_string(), std::to_string(peer_conn_p.peer_t.port));   //Specify IP and Port
+        tcp::resolver::query query(peer_conn_p.peer_.addr.to_string(), std::to_string(peer_conn_p.peer_.port));   //Specify IP and Port
         
         tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
-        //tcp::socket socket(_io_service);
         peer_conn_p.socket = std::make_shared<tcp::socket>(_io_service);    //Allocate the socket
 
-        boost::system::error_code error;
 
-        LOG(INFO) << "Testing : " << peer_conn_p.peer_t.addr.to_string() << "\t " << std::to_string(peer_conn_p.peer_t.port);
+        LOG(INFO) << "Testing : " << peer_conn_p.peer_.addr.to_string() << "\t " << std::to_string(peer_conn_p.peer_.port);
         
         //Try connection
-        boost::system::error_code ec = boost::asio::error::would_block;
 
-        //timer_.expires_from_now(boost::posix_time::seconds(5));    //TODO define here
-        //timer_.async_wait(boost::bind(&check_deadline_tcp, peer_conn_p.socket, std::ref(timer_)));
         size_t len;
-        //peer_conn_p.socket->async_connect(*endpoint_iterator, boost::bind(&handle_receive ,_1, endpoint_iterator ,&ec ));
-        //boost::asio::async_connect(*(peer_conn_p.socket), endpoint_iterator, /*var(ec) = _1*/
-            //boost::bind(&handle_receive ,_1, &ec ));
+        boost::system::error_code error;
 
-        //peer_conn_p.socket->async_connect()
-
-        peer_conn_p.socket->connect(*endpoint_iterator);
-        //std::cout << std::endl << "Waiting for timeout";
-        // do{
-        //     std::cout << "EC : " << ec.value() << std::endl;
-        //     if(_io_service.stopped()){
-        //         _io_service.reset();
-        //         _io_service.run();
-        //     }else
-        //         _io_service.run_one();  
-        // } while (ec == boost::asio::error::would_block);
+        peer_conn_p.socket->connect(*endpoint_iterator, error);
 
 
-        std::cout << "Successfully connect : " << std::endl;
-        // Determine whether a connection was successfully established. The
-        // deadline actor may have had a chance to run and close our socket, even
-        // though the connect operation notionally succeeded. Therefore we must
-        // check whether the socket is still open before deciding if we succeeded
-        // or failed.
-        if (ec || !peer_conn_p.socket->is_open())
-        throw boost::system::system_error(
-            ec ? ec : boost::asio::error::operation_aborted);
+        DLOG(INFO) << "Successfully connect";
 
-        if (ec == boost::asio::error::eof){
+        if (error == boost::asio::error::eof){
             LOG(ERROR) << "Connection Closed";
-        timer_.expires_at(boost::posix_time::pos_infin);
+
 
             return -1; // Connection closed cleanly by peer.
-        }else if (ec){
+        }else if (error){
             throw boost::system::system_error(error); // Some other error.
         }
     }catch (std::exception& e){
-        LOG(ERROR) << peer_conn_p.peer_t.addr << ' ' << e.what() << std::endl;
-        timer_.expires_at(boost::posix_time::pos_infin);
-
+        LOG(ERROR) << peer_conn_p.peer_.addr << ' ' << e.what();
         return -2;
     }
-    timer_.expires_at(boost::posix_time::pos_infin);
 
     return 0;
 }
@@ -164,12 +142,12 @@ std::string string_to_hex(const std::vector<uint8_t>& input)
 }
 
 
-void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshake, const char *info_hash, Torrent &torrent){
+void pwp_protocol_manager(pwp::peer peer_, const std::vector<uint8_t> &handshake, const char *info_hash, Torrent &torrent){
         
     std::vector<uint8_t> response = std::vector<uint8_t>(512);
 
     pwp::peer_connection peer_conn = {
-        peer_t,             //Peer Data
+        peer_,             //Peer Data
         pwp::client_state(),//Client State
         pwp::peer_state(),  //Peer State
         boost::dynamic_bitset<>(),
@@ -181,7 +159,7 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
     int error_code = create_socket(peer_conn);
 
     if(error_code < 0){
-        LOG(ERROR) << peer_t.addr.to_string() << " Exit thread";
+        LOG(ERROR) << peer_.addr.to_string() << " Exit thread";
         return;
     }
 
@@ -199,14 +177,14 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
     //If there was no error (result >= 0) thet it's value is the length of the received handshake
     size_t len = result;        
 
-    result = verify_handshake(response, len, peer_conn.peer_t, info_hash);
+    result = verify_handshake(response, len, peer_conn.peer_, info_hash);
 
     if(result < 0){
         LOG(ERROR) << "[X] Handshake verification failed!! \t Code : " << result;
         return;
     }
 
-    cout << peer_t.addr.to_string() << " handshake done succesfully" << endl;
+    cout << peer_.addr.to_string() << " handshake done succesfully" << endl;
 
     add_active_peer();  //The current peer is valid
 
@@ -236,11 +214,11 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
 
         //Set timeout handler
         //timer_.expires_from_now(boost::posix_time::seconds(15));    //TODO define here
-        cout << endl << peer_t.addr.to_string() << " | Staring timeout count...";
+        cout << endl << peer_.addr.to_string() << " | Staring timeout count...";
         //dtimer_.async_wait(boost::bind(&check_deadline_tcp, peer_conn.socket, std::ref(timer_)));
         
 
-        cout << peer_conn.peer_t.addr << " reading something, byte available : " << peer_conn.socket->available() << "\n";
+        cout << peer_conn.peer_.addr << " reading something, byte available : " << peer_conn.socket->available() << "\n";
         boost::asio::async_read(*(peer_conn.socket), boost::asio::buffer(response, sizeof(uint8_t)*4), 
             boost::asio::transfer_exactly(4),
             boost::bind(&pwp_msg::read_msg_handler, boost::ref(response), 
@@ -272,7 +250,7 @@ void pwp_protocol_manager(pwp::peer peer_t, const std::vector<uint8_t> &handshak
         timer_.expires_at(boost::posix_time::pos_infin);
 
     }catch(std::exception& e){
-        LOG(ERROR) << peer_t.addr << ' ' << e.what() << std::endl;
+        LOG(ERROR) << peer_.addr << ' ' << e.what() << std::endl;
         rm_active_peer();
         peer_conn.socket->close();
         timer_.expires_at(boost::posix_time::pos_infin);
@@ -368,7 +346,7 @@ int send_handshake(pwp::peer_connection& peerc_t, const std::vector<uint8_t> han
 
     try{ 
 
-        if(is_inv_address(peerc_t.peer_t.addr)){
+        if(is_inv_address(peerc_t.peer_.addr)){
             LOG(ERROR) << "Invalid Address";
             return -3;
         }

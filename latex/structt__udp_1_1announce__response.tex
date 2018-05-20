@@ -1,0 +1,48 @@
+\hypertarget{structt__udp_1_1announce__response}{}\section{t\+\_\+udp\+:\+:announce\+\_\+response Struct Reference}
+\label{structt__udp_1_1announce__response}\index{t\+\_\+udp\+::announce\+\_\+response@{t\+\_\+udp\+::announce\+\_\+response}}
+
+
+{\ttfamily \#include $<$tracker\+\_\+udp.\+hpp$>$}
+
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int32\+\_\+t \hyperlink{structt__udp_1_1announce__response_a80aeacfd03e3e64be4218782c6f9b806}{action}
+\item 
+\mbox{\Hypertarget{structt__udp_1_1announce__response_a09d988c7f1c6c46bc37410438d073f45}\label{structt__udp_1_1announce__response_a09d988c7f1c6c46bc37410438d073f45}} 
+int32\+\_\+t {\bfseries transaction\+\_\+id}
+\item 
+\mbox{\Hypertarget{structt__udp_1_1announce__response_afadf951fbddae38de06ba177c2d595b4}\label{structt__udp_1_1announce__response_afadf951fbddae38de06ba177c2d595b4}} 
+int32\+\_\+t {\bfseries interval}
+\item 
+\mbox{\Hypertarget{structt__udp_1_1announce__response_a384b9f0c2c7d8f90a3704bf7257bba6a}\label{structt__udp_1_1announce__response_a384b9f0c2c7d8f90a3704bf7257bba6a}} 
+int32\+\_\+t {\bfseries leechers}
+\item 
+\mbox{\Hypertarget{structt__udp_1_1announce__response_ad6e3f8e872113765e01062f0b4789713}\label{structt__udp_1_1announce__response_ad6e3f8e872113765e01062f0b4789713}} 
+int32\+\_\+t {\bfseries seeders}
+\item 
+\mbox{\Hypertarget{structt__udp_1_1announce__response_a7833ebaa72ad05ee3ee78338b0ea39f1}\label{structt__udp_1_1announce__response_a7833ebaa72ad05ee3ee78338b0ea39f1}} 
+int32\+\_\+t {\bfseries ip\+\_\+address}
+\item 
+\mbox{\Hypertarget{structt__udp_1_1announce__response_aa2102c671b5d2a2455cf1d97a70886b7}\label{structt__udp_1_1announce__response_aa2102c671b5d2a2455cf1d97a70886b7}} 
+int16\+\_\+t {\bfseries port}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+I\+Pv4 announce response\+:
+
+Offset Size Name Value 0 32-\/bit integer action 1 // announce 4 32-\/bit integer transaction\+\_\+id 8 32-\/bit integer interval 12 32-\/bit integer leechers 16 32-\/bit integer seeders 20 + 6 $\ast$ n 32-\/bit integer IP address 24 + 6 $\ast$ n 16-\/bit integer T\+CP port 20 + 6 $\ast$ N 
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{structt__udp_1_1announce__response_a80aeacfd03e3e64be4218782c6f9b806}\label{structt__udp_1_1announce__response_a80aeacfd03e3e64be4218782c6f9b806}} 
+\index{t\+\_\+udp\+::announce\+\_\+response@{t\+\_\+udp\+::announce\+\_\+response}!action@{action}}
+\index{action@{action}!t\+\_\+udp\+::announce\+\_\+response@{t\+\_\+udp\+::announce\+\_\+response}}
+\subsubsection{\texorpdfstring{action}{action}}
+{\footnotesize\ttfamily int32\+\_\+t t\+\_\+udp\+::announce\+\_\+response\+::action}
+
+Must be 1 following the protocol 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+lib/\hyperlink{tracker__udp_8hpp}{tracker\+\_\+udp.\+hpp}\end{DoxyCompactItemize}

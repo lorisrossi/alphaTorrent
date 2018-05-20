@@ -1,0 +1,126 @@
+\hypertarget{namespacepwp__msg}{}\section{pwp\+\_\+msg Namespace Reference}
+\label{namespacepwp__msg}\index{pwp\+\_\+msg@{pwp\+\_\+msg}}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1daf}{msg\+\_\+id} \{ \newline
+\hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafae1d8b3754d66ec7fcad827fb54eaeea2}{chocked} = 0x00, 
+\hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafa55689e288bf71e7737faaf385b1c528b}{unchocked} = 0x01, 
+{\bfseries interested} = 0x02, 
+{\bfseries not\+\_\+interested} = 0x03, 
+\newline
+{\bfseries have} = 0x04, 
+{\bfseries bitfield} = 0x05, 
+{\bfseries request} = 0x06, 
+{\bfseries piece} = 0x07, 
+\newline
+{\bfseries cancel} = 0x08, 
+{\bfseries port} = 0x09
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{namespacepwp__msg_a705398f44211d9aa47d9559c5fb405e1}{send\+\_\+keep\+\_\+alive} (const \hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+c)
+\item 
+\mbox{\Hypertarget{namespacepwp__msg_acf8c4889b5b58efb38f203afacefa3f6}\label{namespacepwp__msg_acf8c4889b5b58efb38f203afacefa3f6}} 
+void {\bfseries enable\+\_\+keep\+\_\+alive\+\_\+message} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peerc\+\_\+t)
+\item 
+\mbox{\Hypertarget{namespacepwp__msg_a3b2185bbd26718703c13fed900d440f0}\label{namespacepwp__msg_a3b2185bbd26718703c13fed900d440f0}} 
+int {\bfseries send\+\_\+msg} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peerc\+\_\+t, std\+::vector$<$ uint8\+\_\+t $>$ msg)
+\item 
+\mbox{\Hypertarget{namespacepwp__msg_a529a3db7938ccfaab85579d58e24061e}\label{namespacepwp__msg_a529a3db7938ccfaab85579d58e24061e}} 
+std\+::vector$<$ uint8\+\_\+t $>$ {\bfseries craft\+\_\+have\+\_\+msg} (int piece\+\_\+index)
+\item 
+\mbox{\Hypertarget{namespacepwp__msg_a2dcbe5fbe0eeca8910340f4978ee4235}\label{namespacepwp__msg_a2dcbe5fbe0eeca8910340f4978ee4235}} 
+std\+::vector$<$ uint8\+\_\+t $>$ {\bfseries make\+\_\+request\+\_\+msg} (\hyperlink{structRequestMsg}{Request\+Msg} request)
+\item 
+\mbox{\Hypertarget{namespacepwp__msg_aa9cc2ccac70638ed59075f27f938b8ec}\label{namespacepwp__msg_aa9cc2ccac70638ed59075f27f938b8ec}} 
+int {\bfseries get\+\_\+bitfield} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+c, \hyperlink{structTorrent}{Torrent} \&torrent)
+\item 
+\mbox{\Hypertarget{namespacepwp__msg_aec35de04a2f2d9cb6abdd777917cfaae}\label{namespacepwp__msg_aec35de04a2f2d9cb6abdd777917cfaae}} 
+void {\bfseries read\+\_\+msg\+\_\+handler} (std\+::vector$<$ uint8\+\_\+t $>$ \&response, \hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+c, \hyperlink{structTorrent}{Torrent} \&torrent, bool \&dead\+\_\+peer, boost\+::asio\+::deadline\+\_\+timer \&timer\+\_\+, const boost\+::system\+::error\+\_\+code \&error, size\+\_\+t bytes\+\_\+read)
+\item 
+\mbox{\Hypertarget{namespacepwp__msg_ab578b213d293636d33efc24382f16b25}\label{namespacepwp__msg_ab578b213d293636d33efc24382f16b25}} 
+int {\bfseries sender} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+conn, \hyperlink{structTorrent}{Torrent} \&torrent, int \&old\+\_\+begin)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{namespacepwp__msg_ae962e65b1871714756b6aeb4722a8caf}\label{namespacepwp__msg_ae962e65b1871714756b6aeb4722a8caf}} 
+enum \hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1daf}{pwp\+\_\+msg\+::msg\+\_\+id} {\bfseries Peer\+List}
+\item 
+const std\+::vector$<$ uint8\+\_\+t $>$ \hyperlink{namespacepwp__msg_a695ee2efb59a7c258559f19440fe6998}{choke\+\_\+msg} = \{0,0,0,1,0\}
+\item 
+const std\+::vector$<$ uint8\+\_\+t $>$ \hyperlink{namespacepwp__msg_acdc5eb698534e84a15db0e061c511e7c}{unchoke\+\_\+msg} = \{0,0,0,1,1\}
+\item 
+const std\+::vector$<$ uint8\+\_\+t $>$ \hyperlink{namespacepwp__msg_afc68b17ce131c52fa0beb0cc7185778b}{interested\+\_\+msg} = \{0,0,0,1,2\}
+\item 
+const std\+::vector$<$ uint8\+\_\+t $>$ \hyperlink{namespacepwp__msg_a16a5f22f784d872342a82af9f6b77830}{non\+\_\+interested\+\_\+msg} = \{0,0,0,1,3\}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This namespace contains all the function that are related to the messages of the P\+WP Protocol 
+
+\subsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1daf}\label{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1daf}} 
+\index{pwp\+\_\+msg@{pwp\+\_\+msg}!msg\+\_\+id@{msg\+\_\+id}}
+\index{msg\+\_\+id@{msg\+\_\+id}!pwp\+\_\+msg@{pwp\+\_\+msg}}
+\subsubsection{\texorpdfstring{msg\+\_\+id}{msg\_id}}
+{\footnotesize\ttfamily enum \hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1daf}{pwp\+\_\+msg\+::msg\+\_\+id}}
+
+P\+WP Message ID \begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{chocked@{chocked}!pwp\+\_\+msg@{pwp\+\_\+msg}}\index{pwp\+\_\+msg@{pwp\+\_\+msg}!chocked@{chocked}}}\mbox{\Hypertarget{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafae1d8b3754d66ec7fcad827fb54eaeea2}\label{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafae1d8b3754d66ec7fcad827fb54eaeea2}} 
+chocked&Chocked \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{unchocked@{unchocked}!pwp\+\_\+msg@{pwp\+\_\+msg}}\index{pwp\+\_\+msg@{pwp\+\_\+msg}!unchocked@{unchocked}}}\mbox{\Hypertarget{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafa55689e288bf71e7737faaf385b1c528b}\label{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafa55689e288bf71e7737faaf385b1c528b}} 
+unchocked&Unchocked \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespacepwp__msg_a705398f44211d9aa47d9559c5fb405e1}\label{namespacepwp__msg_a705398f44211d9aa47d9559c5fb405e1}} 
+\index{pwp\+\_\+msg@{pwp\+\_\+msg}!send\+\_\+keep\+\_\+alive@{send\+\_\+keep\+\_\+alive}}
+\index{send\+\_\+keep\+\_\+alive@{send\+\_\+keep\+\_\+alive}!pwp\+\_\+msg@{pwp\+\_\+msg}}
+\subsubsection{\texorpdfstring{send\+\_\+keep\+\_\+alive()}{send\_keep\_alive()}}
+{\footnotesize\ttfamily void pwp\+\_\+msg\+::send\+\_\+keep\+\_\+alive (\begin{DoxyParamCaption}\item[{const \hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&}]{peer\+\_\+c }\end{DoxyParamCaption})}
+
+Handler that is executed every K\+E\+E\+P\+\_\+\+A\+L\+I\+V\+E\+\_\+\+T\+I\+ME and send a keep-\/alive message
+
+
+\begin{DoxyParams}{Parameters}
+{\em peer\+\_\+c} & The peer connection structure \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{namespacepwp__msg_a695ee2efb59a7c258559f19440fe6998}\label{namespacepwp__msg_a695ee2efb59a7c258559f19440fe6998}} 
+\index{pwp\+\_\+msg@{pwp\+\_\+msg}!choke\+\_\+msg@{choke\+\_\+msg}}
+\index{choke\+\_\+msg@{choke\+\_\+msg}!pwp\+\_\+msg@{pwp\+\_\+msg}}
+\subsubsection{\texorpdfstring{choke\+\_\+msg}{choke\_msg}}
+{\footnotesize\ttfamily const std\+::vector$<$uint8\+\_\+t$>$ pwp\+\_\+msg\+::choke\+\_\+msg = \{0,0,0,1,0\}}
+
+Default chocked message \mbox{\Hypertarget{namespacepwp__msg_afc68b17ce131c52fa0beb0cc7185778b}\label{namespacepwp__msg_afc68b17ce131c52fa0beb0cc7185778b}} 
+\index{pwp\+\_\+msg@{pwp\+\_\+msg}!interested\+\_\+msg@{interested\+\_\+msg}}
+\index{interested\+\_\+msg@{interested\+\_\+msg}!pwp\+\_\+msg@{pwp\+\_\+msg}}
+\subsubsection{\texorpdfstring{interested\+\_\+msg}{interested\_msg}}
+{\footnotesize\ttfamily const std\+::vector$<$uint8\+\_\+t$>$ pwp\+\_\+msg\+::interested\+\_\+msg = \{0,0,0,1,2\}}
+
+Default interested message \mbox{\Hypertarget{namespacepwp__msg_a16a5f22f784d872342a82af9f6b77830}\label{namespacepwp__msg_a16a5f22f784d872342a82af9f6b77830}} 
+\index{pwp\+\_\+msg@{pwp\+\_\+msg}!non\+\_\+interested\+\_\+msg@{non\+\_\+interested\+\_\+msg}}
+\index{non\+\_\+interested\+\_\+msg@{non\+\_\+interested\+\_\+msg}!pwp\+\_\+msg@{pwp\+\_\+msg}}
+\subsubsection{\texorpdfstring{non\+\_\+interested\+\_\+msg}{non\_interested\_msg}}
+{\footnotesize\ttfamily const std\+::vector$<$uint8\+\_\+t$>$ pwp\+\_\+msg\+::non\+\_\+interested\+\_\+msg = \{0,0,0,1,3\}}
+
+Default non interested message \mbox{\Hypertarget{namespacepwp__msg_acdc5eb698534e84a15db0e061c511e7c}\label{namespacepwp__msg_acdc5eb698534e84a15db0e061c511e7c}} 
+\index{pwp\+\_\+msg@{pwp\+\_\+msg}!unchoke\+\_\+msg@{unchoke\+\_\+msg}}
+\index{unchoke\+\_\+msg@{unchoke\+\_\+msg}!pwp\+\_\+msg@{pwp\+\_\+msg}}
+\subsubsection{\texorpdfstring{unchoke\+\_\+msg}{unchoke\_msg}}
+{\footnotesize\ttfamily const std\+::vector$<$uint8\+\_\+t$>$ pwp\+\_\+msg\+::unchoke\+\_\+msg = \{0,0,0,1,1\}}
+
+Default unchocked message 
