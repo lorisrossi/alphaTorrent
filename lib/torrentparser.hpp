@@ -9,8 +9,15 @@
 #include <string>
 #include <vector>
 #include <boost/dynamic_bitset.hpp>
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <openssl/sha.h>
+#include <string.h>
 
 #include "bencode.h"
+
+
 
 /**
  * @brief Struct to store information of a file inside a torrent.

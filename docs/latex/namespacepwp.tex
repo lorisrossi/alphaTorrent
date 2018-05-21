@@ -27,9 +27,8 @@ void \hyperlink{namespacepwp_ae8331eb5e3c98deddc6022dad92352f6}{remove\+\_\+inva
 \begin{DoxyCompactList}\small\item\em Find invalid peers and remove it. \end{DoxyCompactList}\item 
 int \hyperlink{namespacepwp_a73acf05b954e39825a88036d5793db6b}{create\+\_\+socket} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+conn\+\_\+p)
 \begin{DoxyCompactList}\small\item\em Create the socket and connect to the peer. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{namespacepwp_a62060bdcdc80541b0892e26fbeab1e91}\label{namespacepwp_a62060bdcdc80541b0892e26fbeab1e91}} 
-void {\bfseries pwp\+\_\+protocol\+\_\+manager} (\hyperlink{structpwp_1_1peer}{pwp\+::peer} peer\+\_\+, const std\+::vector$<$ uint8\+\_\+t $>$ \&handshake, const char $\ast$info\+\_\+hash, \hyperlink{structTorrent}{Torrent} \&torrent)
-\item 
+void \hyperlink{namespacepwp_a62060bdcdc80541b0892e26fbeab1e91}{pwp\+\_\+protocol\+\_\+manager} (\hyperlink{structpwp_1_1peer}{pwp\+::peer} peer\+\_\+, const std\+::vector$<$ uint8\+\_\+t $>$ \&handshake, const char $\ast$info\+\_\+hash, \hyperlink{structTorrent}{Torrent} \&torrent)
+\begin{DoxyCompactList}\small\item\em Manager of the entire P\+WP protocol. \end{DoxyCompactList}\item 
 void \hyperlink{namespacepwp_a6062876f4d4d4d6ee19341a79a797864}{build\+\_\+handshake} (char $\ast$info\+\_\+hash, std\+::vector$<$ uint8\+\_\+t $>$ \&handshake)
 \item 
 int \hyperlink{namespacepwp_a851ddc0e8fb2eb0a86317cc944c4a927}{send\+\_\+handshake} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peerc\+\_\+t, const std\+::vector$<$ uint8\+\_\+t $>$ handshake, std\+::vector$<$ uint8\+\_\+t $>$ \&response)
@@ -121,6 +120,38 @@ Find a new way to generate the ID\+:
 
 \begin{DoxyParams}{Parameters}
 {\em id} & A pointer to the string that will contains the Peer-\/\+ID \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacepwp_a62060bdcdc80541b0892e26fbeab1e91}\label{namespacepwp_a62060bdcdc80541b0892e26fbeab1e91}} 
+\index{pwp@{pwp}!pwp\+\_\+protocol\+\_\+manager@{pwp\+\_\+protocol\+\_\+manager}}
+\index{pwp\+\_\+protocol\+\_\+manager@{pwp\+\_\+protocol\+\_\+manager}!pwp@{pwp}}
+\subsubsection{\texorpdfstring{pwp\+\_\+protocol\+\_\+manager()}{pwp\_protocol\_manager()}}
+{\footnotesize\ttfamily void pwp\+::pwp\+\_\+protocol\+\_\+manager (\begin{DoxyParamCaption}\item[{\hyperlink{structpwp_1_1peer}{pwp\+::peer}}]{peer\+\_\+,  }\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{handshake,  }\item[{const char $\ast$}]{info\+\_\+hash,  }\item[{\hyperlink{structTorrent}{Torrent} \&}]{torrent }\end{DoxyParamCaption})}
+
+
+
+Manager of the entire P\+WP protocol. 
+
+This is the manager of the entire peer comunication. After creating the socket the handshake is sended. The received handshake is then checked and if it\textquotesingle{}s correct the routine starts.
+
+
+\begin{DoxyEnumerate}
+\item Send Interested Message
+\item Send Unchocked Message
+\item Start Keep-\/\+Alive Routine
+\item Wait (asynchronously) for messages
+\item Loop and send appropriate messages
+\end{DoxyEnumerate}
+
+
+\begin{DoxyParams}{Parameters}
+{\em peer\+\_\+} & The peer on which execute the protocol \\
+\hline
+{\em handshake} & The initial handshake to send \\
+\hline
+{\em info\+\_\+hash} & The torrent file info\+\_\+hash \\
+\hline
+{\em torrent} & The struct containing all torrent information \\
 \hline
 \end{DoxyParams}
 \mbox{\Hypertarget{namespacepwp_ae8331eb5e3c98deddc6022dad92352f6}\label{namespacepwp_ae8331eb5e3c98deddc6022dad92352f6}} 

@@ -1,0 +1,45 @@
+\hypertarget{torrentparser_8hpp}{}\section{lib/torrentparser.hpp File Reference}
+\label{torrentparser_8hpp}\index{lib/torrentparser.\+hpp@{lib/torrentparser.\+hpp}}
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$boost/dynamic\+\_\+bitset.\+hpp$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$iomanip$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$openssl/sha.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}bencode.\+h\char`\"{}}\newline
+Include dependency graph for torrentparser.\+hpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{torrentparser_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=319pt]{torrentparser_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structTorrentFile}{Torrent\+File}
+\begin{DoxyCompactList}\small\item\em Struct to store information of a file inside a torrent. \end{DoxyCompactList}\item 
+struct \hyperlink{structTorrent}{Torrent}
+\begin{DoxyCompactList}\small\item\em Struct to store all the information of a torrent. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{torrentparser_8hpp_a2103399c514cc61b1e74e41da2f638bf}\label{torrentparser_8hpp_a2103399c514cc61b1e74e41da2f638bf}} 
+int {\bfseries parse\+\_\+torrent} (\hyperlink{structTorrent}{Torrent} \&new\+\_\+torrent, std\+::string \&torrent\+\_\+str, const char $\ast$filename)
+\item 
+\mbox{\Hypertarget{torrentparser_8hpp_a81c037bb7409935adacf2d02c34a456d}\label{torrentparser_8hpp_a81c037bb7409935adacf2d02c34a456d}} 
+char $\ast$ {\bfseries get\+\_\+info\+\_\+node\+\_\+hash} (const std\+::string $\ast$file, const std\+::string $\ast$pieces\+\_\+string)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functions for parsing a metainfo (.torrent) file and structs to store parsed information 

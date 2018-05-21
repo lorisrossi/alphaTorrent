@@ -234,6 +234,27 @@ namespace pwp_msg{
         return 0;
     }
 
+    /**
+     * @brief The handler of the message for the PWP protocol
+     * 
+     * 
+     * Initially the message length is readed and next the corresponding byte are readed from 
+     * the socket stream. 
+     * Then the message ID is parsed and the appropriate action is taken
+     * 
+     * See [@ref pwp_msg::msg_id] for message types
+     * 
+     * 
+     * @param response  The response received
+     * @param peer_c    The peer_connection who received the response
+     * @param torrent   The torrent structure
+     * @param dead_peer Reference to a flag to set if the peer is death
+     * @param timer_    Reference of the timer that call the ???? Really necessary?
+     * @param error     Socket error   
+     * @param bytes_read 
+     */
+
+
     void read_msg_handler(std::vector<uint8_t>& response, pwp::peer_connection& peer_c, Torrent &torrent, bool& dead_peer,  boost::asio::deadline_timer &timer_, const boost::system::error_code& error, size_t bytes_read){
         using namespace std;
         using namespace boost::asio;

@@ -30,13 +30,13 @@ namespace pwp_msg{
 
     /*! PWP Message ID */
     enum msg_id{
-        chocked = 0x00, /*!< Chocked state*/
-        unchocked = 0x01, /*!< Unchocked state */
-        interested = 0x02,
-        not_interested = 0x03,
+        chocked = 0x00, /*!< Set the chocked state*/
+        unchocked = 0x01, /*!< Set the unchocked state */
+        interested = 0x02,  /*!< Set the interested state */
+        not_interested = 0x03, /*!< Set the not interested state */
         have = 0x04,
         bitfield = 0x05, /*!< Bitfield sended/received */
-        request = 0x06,
+        request = 0x06, /*!< Request a piece*/
         piece = 0x07, 
         cancel = 0x08,
         port = 0x09

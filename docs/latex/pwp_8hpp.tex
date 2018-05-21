@@ -28,12 +28,12 @@ Include dependency graph for pwp.\+hpp\+:\nopagebreak
 enum \hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1daf}{pwp\+\_\+msg\+::msg\+\_\+id} \{ \newline
 \hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafae1d8b3754d66ec7fcad827fb54eaeea2}{pwp\+\_\+msg\+::chocked} = 0x00, 
 \hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafa55689e288bf71e7737faaf385b1c528b}{pwp\+\_\+msg\+::unchocked} = 0x01, 
-{\bfseries interested} = 0x02, 
-{\bfseries not\+\_\+interested} = 0x03, 
+\hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafaa20400a601bcf2b8d752b26376b2b904}{pwp\+\_\+msg\+::interested} = 0x02, 
+\hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafa3150be15265845a6442c6ecd1515ecec}{pwp\+\_\+msg\+::not\+\_\+interested} = 0x03, 
 \newline
 {\bfseries have} = 0x04, 
 \hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafac3a2343a7b67a371e241ae2184bfe9cd}{pwp\+\_\+msg\+::bitfield} = 0x05, 
-{\bfseries request} = 0x06, 
+\hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafa4d6478c4fe948a9f3aa3ce8d09974370}{pwp\+\_\+msg\+::request} = 0x06, 
 {\bfseries piece} = 0x07, 
 \newline
 {\bfseries cancel} = 0x08, 
@@ -52,9 +52,8 @@ int \hyperlink{namespacepwp__msg_aca807c6281879abef952f8feecccb6e8}{pwp\+\_\+msg
 \mbox{\Hypertarget{namespacepwp__msg_aa9cc2ccac70638ed59075f27f938b8ec}\label{namespacepwp__msg_aa9cc2ccac70638ed59075f27f938b8ec}} 
 int {\bfseries pwp\+\_\+msg\+::get\+\_\+bitfield} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+c, \hyperlink{structTorrent}{Torrent} \&torrent)
 \item 
-\mbox{\Hypertarget{namespacepwp__msg_aec35de04a2f2d9cb6abdd777917cfaae}\label{namespacepwp__msg_aec35de04a2f2d9cb6abdd777917cfaae}} 
-void {\bfseries pwp\+\_\+msg\+::read\+\_\+msg\+\_\+handler} (std\+::vector$<$ uint8\+\_\+t $>$ \&response, \hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+c, \hyperlink{structTorrent}{Torrent} \&torrent, bool \&dead\+\_\+peer, boost\+::asio\+::deadline\+\_\+timer \&timer\+\_\+, const boost\+::system\+::error\+\_\+code \&error, size\+\_\+t bytes\+\_\+read)
-\item 
+void \hyperlink{namespacepwp__msg_aec35de04a2f2d9cb6abdd777917cfaae}{pwp\+\_\+msg\+::read\+\_\+msg\+\_\+handler} (std\+::vector$<$ uint8\+\_\+t $>$ \&response, \hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+c, \hyperlink{structTorrent}{Torrent} \&torrent, bool \&dead\+\_\+peer, boost\+::asio\+::deadline\+\_\+timer \&timer\+\_\+, const boost\+::system\+::error\+\_\+code \&error, size\+\_\+t bytes\+\_\+read)
+\begin{DoxyCompactList}\small\item\em The handler of the message for the P\+WP protocol. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{namespacepwp__msg_ab578b213d293636d33efc24382f16b25}\label{namespacepwp__msg_ab578b213d293636d33efc24382f16b25}} 
 int {\bfseries pwp\+\_\+msg\+::sender} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+conn, \hyperlink{structTorrent}{Torrent} \&torrent, int \&old\+\_\+begin)
 \end{DoxyCompactItemize}

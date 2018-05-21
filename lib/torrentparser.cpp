@@ -1,13 +1,8 @@
 // Reference: https://wiki.theory.org/index.php/BitTorrentSpecification#Metainfo_File_Structure
-
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <openssl/sha.h>
-
 #include "torrentparser.hpp"
 
 using namespace std;
+
 
 /**
  * @brief Parse a be_node dictionary corresponding to a file of a torrent.
@@ -34,6 +29,7 @@ TorrentFile parse_file_dict(const be_node *file_node) {
 
 /**
  * @brief Parse a be_node dictionary corresponding to the "info" key of the torrent.
+ * 
  * Parsed keys: name, piece length, pieces, length, files.
  * Save all the information in a Torrent struct passed as a parameter.
  * In the case of a single file torrent, this function parse file info without
@@ -111,7 +107,7 @@ void parse_torrent_node(const be_node *node, Torrent &new_torrent) {
 
 
 /**
- *  Extract the bencoded dictionary from the metainfo file and hash
+ *  @brief Extract the bencoded dictionary from the metainfo file and hash
  *  (with SHA1) the content
  *
  *  @param *file :  a string cointaining the entire file

@@ -1,0 +1,167 @@
+\hypertarget{namespacetorr}{}\section{torr Namespace Reference}
+\label{namespacetorr}\index{torr@{torr}}
+
+
+Testing namespace.  
+
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structtorr_1_1Torrent}{Torrent}
+\begin{DoxyCompactList}\small\item\em Struct to store all the information of a torrent. \end{DoxyCompactList}\item 
+struct \hyperlink{structtorr_1_1TorrentFile}{Torrent\+File}
+\begin{DoxyCompactList}\small\item\em Struct to store information of a file inside a torrent. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structtorr_1_1TorrentFile}{Torrent\+File} \hyperlink{namespacetorr_a7e45f5777369e0882a30859e1bc511fa}{parse\+\_\+file\+\_\+dict} (const \hyperlink{structbe__node}{be\+\_\+node} $\ast$file\+\_\+node)
+\begin{DoxyCompactList}\small\item\em Parse a \hyperlink{structbe__node}{be\+\_\+node} dictionary corresponding to a file of a torrent. This function is called only when parsing a torrent with multiple files. \end{DoxyCompactList}\item 
+void \hyperlink{namespacetorr_a606e7ff691f182e90c3eb16a4d99082d}{parse\+\_\+info\+\_\+dict} (const \hyperlink{structbe__node}{be\+\_\+node} $\ast$info\+\_\+node, \hyperlink{structtorr_1_1Torrent}{Torrent} \&new\+\_\+torrent)
+\begin{DoxyCompactList}\small\item\em Parse a \hyperlink{structbe__node}{be\+\_\+node} dictionary corresponding to the \char`\"{}info\char`\"{} key of the torrent. \end{DoxyCompactList}\item 
+void \hyperlink{namespacetorr_a3cdccc74839c405efdf2e5c5b5ec53f9}{parse\+\_\+torrent\+\_\+node} (const \hyperlink{structbe__node}{be\+\_\+node} $\ast$node, \hyperlink{structtorr_1_1Torrent}{Torrent} \&new\+\_\+torrent)
+\begin{DoxyCompactList}\small\item\em Parse a \hyperlink{structbe__node}{be\+\_\+node} dictionary corresponding to the decoded torrent file. Parsed keys\+: announce, announce-\/list, info. The first element of \char`\"{}announce-\/list\char`\"{} is equal to \char`\"{}announce\char`\"{}, but sometimes there is no \char`\"{}announce-\/list\char`\"{} key, so we must parse \char`\"{}announce\char`\"{} everytime. Save all the information in a \hyperlink{structtorr_1_1Torrent}{Torrent} struct passed as a parameter. \end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{namespacetorr_ae283dfa60401ce3a0030abbc93508e88}{get\+\_\+info\+\_\+node\+\_\+hash} (const string $\ast$file, const string $\ast$pieces\+\_\+string)
+\begin{DoxyCompactList}\small\item\em Extract the bencoded dictionary from the metainfo file and hash (with S\+H\+A1) the content. \end{DoxyCompactList}\item 
+void \hyperlink{namespacetorr_a86e0a9eb7815111ee9ab4b41e3edeca6}{print\+\_\+file} (const \hyperlink{structtorr_1_1TorrentFile}{Torrent\+File} \&torrent\+\_\+file)
+\begin{DoxyCompactList}\small\item\em Print path and length of a file in a torrent. \end{DoxyCompactList}\item 
+void \hyperlink{namespacetorr_a8f9d5e0b3e7590d0dd115cda74088eef}{print\+\_\+torrent} (const \hyperlink{structtorr_1_1Torrent}{Torrent} \&torrent)
+\begin{DoxyCompactList}\small\item\em Print all the parsed information of a torrent. \end{DoxyCompactList}\item 
+int \hyperlink{namespacetorr_aadd7f7bbd463cb3b941f548ffd3f7ee1}{parse\+\_\+torrent} (\hyperlink{structtorr_1_1Torrent}{Torrent} \&torrent, string \&torrent\+\_\+str, const char $\ast$filename)
+\begin{DoxyCompactList}\small\item\em Main function for parsing a .torrent file. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{namespacetorr_a6309aedbc4feec9c0e036a06d2ffdc41}\label{namespacetorr_a6309aedbc4feec9c0e036a06d2ffdc41}} 
+int {\bfseries parse\+\_\+torrent} (\hyperlink{structtorr_1_1Torrent}{Torrent} \&new\+\_\+torrent, std\+::string \&torrent\+\_\+str, const char $\ast$filename)
+\item 
+\mbox{\Hypertarget{namespacetorr_aea0adcfadf439eed53ca01a555855f04}\label{namespacetorr_aea0adcfadf439eed53ca01a555855f04}} 
+char $\ast$ {\bfseries get\+\_\+info\+\_\+node\+\_\+hash} (const std\+::string $\ast$file, const std\+::string $\ast$pieces\+\_\+string)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Testing namespace. 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespacetorr_ae283dfa60401ce3a0030abbc93508e88}\label{namespacetorr_ae283dfa60401ce3a0030abbc93508e88}} 
+\index{torr@{torr}!get\+\_\+info\+\_\+node\+\_\+hash@{get\+\_\+info\+\_\+node\+\_\+hash}}
+\index{get\+\_\+info\+\_\+node\+\_\+hash@{get\+\_\+info\+\_\+node\+\_\+hash}!torr@{torr}}
+\subsubsection{\texorpdfstring{get\+\_\+info\+\_\+node\+\_\+hash()}{get\_info\_node\_hash()}}
+{\footnotesize\ttfamily char$\ast$ torr\+::get\+\_\+info\+\_\+node\+\_\+hash (\begin{DoxyParamCaption}\item[{const string $\ast$}]{file,  }\item[{const string $\ast$}]{pieces\+\_\+string }\end{DoxyParamCaption})}
+
+
+
+Extract the bencoded dictionary from the metainfo file and hash (with S\+H\+A1) the content. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$file} & \+: a string cointaining the entire file\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the uchar array of the hash 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacetorr_a7e45f5777369e0882a30859e1bc511fa}\label{namespacetorr_a7e45f5777369e0882a30859e1bc511fa}} 
+\index{torr@{torr}!parse\+\_\+file\+\_\+dict@{parse\+\_\+file\+\_\+dict}}
+\index{parse\+\_\+file\+\_\+dict@{parse\+\_\+file\+\_\+dict}!torr@{torr}}
+\subsubsection{\texorpdfstring{parse\+\_\+file\+\_\+dict()}{parse\_file\_dict()}}
+{\footnotesize\ttfamily \hyperlink{structtorr_1_1TorrentFile}{Torrent\+File} torr\+::parse\+\_\+file\+\_\+dict (\begin{DoxyParamCaption}\item[{const \hyperlink{structbe__node}{be\+\_\+node} $\ast$}]{file\+\_\+node }\end{DoxyParamCaption})}
+
+
+
+Parse a \hyperlink{structbe__node}{be\+\_\+node} dictionary corresponding to a file of a torrent. This function is called only when parsing a torrent with multiple files. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\+\_\+node} & \hyperlink{structbe__node}{be\+\_\+node} dictionary corresponding to the file \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structtorr_1_1TorrentFile}{Torrent\+File} struct with path and length 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacetorr_a606e7ff691f182e90c3eb16a4d99082d}\label{namespacetorr_a606e7ff691f182e90c3eb16a4d99082d}} 
+\index{torr@{torr}!parse\+\_\+info\+\_\+dict@{parse\+\_\+info\+\_\+dict}}
+\index{parse\+\_\+info\+\_\+dict@{parse\+\_\+info\+\_\+dict}!torr@{torr}}
+\subsubsection{\texorpdfstring{parse\+\_\+info\+\_\+dict()}{parse\_info\_dict()}}
+{\footnotesize\ttfamily void torr\+::parse\+\_\+info\+\_\+dict (\begin{DoxyParamCaption}\item[{const \hyperlink{structbe__node}{be\+\_\+node} $\ast$}]{info\+\_\+node,  }\item[{\hyperlink{structtorr_1_1Torrent}{Torrent} \&}]{new\+\_\+torrent }\end{DoxyParamCaption})}
+
+
+
+Parse a \hyperlink{structbe__node}{be\+\_\+node} dictionary corresponding to the \char`\"{}info\char`\"{} key of the torrent. 
+
+Parsed keys\+: name, piece length, pieces, length, files. Save all the information in a \hyperlink{structtorr_1_1Torrent}{Torrent} struct passed as a parameter. In the case of a single file torrent, this function parse file info without calling \char`\"{}parse\+\_\+file\+\_\+dict\char`\"{}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em info\+\_\+node} & \hyperlink{structbe__node}{be\+\_\+node} dictionary corresponding to \char`\"{}info\char`\"{} key \\
+\hline
+{\em new\+\_\+torrent} & \hyperlink{structtorr_1_1Torrent}{Torrent} struct where to save the parsed info \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacetorr_aadd7f7bbd463cb3b941f548ffd3f7ee1}\label{namespacetorr_aadd7f7bbd463cb3b941f548ffd3f7ee1}} 
+\index{torr@{torr}!parse\+\_\+torrent@{parse\+\_\+torrent}}
+\index{parse\+\_\+torrent@{parse\+\_\+torrent}!torr@{torr}}
+\subsubsection{\texorpdfstring{parse\+\_\+torrent()}{parse\_torrent()}}
+{\footnotesize\ttfamily int torr\+::parse\+\_\+torrent (\begin{DoxyParamCaption}\item[{\hyperlink{structtorr_1_1Torrent}{Torrent} \&}]{torrent,  }\item[{string \&}]{torrent\+\_\+str,  }\item[{const char $\ast$}]{filename }\end{DoxyParamCaption})}
+
+
+
+Main function for parsing a .torrent file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em torrent} & \hyperlink{structtorr_1_1Torrent}{Torrent} struct \\
+\hline
+{\em torrent\+\_\+str} & String for storing the torrent file \\
+\hline
+{\em filename} & Path of the .torrent file \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int Return negative number in case of error, otherwise 0 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacetorr_a3cdccc74839c405efdf2e5c5b5ec53f9}\label{namespacetorr_a3cdccc74839c405efdf2e5c5b5ec53f9}} 
+\index{torr@{torr}!parse\+\_\+torrent\+\_\+node@{parse\+\_\+torrent\+\_\+node}}
+\index{parse\+\_\+torrent\+\_\+node@{parse\+\_\+torrent\+\_\+node}!torr@{torr}}
+\subsubsection{\texorpdfstring{parse\+\_\+torrent\+\_\+node()}{parse\_torrent\_node()}}
+{\footnotesize\ttfamily void torr\+::parse\+\_\+torrent\+\_\+node (\begin{DoxyParamCaption}\item[{const \hyperlink{structbe__node}{be\+\_\+node} $\ast$}]{node,  }\item[{\hyperlink{structtorr_1_1Torrent}{Torrent} \&}]{new\+\_\+torrent }\end{DoxyParamCaption})}
+
+
+
+Parse a \hyperlink{structbe__node}{be\+\_\+node} dictionary corresponding to the decoded torrent file. Parsed keys\+: announce, announce-\/list, info. The first element of \char`\"{}announce-\/list\char`\"{} is equal to \char`\"{}announce\char`\"{}, but sometimes there is no \char`\"{}announce-\/list\char`\"{} key, so we must parse \char`\"{}announce\char`\"{} everytime. Save all the information in a \hyperlink{structtorr_1_1Torrent}{Torrent} struct passed as a parameter. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & \hyperlink{structbe__node}{be\+\_\+node} dictionary corresponding to the torrent file \\
+\hline
+{\em new\+\_\+torrent} & \hyperlink{structtorr_1_1Torrent}{Torrent} struct where to save the parsed info \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacetorr_a86e0a9eb7815111ee9ab4b41e3edeca6}\label{namespacetorr_a86e0a9eb7815111ee9ab4b41e3edeca6}} 
+\index{torr@{torr}!print\+\_\+file@{print\+\_\+file}}
+\index{print\+\_\+file@{print\+\_\+file}!torr@{torr}}
+\subsubsection{\texorpdfstring{print\+\_\+file()}{print\_file()}}
+{\footnotesize\ttfamily void torr\+::print\+\_\+file (\begin{DoxyParamCaption}\item[{const \hyperlink{structtorr_1_1TorrentFile}{Torrent\+File} \&}]{torrent\+\_\+file }\end{DoxyParamCaption})}
+
+
+
+Print path and length of a file in a torrent. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em torrent\+\_\+file} & File parsed with parse\+\_\+file\+\_\+dict \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacetorr_a8f9d5e0b3e7590d0dd115cda74088eef}\label{namespacetorr_a8f9d5e0b3e7590d0dd115cda74088eef}} 
+\index{torr@{torr}!print\+\_\+torrent@{print\+\_\+torrent}}
+\index{print\+\_\+torrent@{print\+\_\+torrent}!torr@{torr}}
+\subsubsection{\texorpdfstring{print\+\_\+torrent()}{print\_torrent()}}
+{\footnotesize\ttfamily void torr\+::print\+\_\+torrent (\begin{DoxyParamCaption}\item[{const \hyperlink{structtorr_1_1Torrent}{Torrent} \&}]{torrent }\end{DoxyParamCaption})}
+
+
+
+Print all the parsed information of a torrent. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em torrent} & \hyperlink{structtorr_1_1Torrent}{Torrent} parsed with parse\+\_\+torrent \\
+\hline
+\end{DoxyParams}

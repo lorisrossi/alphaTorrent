@@ -72,12 +72,12 @@ Enumerations</h2></td></tr>
 <tr class="memitem:a0b9a29508f00a30e5138d2b78f4b1daf"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp__msg.html#a0b9a29508f00a30e5138d2b78f4b1daf">msg_id</a> { <br />
 &#160;&#160;<a class="el" href="namespacepwp__msg.html#a0b9a29508f00a30e5138d2b78f4b1dafae1d8b3754d66ec7fcad827fb54eaeea2">chocked</a> = 0x00, 
 <a class="el" href="namespacepwp__msg.html#a0b9a29508f00a30e5138d2b78f4b1dafa55689e288bf71e7737faaf385b1c528b">unchocked</a> = 0x01, 
-<b>interested</b> = 0x02, 
-<b>not_interested</b> = 0x03, 
+<a class="el" href="namespacepwp__msg.html#a0b9a29508f00a30e5138d2b78f4b1dafaa20400a601bcf2b8d752b26376b2b904">interested</a> = 0x02, 
+<a class="el" href="namespacepwp__msg.html#a0b9a29508f00a30e5138d2b78f4b1dafa3150be15265845a6442c6ecd1515ecec">not_interested</a> = 0x03, 
 <br />
 &#160;&#160;<b>have</b> = 0x04, 
 <a class="el" href="namespacepwp__msg.html#a0b9a29508f00a30e5138d2b78f4b1dafac3a2343a7b67a371e241ae2184bfe9cd">bitfield</a> = 0x05, 
-<b>request</b> = 0x06, 
+<a class="el" href="namespacepwp__msg.html#a0b9a29508f00a30e5138d2b78f4b1dafa4d6478c4fe948a9f3aa3ce8d09974370">request</a> = 0x06, 
 <b>piece</b> = 0x07, 
 <br />
 &#160;&#160;<b>cancel</b> = 0x08, 
@@ -99,13 +99,13 @@ Functions</h2></td></tr>
 std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>craft_have_msg</b> (int piece_index)</td></tr>
 <tr class="separator:a529a3db7938ccfaab85579d58e24061e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2dcbe5fbe0eeca8910340f4978ee4235"><td class="memItemLeft" align="right" valign="top"><a id="a2dcbe5fbe0eeca8910340f4978ee4235"></a>
-std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>make_request_msg</b> (<a class="el" href="structRequestMsg.html">RequestMsg</a> request)</td></tr>
+std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>make_request_msg</b> (<a class="el" href="structRequestMsg.html">RequestMsg</a> <a class="el" href="namespacepwp__msg.html#a0b9a29508f00a30e5138d2b78f4b1dafa4d6478c4fe948a9f3aa3ce8d09974370">request</a>)</td></tr>
 <tr class="separator:a2dcbe5fbe0eeca8910340f4978ee4235"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9cc2ccac70638ed59075f27f938b8ec"><td class="memItemLeft" align="right" valign="top"><a id="aa9cc2ccac70638ed59075f27f938b8ec"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>get_bitfield</b> (<a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;peer_c, <a class="el" href="structTorrent.html">Torrent</a> &amp;torrent)</td></tr>
 <tr class="separator:aa9cc2ccac70638ed59075f27f938b8ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec35de04a2f2d9cb6abdd777917cfaae"><td class="memItemLeft" align="right" valign="top"><a id="aec35de04a2f2d9cb6abdd777917cfaae"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>read_msg_handler</b> (std::vector&lt; uint8_t &gt; &amp;response, <a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;peer_c, <a class="el" href="structTorrent.html">Torrent</a> &amp;torrent, bool &amp;dead_peer, boost::asio::deadline_timer &amp;timer_, const boost::system::error_code &amp;error, size_t bytes_read)</td></tr>
+<tr class="memitem:aec35de04a2f2d9cb6abdd777917cfaae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp__msg.html#aec35de04a2f2d9cb6abdd777917cfaae">read_msg_handler</a> (std::vector&lt; uint8_t &gt; &amp;response, <a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;peer_c, <a class="el" href="structTorrent.html">Torrent</a> &amp;torrent, bool &amp;dead_peer, boost::asio::deadline_timer &amp;timer_, const boost::system::error_code &amp;error, size_t bytes_read)</td></tr>
+<tr class="memdesc:aec35de04a2f2d9cb6abdd777917cfaae"><td class="mdescLeft">&#160;</td><td class="mdescRight">The handler of the message for the PWP protocol.  <a href="#aec35de04a2f2d9cb6abdd777917cfaae">More...</a><br /></td></tr>
 <tr class="separator:aec35de04a2f2d9cb6abdd777917cfaae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab578b213d293636d33efc24382f16b25"><td class="memItemLeft" align="right" valign="top"><a id="ab578b213d293636d33efc24382f16b25"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>sender</b> (<a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;peer_conn, <a class="el" href="structTorrent.html">Torrent</a> &amp;torrent, int &amp;old_begin)</td></tr>
@@ -141,11 +141,17 @@ enum <a class="el" href="namespacepwp__msg.html#a0b9a29508f00a30e5138d2b78f4b1da
 </div><div class="memdoc">
 <p>PWP Message ID </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a0b9a29508f00a30e5138d2b78f4b1dafae1d8b3754d66ec7fcad827fb54eaeea2"></a>chocked&#160;</td><td class="fielddoc"><p>Chocked state </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a0b9a29508f00a30e5138d2b78f4b1dafae1d8b3754d66ec7fcad827fb54eaeea2"></a>chocked&#160;</td><td class="fielddoc"><p>Set the chocked state </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a0b9a29508f00a30e5138d2b78f4b1dafa55689e288bf71e7737faaf385b1c528b"></a>unchocked&#160;</td><td class="fielddoc"><p>Unchocked state </p>
+<tr><td class="fieldname"><a id="a0b9a29508f00a30e5138d2b78f4b1dafa55689e288bf71e7737faaf385b1c528b"></a>unchocked&#160;</td><td class="fielddoc"><p>Set the unchocked state </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a0b9a29508f00a30e5138d2b78f4b1dafaa20400a601bcf2b8d752b26376b2b904"></a>interested&#160;</td><td class="fielddoc"><p>Set the interested state </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a0b9a29508f00a30e5138d2b78f4b1dafa3150be15265845a6442c6ecd1515ecec"></a>not_interested&#160;</td><td class="fielddoc"><p>Set the not interested state </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a0b9a29508f00a30e5138d2b78f4b1dafac3a2343a7b67a371e241ae2184bfe9cd"></a>bitfield&#160;</td><td class="fielddoc"><p>Bitfield sended/received </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a0b9a29508f00a30e5138d2b78f4b1dafa4d6478c4fe948a9f3aa3ce8d09974370"></a>request&#160;</td><td class="fielddoc"><p>Request a piece </p>
 </td></tr>
 </table>
 
@@ -171,6 +177,80 @@ enum <a class="el" href="namespacepwp__msg.html#a0b9a29508f00a30e5138d2b78f4b1da
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">peer_c</td><td>The peer's connection structure </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aec35de04a2f2d9cb6abdd777917cfaae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec35de04a2f2d9cb6abdd777917cfaae">&#9670;&nbsp;</a></span>read_msg_handler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void pwp_msg::read_msg_handler </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; uint8_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>response</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;&#160;</td>
+          <td class="paramname"><em>peer_c</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structTorrent.html">Torrent</a> &amp;&#160;</td>
+          <td class="paramname"><em>torrent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &amp;&#160;</td>
+          <td class="paramname"><em>dead_peer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">boost::asio::deadline_timer &amp;&#160;</td>
+          <td class="paramname"><em>timer_</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const boost::system::error_code &amp;&#160;</td>
+          <td class="paramname"><em>error</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>bytes_read</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The handler of the message for the PWP protocol. </p>
+<p>Initially the message length is readed and next the corresponding byte are readed from the socket stream. Then the message ID is parsed and the appropriate action is taken</p>
+<p>See [<a class="el" href="namespacepwp__msg.html#a0b9a29508f00a30e5138d2b78f4b1daf">pwp_msg::msg_id</a>] for message types</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">response</td><td>The response received </td></tr>
+    <tr><td class="paramname">peer_c</td><td>The peer_connection who received the response </td></tr>
+    <tr><td class="paramname">torrent</td><td>The torrent structure </td></tr>
+    <tr><td class="paramname">dead_peer</td><td>Reference to a flag to set if the peer is death </td></tr>
+    <tr><td class="paramname">timer_</td><td>Reference of the timer that call the ???? Really necessary? </td></tr>
+    <tr><td class="paramname">error</td><td>Socket error </td></tr>
+    <tr><td class="paramname">bytes_read</td><td></td></tr>
   </table>
   </dd>
 </dl>

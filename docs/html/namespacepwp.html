@@ -95,8 +95,8 @@ Functions</h2></td></tr>
 <tr class="memitem:a73acf05b954e39825a88036d5793db6b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp.html#a73acf05b954e39825a88036d5793db6b">create_socket</a> (<a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;peer_conn_p)</td></tr>
 <tr class="memdesc:a73acf05b954e39825a88036d5793db6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the socket and connect to the peer.  <a href="#a73acf05b954e39825a88036d5793db6b">More...</a><br /></td></tr>
 <tr class="separator:a73acf05b954e39825a88036d5793db6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62060bdcdc80541b0892e26fbeab1e91"><td class="memItemLeft" align="right" valign="top"><a id="a62060bdcdc80541b0892e26fbeab1e91"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>pwp_protocol_manager</b> (<a class="el" href="structpwp_1_1peer.html">pwp::peer</a> peer_, const std::vector&lt; uint8_t &gt; &amp;handshake, const char *info_hash, <a class="el" href="structTorrent.html">Torrent</a> &amp;torrent)</td></tr>
+<tr class="memitem:a62060bdcdc80541b0892e26fbeab1e91"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp.html#a62060bdcdc80541b0892e26fbeab1e91">pwp_protocol_manager</a> (<a class="el" href="structpwp_1_1peer.html">pwp::peer</a> peer_, const std::vector&lt; uint8_t &gt; &amp;handshake, const char *info_hash, <a class="el" href="structTorrent.html">Torrent</a> &amp;torrent)</td></tr>
+<tr class="memdesc:a62060bdcdc80541b0892e26fbeab1e91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manager of the entire PWP protocol.  <a href="#a62060bdcdc80541b0892e26fbeab1e91">More...</a><br /></td></tr>
 <tr class="separator:a62060bdcdc80541b0892e26fbeab1e91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6062876f4d4d4d6ee19341a79a797864"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp.html#a6062876f4d4d4d6ee19341a79a797864">build_handshake</a> (char *info_hash, std::vector&lt; uint8_t &gt; &amp;handshake)</td></tr>
 <tr class="separator:a6062876f4d4d4d6ee19341a79a797864"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -219,6 +219,65 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>verify_handshake</b> (
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">id</td><td>A pointer to the string that will contains the Peer-ID </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a62060bdcdc80541b0892e26fbeab1e91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62060bdcdc80541b0892e26fbeab1e91">&#9670;&nbsp;</a></span>pwp_protocol_manager()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void pwp::pwp_protocol_manager </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structpwp_1_1peer.html">pwp::peer</a>&#160;</td>
+          <td class="paramname"><em>peer_</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>handshake</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>info_hash</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structTorrent.html">Torrent</a> &amp;&#160;</td>
+          <td class="paramname"><em>torrent</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Manager of the entire PWP protocol. </p>
+<p>This is the manager of the entire peer comunication. After creating the socket the handshake is sended. The received handshake is then checked and if it's correct the routine starts.</p>
+<ol type="1">
+<li>Send Interested Message</li>
+<li>Send Unchocked Message</li>
+<li>Start Keep-Alive Routine</li>
+<li>Wait (asynchronously) for messages</li>
+<li>Loop and send appropriate messages</li>
+</ol>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">peer_</td><td>The peer on which execute the protocol </td></tr>
+    <tr><td class="paramname">handshake</td><td>The initial handshake to send </td></tr>
+    <tr><td class="paramname">info_hash</td><td>The torrent file info_hash </td></tr>
+    <tr><td class="paramname">torrent</td><td>The struct containing all torrent information </td></tr>
   </table>
   </dd>
 </dl>

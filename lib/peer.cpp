@@ -78,10 +78,7 @@ namespace pwp{
      * 
      * 
      *  @param peer_connection
-     * 
-     * 
-     * 
-     * 
+     *
      */
 
     int create_socket(pwp::peer_connection& peer_conn_p){
@@ -133,7 +130,25 @@ namespace pwp{
 
 
 
-
+    /**
+     * @brief Manager of the entire PWP protocol
+     * 
+     * This is the manager of the entire peer comunication.
+     * After creating the socket the handshake is sended.
+     * The received handshake is then checked and if it's correct the routine starts.
+     * 
+     * 1. Send Interested Message
+     * 2. Send Unchocked Message
+     * 3. Start Keep-Alive Routine
+     * 4. Wait (asynchronously) for messages
+     * 5. Loop and send appropriate messages
+     * 
+     * 
+     * @param peer_         The peer on which execute the protocol
+     * @param handshake     The initial handshake to send
+     * @param info_hash     The torrent file info_hash
+     * @param torrent       The struct containing all torrent information
+     */
 
     void pwp_protocol_manager(pwp::peer peer_, const std::vector<uint8_t> &handshake, const char *info_hash, Torrent &torrent){
             
@@ -222,19 +237,16 @@ namespace pwp{
             while(!dead_peer) {
 
                 if(_io_service.stopped()){
-                    cout << endl << "IO-Service stopped, resetting";
+                    cout << endl << "IO-Service stopped, resetting" << endl;
                     _io_service.reset();
                     _io_service.run();
                 }
-
 
                 if(pwp_msg::sender(peer_conn, torrent, old_begin) < 0) {
                     dead_peer = true;
                 }
                 
                 boost::this_thread::sleep_for(boost::chrono::milliseconds(500));  // Sleep for 0.5 seconds
-            
-
             }
 
         }catch(std::exception& e){
