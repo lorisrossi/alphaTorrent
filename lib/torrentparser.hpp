@@ -1,24 +1,32 @@
+/**
+ * @file torrentparser.hpp
+ *
+ * Functions for parsing a metainfo (.torrent) file and structs to store parsed information
+ */
 #ifndef TORRENTPARSER_HPP
 #define TORRENTPARSER_HPP
 
 #include <string>
 #include <vector>
 #include <boost/dynamic_bitset.hpp>
-#include <string.h> //For memcpy
-
-
 
 #include "bencode.h"
 
-// Struct to store information of a file inside a torrent
-// The element of path with highest index is the file.
-// The other elements (if any) are subfolders
+/**
+ * @brief Struct to store information of a file inside a torrent.
+ * 
+ * The element of path with highest index is the file.
+ * The other elements (if any) are subfolders
+ */
 typedef struct {
   std::vector<std::string> path;
   long int length;
 } TorrentFile;
 
-// Struct to store all the information of a torrent
+/**
+ * @brief Struct to store all the information of a torrent
+ * 
+ */
 typedef struct {
   std::vector<std::string> trackers;
   std::string name;

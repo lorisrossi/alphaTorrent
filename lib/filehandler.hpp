@@ -1,9 +1,18 @@
+/**
+ * @file filehandler.hpp
+ *
+ * Functions for handling filesystem operations (read/write)
+ */
 #ifndef FILEHANDLER_HPP
 #define FILEHANDLER_HPP
 
 #include <boost/dynamic_bitset.hpp>
 #include "torrentparser.hpp"
 
+/**
+ * @brief Struct corresponding to a pwp "request" message
+ * 
+ */
 typedef struct {
   size_t index;
   size_t begin;

@@ -10,7 +10,7 @@
 using namespace std;
 
 /**
- * Parse a be_node dictionary corresponding to a file of a torrent.
+ * @brief Parse a be_node dictionary corresponding to a file of a torrent.
  * This function is called only when parsing a torrent with multiple files.
  *
  * @param  file_node  be_node dictionary corresponding to the file
@@ -33,7 +33,7 @@ TorrentFile parse_file_dict(const be_node *file_node) {
 }
 
 /**
- * Parse a be_node dictionary corresponding to the "info" key of the torrent.
+ * @brief Parse a be_node dictionary corresponding to the "info" key of the torrent.
  * Parsed keys: name, piece length, pieces, length, files.
  * Save all the information in a Torrent struct passed as a parameter.
  * In the case of a single file torrent, this function parse file info without
@@ -75,7 +75,7 @@ void parse_info_dict(const be_node *info_node, Torrent &new_torrent) {
 }
 
 /**
- * Parse a be_node dictionary corresponding to the decoded torrent file.
+ * @brief Parse a be_node dictionary corresponding to the decoded torrent file.
  * Parsed keys: announce, announce-list, info.
  * The first element of "announce-list" is equal to "announce", but sometimes
  * there is no "announce-list" key, so we must parse "announce" everytime.
@@ -111,10 +111,10 @@ void parse_torrent_node(const be_node *node, Torrent &new_torrent) {
 
 
 /**
- *  This function extract the bencoded dictionary from the metainfo file and hash (with SHA1)
- *  the content
+ *  Extract the bencoded dictionary from the metainfo file and hash
+ *  (with SHA1) the content
  *
- *  @param *file :  a string that cointaining the entire file
+ *  @param *file :  a string cointaining the entire file
  *
  *  @return the uchar array of the hash
  */
@@ -155,10 +155,10 @@ char *get_info_node_hash(const string *file, const string *pieces_string){
   //   cerr << "Malformed torrent file : no info dictionaries" << endl;
   //   return 0;
   // }
-
 }
+
 /**
- * Print path and length of a file in a torrent.
+ * @brief Print path and length of a file in a torrent.
  *
  * @param torrent_file  File parsed with parse_file_dict
  */
@@ -176,7 +176,7 @@ void print_file(const TorrentFile &torrent_file) {
 }
 
 /**
- * Print all the parsed information of a torrent
+ * @brief Print all the parsed information of a torrent
  *
  * @param torrent  Torrent parsed with parse_torrent
  */
@@ -214,7 +214,7 @@ void print_torrent(const Torrent &torrent) {
 }
 
 /**
- * Main function for parsing a .torrent file.
+ * @brief Main function for parsing a .torrent file.
  * 
  * @param torrent     Torrent struct
  * @param torrent_str String for storing the torrent file

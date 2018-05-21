@@ -10,13 +10,13 @@
 
 #include "filehandler.hpp"
 
-#define MAX_REQUEST_LENGTH 16384 // 2^14
-#define EMPTY_CHAR '\001'
+#define MAX_REQUEST_LENGTH 16384 // 2^14 /*!< Maximum length of a request message */
+#define EMPTY_CHAR '\001'  /*!< Byte used to find missing blocks within a piece */
 
 using namespace std;
 
 /**
- * Make a new file in the filesystem (create subfolders, if any).
+ * @brief Make a new file in the filesystem (create subfolders, if any).
  * The new file has the right size (taken from torrent) but it is empty
  * The pathname has the suffix ".part", it will be removed once the file is complete
  *
@@ -42,9 +42,9 @@ void make_file(const string &main_folder, const TorrentFile &tfile) {
 }
 
 /**
- * Check if a torrent is 100% downloaded.
+ * @brief Check if a torrent is 100% downloaded.
  * If that is the case, remove the ".part" suffix from the filename.
- * WARNING: only single file torrents are supported.
+ * \warning Only single file torrents are supported.
  * 
  * @param torrent  Torrent struct
  */
@@ -59,7 +59,7 @@ void check_file_is_complete(Torrent &torrent)
 }
 
 /**
- * Initialize bitfield of a torrent, checking the pieces already downloaded.
+ * @brief Initialize bitfield of a torrent, checking the pieces already downloaded.
  * 
  * @param torrent  Torrent struct
  */
@@ -104,6 +104,14 @@ void init_bitfield(Torrent &torrent) {
   }
 }
 
+/**
+ * @brief Check if all the files of a torrent are in the filesystem.
+ * In case of missing files, this function create them.
+ * After that it calculates the bitfield.
+ * \warning Only single file torrents are supported.
+ * 
+ * @param torrent  Torrent struct
+ */
 void check_files(Torrent &torrent) {
   if (torrent.is_single) {
     // check for file
@@ -137,7 +145,7 @@ void check_files(Torrent &torrent) {
 }
 
 /**
- * Get the index of a piece the peer can give to us
+ * @brief Get the index of a piece the peer can give to us
  * 
  * @param peer_bitfield 
  * @param own_bitfield 
@@ -160,7 +168,7 @@ int compare_bitfields(boost::dynamic_bitset<> peer_bitfield, boost::dynamic_bits
 }
 
 /**
- * Check the value of the bitfield at index "piece_index", and change it accordingly.
+ * @brief Check the value of the bitfield at index "piece_index", and change it accordingly.
  * 
  * @param torrent      Torrent struct
  * @param piece_index  Index to check
@@ -198,7 +206,7 @@ bool check_bitfield_piece(Torrent &torrent, size_t piece_index) {
 }
 
 /**
- * Create a RequestMsg struct starting from "piece_index".
+ * @brief Create a RequestMsg struct starting from "piece_index".
  * 
  * @param torrent    
  * @param piece_index  
@@ -249,6 +257,14 @@ RequestMsg create_request(Torrent &torrent, int piece_index) {
   return request;
 }
 
+/**
+ * @brief Get a block of data requested by a peer
+ * 
+ * @param path 
+ * @param torrent 
+ * @param request 
+ * @param block 
+ */
 void get_block_from_request(string &path, Torrent &torrent, RequestMsg request, char *block) {
   ifstream source(path);
   if (source.is_open()) {
@@ -262,8 +278,8 @@ void get_block_from_request(string &path, Torrent &torrent, RequestMsg request, 
 }
 
 /**
- * Save a blockdata received from a "piece" message.
- * WARNING: only single file torrents are supported. 
+ * @brief Save a blockdata received from a "piece" message.
+ * \warning Only single file torrents are supported. 
  * 
  * @param blockdata  Byte-array of data
  * @param index      Piece index 
