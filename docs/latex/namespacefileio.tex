@@ -1,0 +1,214 @@
+\hypertarget{namespacefileio}{}\section{fileio Namespace Reference}
+\label{namespacefileio}\index{fileio@{fileio}}
+
+
+Namespace with functions for handling file i/o.  
+
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structfileio_1_1RequestMsg}{Request\+Msg}
+\begin{DoxyCompactList}\small\item\em Struct corresponding to a pwp \char`\"{}request\char`\"{} message. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{namespacefileio_a2c09e8f358ac78b947433b69afa0c277}{make\+\_\+file} (const string \&main\+\_\+folder, const \hyperlink{structtorr_1_1TorrentFile}{Torrent\+File} \&tfile)
+\begin{DoxyCompactList}\small\item\em Make a new file in the filesystem (create subfolders, if any). The new file has the right size (taken from torrent) but it is empty The pathname has the suffix \char`\"{}.\+part\char`\"{}, it will be removed once the file is complete. \end{DoxyCompactList}\item 
+void \hyperlink{namespacefileio_ae9adface3fdec7387d6d5cf00ff1d4d1}{check\+\_\+file\+\_\+is\+\_\+complete} (\hyperlink{structtorr_1_1Torrent}{Torrent} \&torrent)
+\begin{DoxyCompactList}\small\item\em Check if a torrent is 100\% downloaded. If that is the case, remove the \char`\"{}.\+part\char`\"{} suffix from the filename. \end{DoxyCompactList}\item 
+void \hyperlink{namespacefileio_a7f1110f96a3deb25d8d75ff0ada7d040}{init\+\_\+bitfield} (\hyperlink{structtorr_1_1Torrent}{Torrent} \&torrent)
+\begin{DoxyCompactList}\small\item\em Initialize bitfield of a torrent, checking the pieces already downloaded. \end{DoxyCompactList}\item 
+void \hyperlink{namespacefileio_a2caefabab7dfb9c7ad57620a998a5541}{check\+\_\+files} (\hyperlink{structtorr_1_1Torrent}{Torrent} \&torrent)
+\begin{DoxyCompactList}\small\item\em Check if all the files of a torrent are in the filesystem. In case of missing files, this function create them. After that it calculates the bitfield. \end{DoxyCompactList}\item 
+int \hyperlink{namespacefileio_ae4d75e087ce78d860bef69df48a32798}{compare\+\_\+bitfields} (boost\+::dynamic\+\_\+bitset$<$$>$ peer\+\_\+bitfield, boost\+::dynamic\+\_\+bitset$<$$>$ own\+\_\+bitfield)
+\begin{DoxyCompactList}\small\item\em Get the index of a piece the peer can give to us. \end{DoxyCompactList}\item 
+bool \hyperlink{namespacefileio_ae56e407c834f29cd78eb144cb754a8f5}{check\+\_\+bitfield\+\_\+piece} (\hyperlink{structtorr_1_1Torrent}{Torrent} \&torrent, size\+\_\+t piece\+\_\+index)
+\begin{DoxyCompactList}\small\item\em Check the value of the bitfield at index \char`\"{}piece\+\_\+index\char`\"{}, and change it accordingly. \end{DoxyCompactList}\item 
+\hyperlink{structfileio_1_1RequestMsg}{Request\+Msg} \hyperlink{namespacefileio_a6c26bf16806ad09920392d80ca362a5b}{create\+\_\+request} (\hyperlink{structtorr_1_1Torrent}{Torrent} \&torrent, int piece\+\_\+index)
+\begin{DoxyCompactList}\small\item\em Create a \hyperlink{structfileio_1_1RequestMsg}{Request\+Msg} struct starting from \char`\"{}piece\+\_\+index\char`\"{}. \end{DoxyCompactList}\item 
+void \hyperlink{namespacefileio_a8bc5078bab6b41e8bce7cdd7193c1ff5}{get\+\_\+block\+\_\+from\+\_\+request} (string \&path, \hyperlink{structtorr_1_1Torrent}{Torrent} \&torrent, \hyperlink{structfileio_1_1RequestMsg}{Request\+Msg} request, char $\ast$block)
+\begin{DoxyCompactList}\small\item\em Get a block of data requested by a peer. \end{DoxyCompactList}\item 
+void \hyperlink{namespacefileio_acc37418d350d6d36c3f691c99de9cf39}{save\+\_\+block} (char $\ast$blockdata, size\+\_\+t index, size\+\_\+t begin, size\+\_\+t length, \hyperlink{structtorr_1_1Torrent}{Torrent} \&torrent)
+\begin{DoxyCompactList}\small\item\em Save a blockdata received from a \char`\"{}piece\char`\"{} message. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Namespace with functions for handling file i/o. 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespacefileio_ae56e407c834f29cd78eb144cb754a8f5}\label{namespacefileio_ae56e407c834f29cd78eb144cb754a8f5}} 
+\index{fileio@{fileio}!check\+\_\+bitfield\+\_\+piece@{check\+\_\+bitfield\+\_\+piece}}
+\index{check\+\_\+bitfield\+\_\+piece@{check\+\_\+bitfield\+\_\+piece}!fileio@{fileio}}
+\subsubsection{\texorpdfstring{check\+\_\+bitfield\+\_\+piece()}{check\_bitfield\_piece()}}
+{\footnotesize\ttfamily bool fileio\+::check\+\_\+bitfield\+\_\+piece (\begin{DoxyParamCaption}\item[{\hyperlink{structtorr_1_1Torrent}{Torrent} \&}]{torrent,  }\item[{size\+\_\+t}]{piece\+\_\+index }\end{DoxyParamCaption})}
+
+
+
+Check the value of the bitfield at index \char`\"{}piece\+\_\+index\char`\"{}, and change it accordingly. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em torrent} & Torrent struct \\
+\hline
+{\em piece\+\_\+index} & Index to check \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true If the piece is completed, otherwise false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacefileio_ae9adface3fdec7387d6d5cf00ff1d4d1}\label{namespacefileio_ae9adface3fdec7387d6d5cf00ff1d4d1}} 
+\index{fileio@{fileio}!check\+\_\+file\+\_\+is\+\_\+complete@{check\+\_\+file\+\_\+is\+\_\+complete}}
+\index{check\+\_\+file\+\_\+is\+\_\+complete@{check\+\_\+file\+\_\+is\+\_\+complete}!fileio@{fileio}}
+\subsubsection{\texorpdfstring{check\+\_\+file\+\_\+is\+\_\+complete()}{check\_file\_is\_complete()}}
+{\footnotesize\ttfamily void fileio\+::check\+\_\+file\+\_\+is\+\_\+complete (\begin{DoxyParamCaption}\item[{\hyperlink{structtorr_1_1Torrent}{Torrent} \&}]{torrent }\end{DoxyParamCaption})}
+
+
+
+Check if a torrent is 100\% downloaded. If that is the case, remove the \char`\"{}.\+part\char`\"{} suffix from the filename. 
+
+\begin{DoxyWarning}{Warning}
+Only single file torrents are supported.
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+{\em torrent} & Torrent struct \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacefileio_a2caefabab7dfb9c7ad57620a998a5541}\label{namespacefileio_a2caefabab7dfb9c7ad57620a998a5541}} 
+\index{fileio@{fileio}!check\+\_\+files@{check\+\_\+files}}
+\index{check\+\_\+files@{check\+\_\+files}!fileio@{fileio}}
+\subsubsection{\texorpdfstring{check\+\_\+files()}{check\_files()}}
+{\footnotesize\ttfamily void fileio\+::check\+\_\+files (\begin{DoxyParamCaption}\item[{\hyperlink{structtorr_1_1Torrent}{Torrent} \&}]{torrent }\end{DoxyParamCaption})}
+
+
+
+Check if all the files of a torrent are in the filesystem. In case of missing files, this function create them. After that it calculates the bitfield. 
+
+\begin{DoxyWarning}{Warning}
+Only single file torrents are supported.
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+{\em torrent} & Torrent struct \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacefileio_ae4d75e087ce78d860bef69df48a32798}\label{namespacefileio_ae4d75e087ce78d860bef69df48a32798}} 
+\index{fileio@{fileio}!compare\+\_\+bitfields@{compare\+\_\+bitfields}}
+\index{compare\+\_\+bitfields@{compare\+\_\+bitfields}!fileio@{fileio}}
+\subsubsection{\texorpdfstring{compare\+\_\+bitfields()}{compare\_bitfields()}}
+{\footnotesize\ttfamily int fileio\+::compare\+\_\+bitfields (\begin{DoxyParamCaption}\item[{boost\+::dynamic\+\_\+bitset$<$$>$}]{peer\+\_\+bitfield,  }\item[{boost\+::dynamic\+\_\+bitset$<$$>$}]{own\+\_\+bitfield }\end{DoxyParamCaption})}
+
+
+
+Get the index of a piece the peer can give to us. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em peer\+\_\+bitfield} & \\
+\hline
+{\em own\+\_\+bitfield} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int Index of a needed piece, or -\/1 if no piece available 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacefileio_a6c26bf16806ad09920392d80ca362a5b}\label{namespacefileio_a6c26bf16806ad09920392d80ca362a5b}} 
+\index{fileio@{fileio}!create\+\_\+request@{create\+\_\+request}}
+\index{create\+\_\+request@{create\+\_\+request}!fileio@{fileio}}
+\subsubsection{\texorpdfstring{create\+\_\+request()}{create\_request()}}
+{\footnotesize\ttfamily \hyperlink{structfileio_1_1RequestMsg}{Request\+Msg} fileio\+::create\+\_\+request (\begin{DoxyParamCaption}\item[{\hyperlink{structtorr_1_1Torrent}{Torrent} \&}]{torrent,  }\item[{int}]{piece\+\_\+index }\end{DoxyParamCaption})}
+
+
+
+Create a \hyperlink{structfileio_1_1RequestMsg}{Request\+Msg} struct starting from \char`\"{}piece\+\_\+index\char`\"{}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em torrent} & \\
+\hline
+{\em piece\+\_\+index} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structfileio_1_1RequestMsg}{Request\+Msg} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacefileio_a8bc5078bab6b41e8bce7cdd7193c1ff5}\label{namespacefileio_a8bc5078bab6b41e8bce7cdd7193c1ff5}} 
+\index{fileio@{fileio}!get\+\_\+block\+\_\+from\+\_\+request@{get\+\_\+block\+\_\+from\+\_\+request}}
+\index{get\+\_\+block\+\_\+from\+\_\+request@{get\+\_\+block\+\_\+from\+\_\+request}!fileio@{fileio}}
+\subsubsection{\texorpdfstring{get\+\_\+block\+\_\+from\+\_\+request()}{get\_block\_from\_request()}}
+{\footnotesize\ttfamily void fileio\+::get\+\_\+block\+\_\+from\+\_\+request (\begin{DoxyParamCaption}\item[{string \&}]{path,  }\item[{\hyperlink{structtorr_1_1Torrent}{Torrent} \&}]{torrent,  }\item[{\hyperlink{structfileio_1_1RequestMsg}{Request\+Msg}}]{request,  }\item[{char $\ast$}]{block }\end{DoxyParamCaption})}
+
+
+
+Get a block of data requested by a peer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & \\
+\hline
+{\em torrent} & \\
+\hline
+{\em request} & \\
+\hline
+{\em block} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacefileio_a7f1110f96a3deb25d8d75ff0ada7d040}\label{namespacefileio_a7f1110f96a3deb25d8d75ff0ada7d040}} 
+\index{fileio@{fileio}!init\+\_\+bitfield@{init\+\_\+bitfield}}
+\index{init\+\_\+bitfield@{init\+\_\+bitfield}!fileio@{fileio}}
+\subsubsection{\texorpdfstring{init\+\_\+bitfield()}{init\_bitfield()}}
+{\footnotesize\ttfamily void fileio\+::init\+\_\+bitfield (\begin{DoxyParamCaption}\item[{\hyperlink{structtorr_1_1Torrent}{Torrent} \&}]{torrent }\end{DoxyParamCaption})}
+
+
+
+Initialize bitfield of a torrent, checking the pieces already downloaded. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em torrent} & Torrent struct \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacefileio_a2c09e8f358ac78b947433b69afa0c277}\label{namespacefileio_a2c09e8f358ac78b947433b69afa0c277}} 
+\index{fileio@{fileio}!make\+\_\+file@{make\+\_\+file}}
+\index{make\+\_\+file@{make\+\_\+file}!fileio@{fileio}}
+\subsubsection{\texorpdfstring{make\+\_\+file()}{make\_file()}}
+{\footnotesize\ttfamily void fileio\+::make\+\_\+file (\begin{DoxyParamCaption}\item[{const string \&}]{main\+\_\+folder,  }\item[{const \hyperlink{structtorr_1_1TorrentFile}{Torrent\+File} \&}]{tfile }\end{DoxyParamCaption})}
+
+
+
+Make a new file in the filesystem (create subfolders, if any). The new file has the right size (taken from torrent) but it is empty The pathname has the suffix \char`\"{}.\+part\char`\"{}, it will be removed once the file is complete. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em main\+\_\+folder} & String of the main folder where to create the file. For current directory use \char`\"{}.\char`\"{}. \\
+\hline
+{\em tfile} & Torrent\+File struct with file information \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacefileio_acc37418d350d6d36c3f691c99de9cf39}\label{namespacefileio_acc37418d350d6d36c3f691c99de9cf39}} 
+\index{fileio@{fileio}!save\+\_\+block@{save\+\_\+block}}
+\index{save\+\_\+block@{save\+\_\+block}!fileio@{fileio}}
+\subsubsection{\texorpdfstring{save\+\_\+block()}{save\_block()}}
+{\footnotesize\ttfamily void fileio\+::save\+\_\+block (\begin{DoxyParamCaption}\item[{char $\ast$}]{blockdata,  }\item[{size\+\_\+t}]{index,  }\item[{size\+\_\+t}]{begin,  }\item[{size\+\_\+t}]{length,  }\item[{\hyperlink{structtorr_1_1Torrent}{Torrent} \&}]{torrent }\end{DoxyParamCaption})}
+
+
+
+Save a blockdata received from a \char`\"{}piece\char`\"{} message. 
+
+\begin{DoxyWarning}{Warning}
+Only single file torrents are supported.
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+{\em blockdata} & Byte-\/array of data \\
+\hline
+{\em index} & Piece index \\
+\hline
+{\em begin} & Block index (within the piece) \\
+\hline
+{\em length} & Length of blockdata \\
+\hline
+{\em torrent} & Torrent struct \\
+\hline
+\end{DoxyParams}

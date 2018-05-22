@@ -10,28 +10,22 @@
 #ifndef PEER_H
 #define PEER_H
 
-#include <iostream>
 #include <string>
-#include <memory>
+#include <memory>   //For shared_ptr
 #include <vector>
-#include <exception>
 
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
-#include <boost/thread.hpp>
 #include <boost/chrono.hpp>
 #include <boost/dynamic_bitset.hpp>
+#include <boost/thread.hpp>     //For Mutex
 
-#include <glog/logging.h>   //Logging Library
 
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <boost/endian/conversion.hpp>
-#include <cmath>
 
-#include <boost/lambda/lambda.hpp>
+
+
+
 
 #include "torrentparser.hpp"
 
@@ -136,7 +130,5 @@ std::string string_to_hex(const std::vector<uint8_t>& input);
 
 
 static void handle_receive(const boost::system::error_code& ec, std::size_t length, boost::system::error_code* out_ec, std::size_t* out_length);
-void check_deadline_udp(boost::asio::ip::udp::socket &socket, boost::asio::deadline_timer &timer_);
-void check_deadline_tcp(std::shared_ptr<boost::asio::ip::tcp::socket> socket, boost::asio::deadline_timer &timer_);
 
 #endif

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['requestmsg',['RequestMsg',['../structRequestMsg.html',1,'']]]
+  ['requestmsg',['RequestMsg',['../structfileio_1_1RequestMsg.html',1,'fileio']]]
 ];

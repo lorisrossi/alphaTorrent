@@ -1,3 +1,10 @@
+#include <stdlib.h>
+#include <stdint.h>
+#include <iostream>
+#include <boost/random.hpp>
+#include <glog/logging.h>   //Logging Library
+
+
 #include "tracker.h"
 #include "tracker_udp.hpp"
 #include "peer.h" //from int to bint
@@ -22,7 +29,7 @@ namespace t_udp{
     using namespace std;
 
     /**
-     *  Get a random number that will be used as a transaction ID
+     *  @brief Get a random number that will be used as a transaction ID
      * 
      *  @return transaction ID
      * 
@@ -39,6 +46,8 @@ namespace t_udp{
 
 
     /**
+     *  @brief Check if the tracker support UDP
+     *  
      *  Check the tracker url for understand which protocol should be used.
      *  In this case, it check's if the tracker support UDP Tracker protocol.
      * 
@@ -57,25 +66,24 @@ namespace t_udp{
 
 
     /**
-     *  Take the tracker url and extract the corrensponding domain.
+     *  @brief Take the tracker url and extract the corrensponding domain.
      *  This function only work on UDP tracker URL, if an HTTP url is passed
      *  it returns empty udp_tracker and port equal to zero
+     * 
+        Example
+    
+        tracker_url = udp://example.com:1337
+     
+        udp_tracker = example.com
+        port = 1337
      * 
      *  @param tracker_url  The URL to parse
      *  @param udp_tracker  The extracted tracker domain
      *  @param port         The port extracted
      * 
-     *  Example
-     * 
-     *  tracker_url = udp://example.com:1337
-     * 
-     *  udp_tracker = example.com
-     *  port = 1337
-     * 
      */
 
     void get_tracker_domain(std::string tracker_url, std::string& udp_tracker, uint& port){
-
 
         if(!is_udp_tracker(tracker_url)){
             udp_tracker = "";
@@ -133,20 +141,19 @@ namespace t_udp{
     /**
      *  Manage the entire UDP tracker protocol procedure and automatically add parsed peers in the passed
      *  peer_list.
+     *      
+     *  A simple description of the protocol
+     * 
+     *  1. Extract Domain
+     *  2. Connect and Send Connect Request
+     *  3. Check Connect Response
+     *  4. Send Announce Request
+     *  5. Check and Parse Announce Response
+     *  6. Put peers in peer_list
      * 
      *  @param tracker_url  the tracker to contact
      *  @param param        struct containing tracker, metainfo and client options      
      *  @param peer_list    the peers list where to store new extracted peers
-     * 
-     *  A simple description of the protocol
-     * 
-     *  1- Extract Domain\n
-     *  2- Connect and Send Connect Request\n
-     *  3- Check Connect Response\n
-     *  4- Send Announce Request\n
-     *  5- Check and Parse Announce Response\n
-     *  6- Put peers in peer_list\n
-     * 
      */
 
     void udp_manager(const std::string tracker_url, tracker::TParameter param, pwp::PeerList peer_list){
@@ -264,7 +271,7 @@ namespace t_udp{
 
 
     /**
-     *  Verify and reconstruct the connection ID bytes from tracker's response.
+     *  @brief Verify and reconstruct the connection ID bytes from tracker's response.
      * 
      *  @param resp         The tracker response
      *  @param trans_id     Protocol transaction ID (Unused)
@@ -307,14 +314,12 @@ namespace t_udp{
 
 
     /**
-     *  Generate the announce request from tracker param.
+     *  @brief Generate the announce request from tracker param.
      * 
      *  @param req          The array where the request will be stored
      *  @param param        Tracker parameters (Port, info_hash etc..)
      *  @param conn_id_v    The connection ID sended from trakcer in a previous connect request
-     * 
-     * 
-     * 
+     *
      */
 
     void get_announce_req(std::vector<uint8_t>& req, const tracker::TParameter& param, std::vector<uint8_t>& conn_id_v){
@@ -384,16 +389,18 @@ namespace t_udp{
 
 
     /**
-     *  Parse the first byte of the announce response and parse data.
+     *  @brief Parse the first byte of the announce response and parse data.
      *  
+     *  Three types of response
+     *  
+     *  Type     | Action
+     *  ---------|--------
+     *  None     | Ignored
+     *  Error    | Print Error
+     *  Announce | Parse peers and add to peer_list
+     * 
      *  @param resp         The announce response
      *  @param peer_list    The peer_list where to store fetched peers in case of a positive response
-     * 
-     *  
-     *  Three types of response\n
-     *  1- None     -> Ingnored\n
-     *  2- Error    -> Print error\n
-     *  3- Announce -> Parse peers and add to peer_list\n
      * 
      */
 
@@ -429,14 +436,16 @@ namespace t_udp{
 /**
  *  Process the tracker error response according to the protocol
  * 
+ *   In case of a tracker error server replies with:
+ * 
+ *   Size 	  |  Name 	       |     Description
+ *   ---------|----------------|-------------------------
+ *   int32_t  |	action 	       | The action, in this case 3, for error.
+ *   int32_t  |	transaction_id | Must match the transaction_id sent from the client.
+ *   int8_t   |	error_string   | The rest of the packet is a string describing the error.
+ * 
+ * 
  *  @param resp The tracker response
- * 
- *   In case of a tracker error server replies with:\n
- *   size 	    name 	        description\n
- *   int32_t 	action 	           The action, in this case 3, for error.\n
- *   int32_t 	transaction_id 	Must match the transaction_id sent from the client.\n
- *   int8_t[] 	error_string 	The rest of the packet is a string describing the error.\n
- * 
  */
 
     void process_error(std::vector<uint8_t>& resp){

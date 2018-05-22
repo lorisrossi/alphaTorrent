@@ -1,7 +1,13 @@
 #include <iomanip>
+#include <glog/logging.h>   //Logging Library
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 #include "pwp.hpp"
 #include "peer.h"
 #include "filehandler.hpp"
+#include "torrentparser.hpp"
+
+
 
 using namespace torr;
 using namespace fileio;
@@ -428,7 +434,21 @@ namespace pwp_msg{
 
     }
 
+    /**
+     * @brief Send appropriate PWP message to download the file
+     * 
+     * The bitfield is compared and a piece index is returned; then a _request_ type message
+     * is created and sended to the peer 
+     * 
+     * @param peer_conn 
+     * @param torrent 
+     * @param old_begin 
+     * @return int 
+     */
+
     int sender(pwp::peer_connection &peer_conn, Torrent &torrent, int &old_begin) {
+        using namespace std;
+        
         if (!peer_conn.pstate.peer_choking && peer_conn.cstate.am_interested && peer_conn.bitfield.size() > 0) {
             
             int piece_index = compare_bitfields(peer_conn.bitfield, torrent.bitfield);
@@ -443,8 +463,8 @@ namespace pwp_msg{
                 }
 
                 if (request.begin != std::string::npos) {
-                    std::vector<uint8_t> msg = make_request_msg(request);
-                    std::cout << peer_conn.peer_.addr << " sending REQUEST: " << string_to_hex(msg) << std::endl;
+                    vector<uint8_t> msg = make_request_msg(request);
+                    cout << peer_conn.peer_.addr << " sending REQUEST: " << string_to_hex(msg) << std::endl;
                     return send_msg(peer_conn, msg);                    
                 }
             }

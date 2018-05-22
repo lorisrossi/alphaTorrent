@@ -1,22 +1,26 @@
+/**
+ * @file tracker.h
+ *
+ * Tracker'data and tracker's protocol (http) implementation
+ *
+ * 
+ */
+
 #ifndef TRACKER_H
 #define TRACKER_H
 
 #include <string>
-#include <stdlib.h>
-#include <assert.h>
-#include <string.h>
 #include <memory>       //For shared_ptr
 #include <vector>
-#include <ctime>        //For generating tracker key
 #include <boost/thread.hpp>
-
-
 #include <curl/curl.h>
 #include <curl/easy.h>
+
+
 #include "bencode.h"    //For processing response
 #include "peer.h"
 
-#include <glog/logging.h>   //Logging Library
+
 
 
 #include <fstream>
@@ -30,6 +34,10 @@
 #define MAX_TRACKER_URLS 10
 #define MAX_PORT_VALUE 65535
 
+/**
+ * @brief Contains all tracker method and structures
+ * 
+ */
 
 namespace tracker{
 

@@ -11,20 +11,14 @@
 #define TRACKER_UDP_H
 
 #include <boost/asio.hpp>
-#include <boost/random.hpp>
 #include <boost/algorithm/string.hpp>   //Replace all '/' in the url
-//#include <boost/asio/deadline_timer.hpp>
 #include <string>
-#include <stdlib.h>
-#include <stdint.h>
 
-#include <iostream>
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
 
 /**
  *  Namespace related to the Tracker UDP protocol
- * 
  */
 
 namespace t_udp{
@@ -96,8 +90,6 @@ namespace t_udp{
     20 + 6 * N
 
  */
-
-
 
     typedef struct{
         int32_t action; /*!< Must be 1 following the protocol */

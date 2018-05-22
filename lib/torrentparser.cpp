@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <cstring> //For bzero and memset
 #include <openssl/sha.h>
 
 #include "torrentparser.hpp"

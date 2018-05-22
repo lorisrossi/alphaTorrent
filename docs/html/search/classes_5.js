@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['torrent',['Torrent',['../structTorrent.html',1,'']]],
-  ['torrentfile',['TorrentFile',['../structTorrentFile.html',1,'']]],
+  ['torrent',['Torrent',['../structtorr_1_1Torrent.html',1,'torr']]],
+  ['torrentfile',['TorrentFile',['../structtorr_1_1TorrentFile.html',1,'torr']]],
   ['tparameter',['TParameter',['../structtracker_1_1TParameter.html',1,'tracker']]]
 ];

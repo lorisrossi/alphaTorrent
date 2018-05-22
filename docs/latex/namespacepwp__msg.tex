@@ -31,16 +31,15 @@ int \hyperlink{namespacepwp__msg_aca807c6281879abef952f8feecccb6e8}{send\+\_\+ms
 std\+::vector$<$ uint8\+\_\+t $>$ {\bfseries craft\+\_\+have\+\_\+msg} (int piece\+\_\+index)
 \item 
 \mbox{\Hypertarget{namespacepwp__msg_a2dcbe5fbe0eeca8910340f4978ee4235}\label{namespacepwp__msg_a2dcbe5fbe0eeca8910340f4978ee4235}} 
-std\+::vector$<$ uint8\+\_\+t $>$ {\bfseries make\+\_\+request\+\_\+msg} (\hyperlink{structRequestMsg}{Request\+Msg} \hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafa4d6478c4fe948a9f3aa3ce8d09974370}{request})
+std\+::vector$<$ uint8\+\_\+t $>$ {\bfseries make\+\_\+request\+\_\+msg} (\hyperlink{structfileio_1_1RequestMsg}{Request\+Msg} \hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1dafa4d6478c4fe948a9f3aa3ce8d09974370}{request})
 \item 
 \mbox{\Hypertarget{namespacepwp__msg_aa9cc2ccac70638ed59075f27f938b8ec}\label{namespacepwp__msg_aa9cc2ccac70638ed59075f27f938b8ec}} 
-int {\bfseries get\+\_\+bitfield} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+c, \hyperlink{structTorrent}{Torrent} \&torrent)
+int {\bfseries get\+\_\+bitfield} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+c, \hyperlink{structtorr_1_1Torrent}{Torrent} \&torrent)
 \item 
-void \hyperlink{namespacepwp__msg_aec35de04a2f2d9cb6abdd777917cfaae}{read\+\_\+msg\+\_\+handler} (std\+::vector$<$ uint8\+\_\+t $>$ \&response, \hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+c, \hyperlink{structTorrent}{Torrent} \&torrent, bool \&dead\+\_\+peer, boost\+::asio\+::deadline\+\_\+timer \&timer\+\_\+, const boost\+::system\+::error\+\_\+code \&error, size\+\_\+t bytes\+\_\+read)
+void \hyperlink{namespacepwp__msg_aec35de04a2f2d9cb6abdd777917cfaae}{read\+\_\+msg\+\_\+handler} (std\+::vector$<$ uint8\+\_\+t $>$ \&response, \hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+c, \hyperlink{structtorr_1_1Torrent}{Torrent} \&torrent, bool \&dead\+\_\+peer, boost\+::asio\+::deadline\+\_\+timer \&timer\+\_\+, const boost\+::system\+::error\+\_\+code \&error, size\+\_\+t bytes\+\_\+read)
 \begin{DoxyCompactList}\small\item\em The handler of the message for the P\+WP protocol. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{namespacepwp__msg_ab578b213d293636d33efc24382f16b25}\label{namespacepwp__msg_ab578b213d293636d33efc24382f16b25}} 
-int {\bfseries sender} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+conn, \hyperlink{structTorrent}{Torrent} \&torrent, int \&old\+\_\+begin)
-\end{DoxyCompactItemize}
+int \hyperlink{namespacepwp__msg_ab578b213d293636d33efc24382f16b25}{sender} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+conn, \hyperlink{structtorr_1_1Torrent}{Torrent} \&torrent, int \&old\+\_\+begin)
+\begin{DoxyCompactList}\small\item\em Send appropriate P\+WP message to download the file. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
@@ -113,7 +112,7 @@ Start the timer that each K\+E\+E\+P\+\_\+\+A\+L\+I\+V\+E\+\_\+\+T\+I\+ME send a
 \index{pwp\+\_\+msg@{pwp\+\_\+msg}!read\+\_\+msg\+\_\+handler@{read\+\_\+msg\+\_\+handler}}
 \index{read\+\_\+msg\+\_\+handler@{read\+\_\+msg\+\_\+handler}!pwp\+\_\+msg@{pwp\+\_\+msg}}
 \subsubsection{\texorpdfstring{read\+\_\+msg\+\_\+handler()}{read\_msg\_handler()}}
-{\footnotesize\ttfamily void pwp\+\_\+msg\+::read\+\_\+msg\+\_\+handler (\begin{DoxyParamCaption}\item[{std\+::vector$<$ uint8\+\_\+t $>$ \&}]{response,  }\item[{\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&}]{peer\+\_\+c,  }\item[{\hyperlink{structTorrent}{Torrent} \&}]{torrent,  }\item[{bool \&}]{dead\+\_\+peer,  }\item[{boost\+::asio\+::deadline\+\_\+timer \&}]{timer\+\_\+,  }\item[{const boost\+::system\+::error\+\_\+code \&}]{error,  }\item[{size\+\_\+t}]{bytes\+\_\+read }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void pwp\+\_\+msg\+::read\+\_\+msg\+\_\+handler (\begin{DoxyParamCaption}\item[{std\+::vector$<$ uint8\+\_\+t $>$ \&}]{response,  }\item[{\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&}]{peer\+\_\+c,  }\item[{\hyperlink{structtorr_1_1Torrent}{Torrent} \&}]{torrent,  }\item[{bool \&}]{dead\+\_\+peer,  }\item[{boost\+::asio\+::deadline\+\_\+timer \&}]{timer\+\_\+,  }\item[{const boost\+::system\+::error\+\_\+code \&}]{error,  }\item[{size\+\_\+t}]{bytes\+\_\+read }\end{DoxyParamCaption})}
 
 
 
@@ -194,6 +193,30 @@ Error code list
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 0 on success, $<$0 otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacepwp__msg_ab578b213d293636d33efc24382f16b25}\label{namespacepwp__msg_ab578b213d293636d33efc24382f16b25}} 
+\index{pwp\+\_\+msg@{pwp\+\_\+msg}!sender@{sender}}
+\index{sender@{sender}!pwp\+\_\+msg@{pwp\+\_\+msg}}
+\subsubsection{\texorpdfstring{sender()}{sender()}}
+{\footnotesize\ttfamily int pwp\+\_\+msg\+::sender (\begin{DoxyParamCaption}\item[{\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&}]{peer\+\_\+conn,  }\item[{\hyperlink{structtorr_1_1Torrent}{Torrent} \&}]{torrent,  }\item[{int \&}]{old\+\_\+begin }\end{DoxyParamCaption})}
+
+
+
+Send appropriate P\+WP message to download the file. 
+
+The bitfield is compared and a piece index is returned; then a {\itshape request} type message is created and sended to the peer
+
+
+\begin{DoxyParams}{Parameters}
+{\em peer\+\_\+conn} & \\
+\hline
+{\em torrent} & \\
+\hline
+{\em old\+\_\+begin} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int 
 \end{DoxyReturn}
 
 

@@ -90,20 +90,26 @@ Enumerations</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a8ff6ed3deaee00a35cc7afd4b37456d6"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#a8ff6ed3deaee00a35cc7afd4b37456d6">get_transaction_id</a> ()</td></tr>
+<tr class="memdesc:a8ff6ed3deaee00a35cc7afd4b37456d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a random number that will be used as a transaction ID.  <a href="#a8ff6ed3deaee00a35cc7afd4b37456d6">More...</a><br /></td></tr>
 <tr class="separator:a8ff6ed3deaee00a35cc7afd4b37456d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6fbd38370a6f5f7d8520144de7104c4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#af6fbd38370a6f5f7d8520144de7104c4">is_udp_tracker</a> (const std::string &amp;tracker_url)</td></tr>
+<tr class="memdesc:af6fbd38370a6f5f7d8520144de7104c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the tracker support UDP.  <a href="#af6fbd38370a6f5f7d8520144de7104c4">More...</a><br /></td></tr>
 <tr class="separator:af6fbd38370a6f5f7d8520144de7104c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e87c0151a7bceaace19434206566199"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#a0e87c0151a7bceaace19434206566199">get_tracker_domain</a> (std::string tracker_url, std::string &amp;udp_tracker, uint &amp;port)</td></tr>
+<tr class="memdesc:a0e87c0151a7bceaace19434206566199"><td class="mdescLeft">&#160;</td><td class="mdescRight">Take the tracker url and extract the corrensponding domain. This function only work on UDP tracker URL, if an HTTP url is passed it returns empty udp_tracker and port equal to zero.  <a href="#a0e87c0151a7bceaace19434206566199">More...</a><br /></td></tr>
 <tr class="separator:a0e87c0151a7bceaace19434206566199"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb2cdd5090cae67a7de482be4e281f23"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#adb2cdd5090cae67a7de482be4e281f23">get_connect_request</a> (<a class="el" href="structt__udp_1_1connect__request.html">connect_request</a> c, std::vector&lt; uint8_t &gt; &amp;req)</td></tr>
 <tr class="separator:adb2cdd5090cae67a7de482be4e281f23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af26a254f05566a7066b6930ad998a656"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#af26a254f05566a7066b6930ad998a656">udp_manager</a> (const std::string tracker_url, <a class="el" href="structtracker_1_1TParameter.html">tracker::TParameter</a> param, pwp::PeerList peer_list)</td></tr>
 <tr class="separator:af26a254f05566a7066b6930ad998a656"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6b2788d8ce8ab98f367838a7e3b7b09"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#af6b2788d8ce8ab98f367838a7e3b7b09">verify_connect_resp</a> (const std::vector&lt; uint8_t &gt; &amp;resp, uint32_t &amp;trans_id, uint64_t &amp;conn_id, std::vector&lt; uint8_t &gt; &amp;conn_id_v)</td></tr>
+<tr class="memdesc:af6b2788d8ce8ab98f367838a7e3b7b09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verify and reconstruct the connection ID bytes from tracker's response.  <a href="#af6b2788d8ce8ab98f367838a7e3b7b09">More...</a><br /></td></tr>
 <tr class="separator:af6b2788d8ce8ab98f367838a7e3b7b09"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e968355a7c45dae0749b80e1be8308a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#a5e968355a7c45dae0749b80e1be8308a">get_announce_req</a> (std::vector&lt; uint8_t &gt; &amp;req, const <a class="el" href="structtracker_1_1TParameter.html">tracker::TParameter</a> &amp;param, std::vector&lt; uint8_t &gt; &amp;conn_id_v)</td></tr>
+<tr class="memdesc:a5e968355a7c45dae0749b80e1be8308a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate the announce request from tracker param.  <a href="#a5e968355a7c45dae0749b80e1be8308a">More...</a><br /></td></tr>
 <tr class="separator:a5e968355a7c45dae0749b80e1be8308a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f2a0ab9801cbc55002e67c166895a0e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#a1f2a0ab9801cbc55002e67c166895a0e">parse_announce_resp</a> (std::vector&lt; uint8_t &gt; &amp;resp, pwp::PeerList peer_list)</td></tr>
+<tr class="memdesc:a1f2a0ab9801cbc55002e67c166895a0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the first byte of the announce response and parse data.  <a href="#a1f2a0ab9801cbc55002e67c166895a0e">More...</a><br /></td></tr>
 <tr class="separator:a1f2a0ab9801cbc55002e67c166895a0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab582ebbfac6fd929e811527e44384c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#aab582ebbfac6fd929e811527e44384c1">process_error</a> (std::vector&lt; uint8_t &gt; &amp;resp)</td></tr>
 <tr class="separator:aab582ebbfac6fd929e811527e44384c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -147,7 +153,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Generate the announce request from tracker param.</p>
+
+<p>Generate the announce request from tracker param. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">req</td><td>The array where the request will be stored </td></tr>
@@ -219,18 +226,19 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Take the tracker url and extract the corrensponding domain. This function only work on UDP tracker URL, if an HTTP url is passed it returns empty udp_tracker and port equal to zero</p>
+
+<p>Take the tracker url and extract the corrensponding domain. This function only work on UDP tracker URL, if an HTTP url is passed it returns empty udp_tracker and port equal to zero. </p>
+<p>Example</p>
+<p>tracker_url = udp://example.com:1337</p>
+<p>udp_tracker = example.com port = 1337</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tracker_url</td><td>The URL to parse </td></tr>
     <tr><td class="paramname">udp_tracker</td><td>The extracted tracker domain </td></tr>
-    <tr><td class="paramname">port</td><td>The port extracted</td></tr>
+    <tr><td class="paramname">port</td><td>The port extracted </td></tr>
   </table>
   </dd>
 </dl>
-<p>Example</p>
-<p>tracker_url = udp://example.com:1337</p>
-<p>udp_tracker = example.com port = 1337 </p>
 
 </div>
 </div>
@@ -248,7 +256,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Get a random number that will be used as a transaction ID</p>
+
+<p>Get a random number that will be used as a transaction ID. </p>
 <dl class="section return"><dt>Returns</dt><dd>transaction ID </dd></dl>
 
 </div>
@@ -268,6 +277,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Check if the tracker support UDP. </p>
 <p>Check the tracker url for understand which protocol should be used. In this case, it check's if the tracker support UDP Tracker protocol.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -304,19 +315,26 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Parse the first byte of the announce response and parse data.</p>
+
+<p>Parse the first byte of the announce response and parse data. </p>
+<p>Three types of response</p>
+<table class="doxtable">
+<tr>
+<th>Type </th><th>Action  </th></tr>
+<tr>
+<td>None </td><td>Ignored </td></tr>
+<tr>
+<td>Error </td><td>Print Error </td></tr>
+<tr>
+<td>Announce </td><td>Parse peers and add to peer_list </td></tr>
+</table>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">resp</td><td>The announce response </td></tr>
-    <tr><td class="paramname">peer_list</td><td>The peer_list where to store fetched peers in case of a positive response</td></tr>
+    <tr><td class="paramname">peer_list</td><td>The peer_list where to store fetched peers in case of a positive response </td></tr>
   </table>
   </dd>
 </dl>
-<p>Three types of response<br />
-1- None -&gt; Ingnored<br />
-2- Error -&gt; Print error<br />
-3- Announce -&gt; Parse peers and add to peer_list<br />
-</p>
 
 </div>
 </div>
@@ -400,18 +418,23 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Process the tracker error response according to the protocol</p>
+<p>In case of a tracker error server replies with:</p>
+<table class="doxtable">
+<tr>
+<th>Size </th><th>Name </th><th>Description  </th></tr>
+<tr>
+<td>int32_t </td><td>action </td><td>The action, in this case 3, for error. </td></tr>
+<tr>
+<td>int32_t </td><td>transaction_id </td><td>Must match the transaction_id sent from the client. </td></tr>
+<tr>
+<td>int8_t </td><td>error_string </td><td>The rest of the packet is a string describing the error. </td></tr>
+</table>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">resp</td><td>The tracker response</td></tr>
+    <tr><td class="paramname">resp</td><td>The tracker response </td></tr>
   </table>
   </dd>
 </dl>
-<p>In case of a tracker error server replies with:<br />
- size name description<br />
- int32_t action The action, in this case 3, for error.<br />
- int32_t transaction_id Must match the transaction_id sent from the client.<br />
- int8_t[] error_string The rest of the packet is a string describing the error.<br />
-</p>
 
 </div>
 </div>
@@ -447,22 +470,23 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Manage the entire UDP tracker protocol procedure and automatically add parsed peers in the passed peer_list.</p>
+<p>A simple description of the protocol</p>
+<ol type="1">
+<li>Extract Domain</li>
+<li>Connect and Send Connect Request</li>
+<li>Check Connect Response</li>
+<li>Send Announce Request</li>
+<li>Check and Parse Announce Response</li>
+<li>Put peers in peer_list</li>
+</ol>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tracker_url</td><td>the tracker to contact </td></tr>
     <tr><td class="paramname">param</td><td>struct containing tracker, metainfo and client options </td></tr>
-    <tr><td class="paramname">peer_list</td><td>the peers list where to store new extracted peers</td></tr>
+    <tr><td class="paramname">peer_list</td><td>the peers list where to store new extracted peers </td></tr>
   </table>
   </dd>
 </dl>
-<p>A simple description of the protocol</p>
-<p>1- Extract Domain<br />
-2- Connect and Send Connect Request<br />
-3- Check Connect Response<br />
-4- Send Announce Request<br />
-5- Check and Parse Announce Response<br />
-6- Put peers in peer_list<br />
-</p>
 
 </div>
 </div>
@@ -503,7 +527,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Verify and reconstruct the connection ID bytes from tracker's response.</p>
+
+<p>Verify and reconstruct the connection ID bytes from tracker's response. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">resp</td><td>The tracker response </td></tr>

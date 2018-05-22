@@ -3,11 +3,6 @@
 {\ttfamily \#include $<$string$>$}\newline
 {\ttfamily \#include $<$vector$>$}\newline
 {\ttfamily \#include $<$boost/dynamic\+\_\+bitset.\+hpp$>$}\newline
-{\ttfamily \#include $<$iostream$>$}\newline
-{\ttfamily \#include $<$iomanip$>$}\newline
-{\ttfamily \#include $<$fstream$>$}\newline
-{\ttfamily \#include $<$openssl/sha.\+h$>$}\newline
-{\ttfamily \#include $<$string.\+h$>$}\newline
 {\ttfamily \#include \char`\"{}bencode.\+h\char`\"{}}\newline
 Include dependency graph for torrentparser.\+hpp\+:\nopagebreak
 \begin{figure}[H]
@@ -16,7 +11,8 @@ Include dependency graph for torrentparser.\+hpp\+:\nopagebreak
 \includegraphics[width=350pt]{torrentparser_8hpp__incl}
 \end{center}
 \end{figure}
-This graph shows which files directly or indirectly include this file\+:\nopagebreak
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -26,18 +22,23 @@ This graph shows which files directly or indirectly include this file\+:\nopageb
 \subsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
-struct \hyperlink{structTorrentFile}{Torrent\+File}
+struct \hyperlink{structtorr_1_1TorrentFile}{torr\+::\+Torrent\+File}
 \begin{DoxyCompactList}\small\item\em Struct to store information of a file inside a torrent. \end{DoxyCompactList}\item 
-struct \hyperlink{structTorrent}{Torrent}
+struct \hyperlink{structtorr_1_1Torrent}{torr\+::\+Torrent}
 \begin{DoxyCompactList}\small\item\em Struct to store all the information of a torrent. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespacetorr}{torr}
+\begin{DoxyCompactList}\small\item\em Namespace with functions relating to metainfo file and \hyperlink{structtorr_1_1Torrent}{Torrent} struct. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{torrentparser_8hpp_a2103399c514cc61b1e74e41da2f638bf}\label{torrentparser_8hpp_a2103399c514cc61b1e74e41da2f638bf}} 
-int {\bfseries parse\+\_\+torrent} (\hyperlink{structTorrent}{Torrent} \&new\+\_\+torrent, std\+::string \&torrent\+\_\+str, const char $\ast$filename)
+\mbox{\Hypertarget{namespacetorr_ac7876733490126f221d2c476f770e9dd}\label{namespacetorr_ac7876733490126f221d2c476f770e9dd}} 
+int {\bfseries torr\+::parse\+\_\+torrent} (Torrent \&torrent, std\+::string \&torrent\+\_\+str, const char $\ast$filename)
 \item 
-\mbox{\Hypertarget{torrentparser_8hpp_a81c037bb7409935adacf2d02c34a456d}\label{torrentparser_8hpp_a81c037bb7409935adacf2d02c34a456d}} 
-char $\ast$ {\bfseries get\+\_\+info\+\_\+node\+\_\+hash} (const std\+::string $\ast$file, const std\+::string $\ast$pieces\+\_\+string)
+\mbox{\Hypertarget{namespacetorr_aea0adcfadf439eed53ca01a555855f04}\label{namespacetorr_aea0adcfadf439eed53ca01a555855f04}} 
+char $\ast$ {\bfseries torr\+::get\+\_\+info\+\_\+node\+\_\+hash} (const std\+::string $\ast$file, const std\+::string $\ast$pieces\+\_\+string)
 \end{DoxyCompactItemize}
 
 

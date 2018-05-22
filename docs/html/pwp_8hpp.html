@@ -72,9 +72,8 @@ $(function() {
 <div class="title">pwp.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;iostream&gt;</code><br />
+<div class="textblock"><code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;boost/asio.hpp&gt;</code><br />
-<code>#include &lt;boost/date_time/posix_time/posix_time.hpp&gt;</code><br />
 <code>#include &quot;<a class="el" href="torrentparser_8hpp_source.html">torrentparser.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="peer_8h_source.html">peer.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -82,9 +81,9 @@ Include dependency graph for pwp.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="pwp_8hpp__incl.png" border="0" usemap="#lib_2pwp_8hpp" alt=""/></div>
 <map name="lib_2pwp_8hpp" id="lib_2pwp_8hpp">
-<area shape="rect" id="node5" href="torrentparser_8hpp.html" title="torrentparser.hpp" alt="" coords="260,169,380,196"/>
-<area shape="rect" id="node14" href="peer_8h.html" title="peer.h" alt="" coords="889,87,948,114"/>
-<area shape="rect" id="node13" href="bencode_8h_source.html" title="bencode.h" alt="" coords="229,244,312,271"/>
+<area shape="rect" id="node4" href="torrentparser_8hpp.html" title="torrentparser.hpp" alt="" coords="775,155,895,181"/>
+<area shape="rect" id="node8" href="peer_8h.html" title="peer.h" alt="" coords="395,80,454,107"/>
+<area shape="rect" id="node7" href="bencode_8h_source.html" title="bencode.h" alt="" coords="741,229,823,256"/>
 </map>
 </div>
 </div>
@@ -129,13 +128,13 @@ Functions</h2></td></tr>
 <tr class="memdesc:aca807c6281879abef952f8feecccb6e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send <code>msg</code> to the peer specified in <code>peer_c</code>  <a href="namespacepwp__msg.html#aca807c6281879abef952f8feecccb6e8">More...</a><br /></td></tr>
 <tr class="separator:aca807c6281879abef952f8feecccb6e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9cc2ccac70638ed59075f27f938b8ec"><td class="memItemLeft" align="right" valign="top"><a id="aa9cc2ccac70638ed59075f27f938b8ec"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>pwp_msg::get_bitfield</b> (<a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;peer_c, <a class="el" href="structTorrent.html">Torrent</a> &amp;torrent)</td></tr>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>pwp_msg::get_bitfield</b> (<a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;peer_c, <a class="el" href="structtorr_1_1Torrent.html">Torrent</a> &amp;torrent)</td></tr>
 <tr class="separator:aa9cc2ccac70638ed59075f27f938b8ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec35de04a2f2d9cb6abdd777917cfaae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp__msg.html#aec35de04a2f2d9cb6abdd777917cfaae">pwp_msg::read_msg_handler</a> (std::vector&lt; uint8_t &gt; &amp;response, <a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;peer_c, <a class="el" href="structTorrent.html">Torrent</a> &amp;torrent, bool &amp;dead_peer, boost::asio::deadline_timer &amp;timer_, const boost::system::error_code &amp;error, size_t bytes_read)</td></tr>
+<tr class="memitem:aec35de04a2f2d9cb6abdd777917cfaae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp__msg.html#aec35de04a2f2d9cb6abdd777917cfaae">pwp_msg::read_msg_handler</a> (std::vector&lt; uint8_t &gt; &amp;response, <a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;peer_c, <a class="el" href="structtorr_1_1Torrent.html">Torrent</a> &amp;torrent, bool &amp;dead_peer, boost::asio::deadline_timer &amp;timer_, const boost::system::error_code &amp;error, size_t bytes_read)</td></tr>
 <tr class="memdesc:aec35de04a2f2d9cb6abdd777917cfaae"><td class="mdescLeft">&#160;</td><td class="mdescRight">The handler of the message for the PWP protocol.  <a href="namespacepwp__msg.html#aec35de04a2f2d9cb6abdd777917cfaae">More...</a><br /></td></tr>
 <tr class="separator:aec35de04a2f2d9cb6abdd777917cfaae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab578b213d293636d33efc24382f16b25"><td class="memItemLeft" align="right" valign="top"><a id="ab578b213d293636d33efc24382f16b25"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>pwp_msg::sender</b> (<a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;peer_conn, <a class="el" href="structTorrent.html">Torrent</a> &amp;torrent, int &amp;old_begin)</td></tr>
+<tr class="memitem:ab578b213d293636d33efc24382f16b25"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp__msg.html#ab578b213d293636d33efc24382f16b25">pwp_msg::sender</a> (<a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;peer_conn, <a class="el" href="structtorr_1_1Torrent.html">Torrent</a> &amp;torrent, int &amp;old_begin)</td></tr>
+<tr class="memdesc:ab578b213d293636d33efc24382f16b25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send appropriate PWP message to download the file.  <a href="namespacepwp__msg.html#ab578b213d293636d33efc24382f16b25">More...</a><br /></td></tr>
 <tr class="separator:ab578b213d293636d33efc24382f16b25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>

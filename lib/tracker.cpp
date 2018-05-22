@@ -1,10 +1,12 @@
+#include <ctime>        //For generating tracker key
+#include <stdlib.h>
+#include <assert.h>
+#include <string.h>
+
+#include <glog/logging.h>   //Logging Library
+
 #include "tracker.h"
 #include "tracker_udp.hpp"
-
-
-//#include <algorithm>    //Lower String
-
-
 #include "peer.h"
 
 namespace tracker{
@@ -16,17 +18,27 @@ namespace tracker{
     
     
     /**
-     *  Function that start the communication with the tracker
+     *  @brief Send request to each tracker in tracker_list
      *
-     *  @param *param       : the struct containing the tracker parameter
-     *  @param peer_id      : the client generated id
+     *  Read from config file (to implement) the port.
+     *  Then analize the files and fill the tracker parameter structure.
+     *  
+     *  The appropriate tracker protocol is then choosed and executed; the parsed peers
+     *  are added to the peer_list (passed by argument).
+     * 
+     *  /waring The config file and the "uploaded" and "downloaded" param are still unimplemented.
+     * 
+     * 
+     *  @param *param       the struct containing the tracker parameter
+     *  @param peer_id      the client generated id
+     *  @param peer_list    vector where to store received peers
      *
      */
     int start_tracker_request(TParameter *param, const TList &tracker_list, pwp::PeerList peer_list){
 
-        cout << endl << "----------------------------------------------------------------------";
-        cout << endl << "--------------Peer fetching from tracker------------------------------";
-        cout << endl << "----------------------------------------------------------------------";
+        // cout << endl << "----------------------------------------------------------------------";
+        // cout << endl << "--------------Peer fetching from tracker------------------------------";
+        // cout << endl << "----------------------------------------------------------------------";
 
         //TODO Read this info from config files
         param->info_hash = "";
@@ -37,14 +49,11 @@ namespace tracker{
         param->compact = true;
         //-------------------------------------
 
-
-
         if(urlencode_paramenter(param) < 0){
             LOG(FATAL) << "Cannot encode parameter correctly";
             return -1;
         }
 
-        //TODO Process udp:// urls
 
         boost::thread_group t_group;
         TList::const_iterator it = tracker_list.begin();
@@ -55,37 +64,45 @@ namespace tracker{
         for(; it != tracker_list.end(); ++it){
             LOG(INFO) << endl << "Contacting tracker : " << *it;
             if(t_udp::is_udp_tracker(*it)){
-                DLOG(INFO) << endl << "UDP Tracker " << endl;
+                DLOG(INFO) << endl << "UDP Tracker ";
                 t_group.add_thread(new boost::thread(&t_udp::udp_manager, *it, *param, peer_list));
             }
             else if(*it != ""){
-                DLOG(INFO) << endl << "HTTP Tracker " << endl;
+                DLOG(INFO) << endl << "HTTP Tracker ";
                 t_group.add_thread(new boost::thread(process_tracker_request, *it, param, peer_list));
             }
         }
+    
 
-        // if(_io_service.stopped()){
-        //     _io_service.reset();
-        //     _io_service.run();
-        // }         
-
-        cout << "Waiting for joining" << endl;
+        LOG(INFO) << "Waiting for joining";
         t_group.join_all(); //Sync all thread
 
-        cout << "Joinned" << endl;
+        LOG(INFO) << "Joinned";
 
         _io_service.stop();
         _io_service.reset();
 
         remove_duplicate_peers(peer_list);
 
-        
-        std::cout << endl << endl << "Found " << peer_list->size() << " available peers" << endl;
+        LOG(INFO) << "Found " << peer_list->size() << " available peers";
 
         return 0;
     }
 
 
+
+
+    /**
+     * @brief Remove duplicate peers from a peer_list
+     * 
+     * Take a PeerList and delete al duplicate elements.
+     * See the code for the method used.
+     * 
+     * /warning Unimplemented function
+     * 
+     * @param peer_list 
+     * @return uint         the peers number after the processing
+     */
 
     uint remove_duplicate_peers(pwp::PeerList& peer_list){
         /*  Remove duplicate peers
@@ -94,7 +111,6 @@ namespace tracker{
         *   TODO : the test was with integers, re-test with pwp::peer
         */
         
-
         DLOG(WARNING) << "REMOVE DUPLICATE PEER : Unimplemented function";
         return 0;
 
@@ -105,13 +121,13 @@ namespace tracker{
             //IMPEMENT
                 
         }
-
-
     }
 
 
 
     /**
+     *  @brief Main http tracker manager
+     * 
      *  Manage the entire tracker request : it craft the "announce" request and parse the
      *  response to extract peers data, that subsequently is pushed inside peer_list
      * 
@@ -192,7 +208,7 @@ namespace tracker{
 
     int urlencode_paramenter(TParameter *param, CURL *curl){
 
-        //Valori di ritorno della codifica "urlencode"
+        //Return values of "urlencode"
         char* enc_info_hash_curl;
         char* enc_peer_id_curl;
         bool curl_passed=true;;
@@ -205,28 +221,26 @@ namespace tracker{
         if(!curl)
             return CURL_NOT_INIT;
 
-        //I campi "info_hash" e "peer_id" devono essere codificati tramite "urlencoding"
+        //The field "info_hash" and "peer_id" must be encoded by "urlencoding"
         enc_info_hash_curl = curl_easy_escape(curl, (char*)param->info_hash_raw, strnlen(param->info_hash_raw, 20*2 +1));   //Inserire SHA_DIGEST
         enc_peer_id_curl = curl_easy_escape(curl, param->peer_id.c_str(),param->peer_id.length());
         
         string enc_info_hash = string(enc_info_hash_curl);
 
-        if(!enc_info_hash_curl || !enc_peer_id_curl){ //Se fallisco l'escape
+        if(!enc_info_hash_curl || !enc_peer_id_curl){ //If the escape fails
             return CURL_ESCAPE_ERROR;
         }
 
-        //Costruisco l'oggetto string
+        //String object build
         param->info_hash.clear();
         param->peer_id.clear();
         param->info_hash.assign(enc_info_hash_curl);
         param->peer_id.assign(enc_peer_id_curl);
 
 
-        //Libero la memoria
+        //Free the memory
         curl_free(enc_info_hash_curl);
         curl_free(enc_peer_id_curl);
-
-
 
         if(!curl_passed)
             curl_easy_cleanup(curl);
@@ -235,15 +249,18 @@ namespace tracker{
     }
 
     /**
-     *  Funzione che passato l'url del tracker ed i parametri costruisce l'url per effettuare
-     *  la richiesta GET al tracker
+     *  @brief Create the tracker GET request
+     * 
+     *  An HTTP GET request is crafted using tracker's url and request parameters
+     * 
+     *  In case of error the request is equal to ""
      *
-     *  @param tracker_url      : url del tracker
-     *  @param param            : parametri da inviare al tracker
-     *  @param curl             : (Opzionale) istanza della libreria curl
-     *  @param tls              : (Opzionale) specifica se usare l'https, default = false
+     *  @param tracker_url      tracker's url
+     *  @param param            param to send to the tracker
+     *  @param curl             : (Optional) curl library instance
+     *  @param tls              : (Optional) specify if https should be used; default = false
      *
-     *  @return Un puntatore ad una stringa contenente l'url
+     *  @return a shared pointer to a string containing the url
     */
 
     shared_ptr<string> url_builder(const string& tracker_url, const TParameter& t_param, event_type event, const string& tracker_key, CURL *curl, bool tls){
@@ -309,14 +326,16 @@ namespace tracker{
             curl_easy_cleanup(curl);
         }
 
-        cout << endl << *url_req << endl;
+        LOG(INFO) << *url_req;
 
         return url_req;
     }
 
 
     /**
-     *  Function to manage the curl response
+     *  @brief Manage the curl response
+     * 
+     *  Default function (take from curl example) that write the response into "data"
      */
     size_t writeFunction(void *ptr, size_t size, size_t nmemb, std::string* data) {
         if(data == NULL)
@@ -326,7 +345,7 @@ namespace tracker{
     }
 
     /**
-     * Execute the http(s) request and print the response
+     * @brief Execute the http(s) request and print the response
      *
      * @param *url : the url to contact (with the GET parameter)
      * @param curl : (Optional) the instance of the curl lib
@@ -353,7 +372,7 @@ namespace tracker{
                 return -1;
             }
             /*
-            *   Varie opzioni da aggiungere opzionalmente nel file di configurazione
+            *   Various options to fill from configuraton files
 
             curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
             curl_easy_setopt(curl, CURLOPT_USERPWD, "user:pass");
@@ -366,7 +385,7 @@ namespace tracker{
 
             //string response_string;
             string header_string;
-            //Setto la funzione che andrà a scrivere e i rispettivi parametri
+            //Set the function that handle the received data (writeFunction)
             code = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeFunction);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, response);
             curl_easy_setopt(curl, CURLOPT_HEADERDATA, &header_string);
@@ -385,7 +404,7 @@ namespace tracker{
                 return -1;
             }
 
-            DLOG(INFO) << endl << "Response : " << *response << endl << endl << header_string << endl << endl;
+            DLOG(INFO) << endl << "Response : " << *response << "\t\n" << header_string;
 
 
             if(!curl_passed){
@@ -399,7 +418,9 @@ namespace tracker{
 
 
     /**
-     * Checks if the url is valid
+     *  @brief Checks if the url is valid
+     * 
+     *  \warning Untested
      *
      *  @param *url     : URL to check 
      *  @param *curl    : (Optional) instance of curl library
@@ -425,7 +446,6 @@ namespace tracker{
 
         }
 
-        //Se l'istanza non è stata passata allora pulisco
         if(!curl_passed){
             curl_easy_cleanup(curl);
         }
@@ -433,6 +453,18 @@ namespace tracker{
         return (response == CURLE_OK) ? true : false;
     }
 
+
+    /**
+     * @brief Parse tracker response and extract peers
+     * 
+     * Decode the bencoded tracker response and detect if the response is "compact" of "dictionary"
+     * After calling the appropriate function the PeerList is populated with extracted peers.
+     * 
+     * 
+     * @param response 
+     * @param peer_list 
+     * @return int 0 on success, <0 otherwise
+     */
 
 
     int process_tracker_response(string *response, pwp::PeerList peer_list){
@@ -452,26 +484,26 @@ namespace tracker{
 
                 //According to the protocol, if "failure reason" is present,no other keys may be present, so simply return 
                 if(key == "failure reason"){    
-                    LOG(ERROR) << "Error : " << node->val.d[i].val->val.s << endl;
+                    LOG(ERROR) << "Error : " << node->val.d[i].val->val.s;
                     be_free(node);
                     return -1;
                 }else if(key == "complete"){
-                    LOG(INFO) << endl << "There are " << node->val.d[i].val->val.i << " seeders" << endl;
+                    LOG(INFO) << endl << "There are " << node->val.d[i].val->val.i << " seeders";
                 }else if(key == "incomplete"){
-                    LOG(INFO) << endl << "There are " << node->val.d[i].val->val.i << " leechers" << endl;
+                    LOG(INFO) << endl << "There are " << node->val.d[i].val->val.i << " leechers";
                 }else if(key == "interval"){
-                    LOG(INFO) << endl << "Interval is " << node->val.d[i].val->val.i << endl;
+                    LOG(INFO) << endl << "Interval is " << node->val.d[i].val->val.i;
                 }else if(key == "peers"){
                     //Need to differentiate between dictionary rappresentation and binary rappresentation
                     
                     if(is_compact_response(response)){
-                        LOG(INFO) << "Compact Response" << endl;
+                        LOG(INFO) << "Compact Response";
                         be_node *n = node->val.d[i].val;
                         assert(n->type == BE_STR);
 
                         string resp = string(n->val.s);
 
-                        LOG(INFO) << endl << "String to parse : " << resp << endl;
+                        LOG(INFO)  << "String to parse : " << resp;
     
                         parse_binary_peers(resp, peer_list);
                     }else{
@@ -481,7 +513,7 @@ namespace tracker{
                             error_code = parse_dict_peer(node->val.d[i].val, peer_list);
                             if(error_code < 0){
                                 if(error_code == EMPTY_TRACKER){
-                                    LOG(WARNING) << endl << "Empty Tracker List";
+                                    LOG(WARNING) << "Empty Tracker List";
                                     return EMPTY_TRACKER;
                                 }
 
@@ -490,7 +522,6 @@ namespace tracker{
                         }
 
                     }
-
                 }   
             }
             be_free(node);
@@ -499,6 +530,17 @@ namespace tracker{
         return 0;
 
     }
+
+
+    /**
+     * @brief Generate a scrape request from a tracker url
+     * 
+     * @param url       tracker url
+     * @param param 
+     * @param response  reference to a buffer that will store the response
+     * @param curl      (Optional) instance of the curl library
+     * @return int 
+     */
 
 
     int scrape_request(string &url, const TParameter &param, string *response, CURL *curl){
@@ -532,10 +574,9 @@ namespace tracker{
     }
 
     /**
-     *  Function that get the tracker url and return the scraped version of it
+     *  @brief Get tracker url and return the scraped version of it
      * 
      *  @param url : the url(annouunce version) of the tracker 
-     * 
      *  @return a pointer to the new url or nullptr if the tracker doesn't support scraping
      */
 
@@ -564,7 +605,7 @@ namespace tracker{
 
 
     /**
-     * Create the key needed for tracker protocol
+     * @brief Create the key needed for tracker protocol
      * 
      * @return string cointaining the key
      * 
@@ -575,16 +616,18 @@ namespace tracker{
     }
 
     /**
-     *  This function parse a non compact tracker's response according to the following protocol
+     *  @brief Parse a non compact tracker response
      * 
-     *  peers: (dictionary model) The value is a list of dictionaries, each with the following keys:
-     *  peer id: peer's self-selected ID, as described above for the tracker request (string)
-     *  ip: peer's IP address either IPv6 (hexed) or IPv4 (dotted quad) or DNS name (string)
-     *  port: peer's port number (integer)
+     *  This function parse a non compact tracker's response according to the following protocol\n
      * 
-     *  @param node     : the bencoded node containing the list of dictionaries
+     *  peers: (dictionary model) The value is a list of dictionaries, each with the following keys:\n
+     *  peer id: peer's self-selected ID, as described above for the tracker request (string)\n
+     *  ip: peer's IP address either IPv6 (hexed) or IPv4 (dotted quad) or DNS name (string)\n
+     *  port: peer's port number (integer)\n
      * 
-     *  @return         : 0 on success, < 0 otherwise
+     *  @param node  the bencoded node containing the list of dictionaries
+     * 
+     *  @return      0 on success, < 0 otherwise
      */
 
     int parse_dict_peer(be_node *node, pwp::PeerList peer_list){
@@ -649,14 +692,15 @@ namespace tracker{
     }
 
     /**
+     * @brief Parse a binary tracker response
      * 
      * This function parse a compact tracker's response according to the following protocol
      * 
      * peers: (binary model) Instead of using the dictionary model described above, the peers value may be a string consisting of multiples of 6 bytes. 
      * First 4 bytes are the IP address and last 2 bytes are the port number. All in network (big endian) notation.
      * 
-     * @param resp :        the response to parse
-     * @param peer_list :   the structure where to store extracted peers
+     * @param resp         the response to parse
+     * @param peer_list    the structure where to store extracted peers
      * 
      */
 
@@ -688,7 +732,7 @@ namespace tracker{
     }
 
     /**
-     *  This functionc check if a response is in a compact format
+     *  @brief Check if a response is in a compact format
      * 
      *  @param *response    : the response to check
      *  @return             : true if it's compact, otherwise false

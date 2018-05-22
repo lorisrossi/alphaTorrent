@@ -1,7 +1,17 @@
-#include "peer.h"
-#include "pwp.hpp"
+#include <iostream>
+#include <exception>
+
 #include <boost/dynamic_bitset.hpp>
 #include <fstream>
+#include <glog/logging.h>   //Logging Library
+#include <cmath>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+#include "peer.h"
+#include "pwp.hpp"
+
 
 using namespace std;
 using namespace torr;

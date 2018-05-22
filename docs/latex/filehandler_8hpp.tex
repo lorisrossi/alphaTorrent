@@ -12,106 +12,25 @@ Include dependency graph for filehandler.\+hpp\+:\nopagebreak
 \subsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
-struct \hyperlink{structRequestMsg}{Request\+Msg}
+struct \hyperlink{structfileio_1_1RequestMsg}{fileio\+::\+Request\+Msg}
 \begin{DoxyCompactList}\small\item\em Struct corresponding to a pwp \char`\"{}request\char`\"{} message. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespacefileio}{fileio}
+\begin{DoxyCompactList}\small\item\em Namespace with functions for handling file i/o. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \hyperlink{filehandler_8hpp_aca0a8acad9ef8792237224188cac4ce7}{check\+\_\+files} (\hyperlink{structTorrent}{Torrent} \&torrent)
+void \hyperlink{namespacefileio_a2caefabab7dfb9c7ad57620a998a5541}{fileio\+::check\+\_\+files} (\hyperlink{structtorr_1_1Torrent}{Torrent} \&torrent)
 \begin{DoxyCompactList}\small\item\em Check if all the files of a torrent are in the filesystem. In case of missing files, this function create them. After that it calculates the bitfield. \end{DoxyCompactList}\item 
-int \hyperlink{filehandler_8hpp_a3fbe0f898f05ba44e87a23e36ed8dcb1}{compare\+\_\+bitfields} (boost\+::dynamic\+\_\+bitset$<$$>$ peer\+\_\+bitfield, boost\+::dynamic\+\_\+bitset$<$$>$ own\+\_\+bitfield)
+int \hyperlink{namespacefileio_ae4d75e087ce78d860bef69df48a32798}{fileio\+::compare\+\_\+bitfields} (boost\+::dynamic\+\_\+bitset$<$$>$ peer\+\_\+bitfield, boost\+::dynamic\+\_\+bitset$<$$>$ own\+\_\+bitfield)
 \begin{DoxyCompactList}\small\item\em Get the index of a piece the peer can give to us. \end{DoxyCompactList}\item 
-\hyperlink{structRequestMsg}{Request\+Msg} \hyperlink{filehandler_8hpp_a579e47a4fda5c4caea3423dc05c60b2a}{create\+\_\+request} (\hyperlink{structTorrent}{Torrent} \&torrent, int piece\+\_\+index)
-\begin{DoxyCompactList}\small\item\em Create a \hyperlink{structRequestMsg}{Request\+Msg} struct starting from \char`\"{}piece\+\_\+index\char`\"{}. \end{DoxyCompactList}\item 
-void \hyperlink{filehandler_8hpp_a4bf7468001cd66bad22681c4f90d1972}{save\+\_\+block} (char $\ast$blockdata, size\+\_\+t index, size\+\_\+t begin, size\+\_\+t length, \hyperlink{structTorrent}{Torrent} \&torrent)
+Request\+Msg \hyperlink{namespacefileio_a6c26bf16806ad09920392d80ca362a5b}{fileio\+::create\+\_\+request} (\hyperlink{structtorr_1_1Torrent}{Torrent} \&torrent, int piece\+\_\+index)
+\begin{DoxyCompactList}\small\item\em Create a \hyperlink{structfileio_1_1RequestMsg}{Request\+Msg} struct starting from \char`\"{}piece\+\_\+index\char`\"{}. \end{DoxyCompactList}\item 
+void \hyperlink{namespacefileio_acc37418d350d6d36c3f691c99de9cf39}{fileio\+::save\+\_\+block} (char $\ast$blockdata, size\+\_\+t index, size\+\_\+t begin, size\+\_\+t length, \hyperlink{structtorr_1_1Torrent}{Torrent} \&torrent)
 \begin{DoxyCompactList}\small\item\em Save a blockdata received from a \char`\"{}piece\char`\"{} message. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
 Functions for handling filesystem operations (read/write) 
-
-\subsection{Function Documentation}
-\mbox{\Hypertarget{filehandler_8hpp_aca0a8acad9ef8792237224188cac4ce7}\label{filehandler_8hpp_aca0a8acad9ef8792237224188cac4ce7}} 
-\index{filehandler.\+hpp@{filehandler.\+hpp}!check\+\_\+files@{check\+\_\+files}}
-\index{check\+\_\+files@{check\+\_\+files}!filehandler.\+hpp@{filehandler.\+hpp}}
-\subsubsection{\texorpdfstring{check\+\_\+files()}{check\_files()}}
-{\footnotesize\ttfamily void check\+\_\+files (\begin{DoxyParamCaption}\item[{\hyperlink{structTorrent}{Torrent} \&}]{torrent }\end{DoxyParamCaption})}
-
-
-
-Check if all the files of a torrent are in the filesystem. In case of missing files, this function create them. After that it calculates the bitfield. 
-
-\begin{DoxyWarning}{Warning}
-Only single file torrents are supported.
-\end{DoxyWarning}
-
-\begin{DoxyParams}{Parameters}
-{\em torrent} & \hyperlink{structTorrent}{Torrent} struct \\
-\hline
-\end{DoxyParams}
-\mbox{\Hypertarget{filehandler_8hpp_a3fbe0f898f05ba44e87a23e36ed8dcb1}\label{filehandler_8hpp_a3fbe0f898f05ba44e87a23e36ed8dcb1}} 
-\index{filehandler.\+hpp@{filehandler.\+hpp}!compare\+\_\+bitfields@{compare\+\_\+bitfields}}
-\index{compare\+\_\+bitfields@{compare\+\_\+bitfields}!filehandler.\+hpp@{filehandler.\+hpp}}
-\subsubsection{\texorpdfstring{compare\+\_\+bitfields()}{compare\_bitfields()}}
-{\footnotesize\ttfamily int compare\+\_\+bitfields (\begin{DoxyParamCaption}\item[{boost\+::dynamic\+\_\+bitset$<$$>$}]{peer\+\_\+bitfield,  }\item[{boost\+::dynamic\+\_\+bitset$<$$>$}]{own\+\_\+bitfield }\end{DoxyParamCaption})}
-
-
-
-Get the index of a piece the peer can give to us. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em peer\+\_\+bitfield} & \\
-\hline
-{\em own\+\_\+bitfield} & \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-int Index of a needed piece, or -\/1 if no piece available 
-\end{DoxyReturn}
-\mbox{\Hypertarget{filehandler_8hpp_a579e47a4fda5c4caea3423dc05c60b2a}\label{filehandler_8hpp_a579e47a4fda5c4caea3423dc05c60b2a}} 
-\index{filehandler.\+hpp@{filehandler.\+hpp}!create\+\_\+request@{create\+\_\+request}}
-\index{create\+\_\+request@{create\+\_\+request}!filehandler.\+hpp@{filehandler.\+hpp}}
-\subsubsection{\texorpdfstring{create\+\_\+request()}{create\_request()}}
-{\footnotesize\ttfamily \hyperlink{structRequestMsg}{Request\+Msg} create\+\_\+request (\begin{DoxyParamCaption}\item[{\hyperlink{structTorrent}{Torrent} \&}]{torrent,  }\item[{int}]{piece\+\_\+index }\end{DoxyParamCaption})}
-
-
-
-Create a \hyperlink{structRequestMsg}{Request\+Msg} struct starting from \char`\"{}piece\+\_\+index\char`\"{}. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em torrent} & \\
-\hline
-{\em piece\+\_\+index} & \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-\hyperlink{structRequestMsg}{Request\+Msg} 
-\end{DoxyReturn}
-\mbox{\Hypertarget{filehandler_8hpp_a4bf7468001cd66bad22681c4f90d1972}\label{filehandler_8hpp_a4bf7468001cd66bad22681c4f90d1972}} 
-\index{filehandler.\+hpp@{filehandler.\+hpp}!save\+\_\+block@{save\+\_\+block}}
-\index{save\+\_\+block@{save\+\_\+block}!filehandler.\+hpp@{filehandler.\+hpp}}
-\subsubsection{\texorpdfstring{save\+\_\+block()}{save\_block()}}
-{\footnotesize\ttfamily void save\+\_\+block (\begin{DoxyParamCaption}\item[{char $\ast$}]{blockdata,  }\item[{size\+\_\+t}]{index,  }\item[{size\+\_\+t}]{begin,  }\item[{size\+\_\+t}]{length,  }\item[{\hyperlink{structTorrent}{Torrent} \&}]{torrent }\end{DoxyParamCaption})}
-
-
-
-Save a blockdata received from a \char`\"{}piece\char`\"{} message. 
-
-\begin{DoxyWarning}{Warning}
-Only single file torrents are supported.
-\end{DoxyWarning}
-
-\begin{DoxyParams}{Parameters}
-{\em blockdata} & Byte-\/array of data \\
-\hline
-{\em index} & Piece index \\
-\hline
-{\em begin} & Block index (within the piece) \\
-\hline
-{\em length} & Length of blockdata \\
-\hline
-{\em torrent} & \hyperlink{structTorrent}{Torrent} struct \\
-\hline
-\end{DoxyParams}

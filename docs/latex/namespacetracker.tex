@@ -1,0 +1,381 @@
+\hypertarget{namespacetracker}{}\section{tracker Namespace Reference}
+\label{namespacetracker}\index{tracker@{tracker}}
+
+
+Contains all tracker method and structures.  
+
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structtracker_1_1TParameter}{T\+Parameter}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{namespacetracker_a5c98069e9e5f8fbee2ac2ee82144347d}\label{namespacetracker_a5c98069e9e5f8fbee2ac2ee82144347d}} 
+typedef vector$<$ string $>$ {\bfseries T\+List}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{namespacetracker_adad29535063afb92161f98de28f9af30}\label{namespacetracker_adad29535063afb92161f98de28f9af30}} 
+enum {\bfseries event\+\_\+type} \{ {\bfseries S\+T\+A\+R\+T\+ED}, 
+{\bfseries S\+T\+O\+P\+P\+ED}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{namespacetracker_afbc30ba2b5f62968e92fedaaa8eab454}{start\+\_\+tracker\+\_\+request} (\hyperlink{structtracker_1_1TParameter}{T\+Parameter} $\ast$param, const T\+List \&tracker\+\_\+list, pwp\+::\+Peer\+List peer\+\_\+list)
+\begin{DoxyCompactList}\small\item\em Send request to each tracker in tracker\+\_\+list. \end{DoxyCompactList}\item 
+uint \hyperlink{namespacetracker_ab1ce1ce0570dd4742e06b6941f63dbe4}{remove\+\_\+duplicate\+\_\+peers} (pwp\+::\+Peer\+List \&peer\+\_\+list)
+\begin{DoxyCompactList}\small\item\em Remove duplicate peers from a peer\+\_\+list. \end{DoxyCompactList}\item 
+void \hyperlink{namespacetracker_ab13f3471f16db9505c2853f4e1bde3aa}{process\+\_\+tracker\+\_\+request} (const string \&tracker\+\_\+url, const \hyperlink{structtracker_1_1TParameter}{T\+Parameter} $\ast$param, pwp\+::\+Peer\+List peer\+\_\+list)
+\begin{DoxyCompactList}\small\item\em Main http tracker manager. \end{DoxyCompactList}\item 
+int \hyperlink{namespacetracker_a0158d3629445e060aef8608eefff5f09}{urlencode\+\_\+paramenter} (\hyperlink{structtracker_1_1TParameter}{T\+Parameter} $\ast$param, C\+U\+RL $\ast$curl)
+\item 
+shared\+\_\+ptr$<$ string $>$ \hyperlink{namespacetracker_a60c22f265981fba0a5dad14d6d3d516a}{url\+\_\+builder} (const string \&tracker\+\_\+url, const \hyperlink{structtracker_1_1TParameter}{T\+Parameter} \&t\+\_\+param, event\+\_\+type event, const string \&tracker\+\_\+key, C\+U\+RL $\ast$curl, bool tls)
+\begin{DoxyCompactList}\small\item\em Create the tracker G\+ET request. \end{DoxyCompactList}\item 
+size\+\_\+t \hyperlink{namespacetracker_a6486613c238a5415481c5ae6234aa91b}{write\+Function} (void $\ast$ptr, size\+\_\+t size, size\+\_\+t nmemb, std\+::string $\ast$data)
+\begin{DoxyCompactList}\small\item\em Manage the curl response. \end{DoxyCompactList}\item 
+int \hyperlink{namespacetracker_a53773ba678237b3a3675d87a66c68aee}{tracker\+\_\+send\+\_\+request} (shared\+\_\+ptr$<$ string $>$ url, string $\ast$response, C\+U\+RL $\ast$curl)
+\begin{DoxyCompactList}\small\item\em Execute the http(s) request and print the response. \end{DoxyCompactList}\item 
+bool \hyperlink{namespacetracker_a2ceea8b68053534e15cb3ac3fd1702fb}{check\+\_\+url} (const string \&url, C\+U\+RL $\ast$curl)
+\begin{DoxyCompactList}\small\item\em Checks if the url is valid. \end{DoxyCompactList}\item 
+int \hyperlink{namespacetracker_ac31ad1c263b18cd7885f587823514abe}{process\+\_\+tracker\+\_\+response} (string $\ast$response, pwp\+::\+Peer\+List peer\+\_\+list)
+\begin{DoxyCompactList}\small\item\em Parse tracker response and extract peers. \end{DoxyCompactList}\item 
+int \hyperlink{namespacetracker_afd84715185a5e4a1351b77af43e7e01c}{scrape\+\_\+request} (string \&url, const \hyperlink{structtracker_1_1TParameter}{T\+Parameter} \&param, string $\ast$response, C\+U\+RL $\ast$curl)
+\begin{DoxyCompactList}\small\item\em Generate a scrape request from a tracker url. \end{DoxyCompactList}\item 
+shared\+\_\+ptr$<$ string $>$ \hyperlink{namespacetracker_ace1983d55d0f9efca5948d0a69d25ba6}{get\+\_\+scrape\+\_\+url} (const string \&url)
+\begin{DoxyCompactList}\small\item\em Get tracker url and return the scraped version of it. \end{DoxyCompactList}\item 
+string \hyperlink{namespacetracker_a722dfd0ec93e84bbbd448d2c9d6a9f1b}{create\+\_\+tracker\+\_\+key} ()
+\begin{DoxyCompactList}\small\item\em Create the key needed for tracker protocol. \end{DoxyCompactList}\item 
+int \hyperlink{namespacetracker_a38d52cf6dd86f2a26a719e285097c805}{parse\+\_\+dict\+\_\+peer} (\hyperlink{structbe__node}{be\+\_\+node} $\ast$node, pwp\+::\+Peer\+List peer\+\_\+list)
+\begin{DoxyCompactList}\small\item\em Parse a non compact tracker response. \end{DoxyCompactList}\item 
+void \hyperlink{namespacetracker_a237de4c8b0282af2d59cd5d0b7bfd1fd}{parse\+\_\+binary\+\_\+peers} (const string \&resp, pwp\+::\+Peer\+List peer\+\_\+list)
+\begin{DoxyCompactList}\small\item\em Parse a binary tracker response. \end{DoxyCompactList}\item 
+bool \hyperlink{namespacetracker_ae542bb4bf17f34b8cadc3a4ae2f5ced2}{is\+\_\+compact\+\_\+response} (const string $\ast$response)
+\begin{DoxyCompactList}\small\item\em Check if a response is in a compact format. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{namespacetracker_a3426052cbc1ef8f22a629e4468cd70e6}\label{namespacetracker_a3426052cbc1ef8f22a629e4468cd70e6}} 
+int {\bfseries scrape\+\_\+request} (string \&url, string $\ast$response, C\+U\+RL $\ast$curl=N\+U\+LL)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{namespacetracker_a53fb7c4cde6ffdc06505609407c563ad}\label{namespacetracker_a53fb7c4cde6ffdc06505609407c563ad}} 
+boost\+::mutex {\bfseries peer\+\_\+list\+\_\+mutex}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Contains all tracker method and structures. 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespacetracker_a2ceea8b68053534e15cb3ac3fd1702fb}\label{namespacetracker_a2ceea8b68053534e15cb3ac3fd1702fb}} 
+\index{tracker@{tracker}!check\+\_\+url@{check\+\_\+url}}
+\index{check\+\_\+url@{check\+\_\+url}!tracker@{tracker}}
+\subsubsection{\texorpdfstring{check\+\_\+url()}{check\_url()}}
+{\footnotesize\ttfamily bool tracker\+::check\+\_\+url (\begin{DoxyParamCaption}\item[{const string \&}]{url,  }\item[{C\+U\+RL $\ast$}]{curl }\end{DoxyParamCaption})}
+
+
+
+Checks if the url is valid. 
+
+\begin{DoxyWarning}{Warning}
+Untested
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$url} & \+: U\+RL to check \\
+\hline
+{\em $\ast$curl} & \+: (Optional) instance of curl library\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(true) if it\textquotesingle{}s valid, (false) otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacetracker_a722dfd0ec93e84bbbd448d2c9d6a9f1b}\label{namespacetracker_a722dfd0ec93e84bbbd448d2c9d6a9f1b}} 
+\index{tracker@{tracker}!create\+\_\+tracker\+\_\+key@{create\+\_\+tracker\+\_\+key}}
+\index{create\+\_\+tracker\+\_\+key@{create\+\_\+tracker\+\_\+key}!tracker@{tracker}}
+\subsubsection{\texorpdfstring{create\+\_\+tracker\+\_\+key()}{create\_tracker\_key()}}
+{\footnotesize\ttfamily string tracker\+::create\+\_\+tracker\+\_\+key (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Create the key needed for tracker protocol. 
+
+\begin{DoxyReturn}{Returns}
+string cointaining the key 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacetracker_ace1983d55d0f9efca5948d0a69d25ba6}\label{namespacetracker_ace1983d55d0f9efca5948d0a69d25ba6}} 
+\index{tracker@{tracker}!get\+\_\+scrape\+\_\+url@{get\+\_\+scrape\+\_\+url}}
+\index{get\+\_\+scrape\+\_\+url@{get\+\_\+scrape\+\_\+url}!tracker@{tracker}}
+\subsubsection{\texorpdfstring{get\+\_\+scrape\+\_\+url()}{get\_scrape\_url()}}
+{\footnotesize\ttfamily shared\+\_\+ptr$<$ string $>$ tracker\+::get\+\_\+scrape\+\_\+url (\begin{DoxyParamCaption}\item[{const string \&}]{url }\end{DoxyParamCaption})}
+
+
+
+Get tracker url and return the scraped version of it. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em url} & \+: the url(annouunce version) of the tracker \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a pointer to the new url or nullptr if the tracker doesn\textquotesingle{}t support scraping 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacetracker_ae542bb4bf17f34b8cadc3a4ae2f5ced2}\label{namespacetracker_ae542bb4bf17f34b8cadc3a4ae2f5ced2}} 
+\index{tracker@{tracker}!is\+\_\+compact\+\_\+response@{is\+\_\+compact\+\_\+response}}
+\index{is\+\_\+compact\+\_\+response@{is\+\_\+compact\+\_\+response}!tracker@{tracker}}
+\subsubsection{\texorpdfstring{is\+\_\+compact\+\_\+response()}{is\_compact\_response()}}
+{\footnotesize\ttfamily bool tracker\+::is\+\_\+compact\+\_\+response (\begin{DoxyParamCaption}\item[{const string $\ast$}]{response }\end{DoxyParamCaption})}
+
+
+
+Check if a response is in a compact format. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$response} & \+: the response to check \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\+: true if it\textquotesingle{}s compact, otherwise false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacetracker_a237de4c8b0282af2d59cd5d0b7bfd1fd}\label{namespacetracker_a237de4c8b0282af2d59cd5d0b7bfd1fd}} 
+\index{tracker@{tracker}!parse\+\_\+binary\+\_\+peers@{parse\+\_\+binary\+\_\+peers}}
+\index{parse\+\_\+binary\+\_\+peers@{parse\+\_\+binary\+\_\+peers}!tracker@{tracker}}
+\subsubsection{\texorpdfstring{parse\+\_\+binary\+\_\+peers()}{parse\_binary\_peers()}}
+{\footnotesize\ttfamily void tracker\+::parse\+\_\+binary\+\_\+peers (\begin{DoxyParamCaption}\item[{const string \&}]{resp,  }\item[{pwp\+::\+Peer\+List}]{peer\+\_\+list }\end{DoxyParamCaption})}
+
+
+
+Parse a binary tracker response. 
+
+This function parse a compact tracker\textquotesingle{}s response according to the following protocol
+
+peers\+: (binary model) Instead of using the dictionary model described above, the peers value may be a string consisting of multiples of 6 bytes. First 4 bytes are the IP address and last 2 bytes are the port number. All in network (big endian) notation.
+
+
+\begin{DoxyParams}{Parameters}
+{\em resp} & the response to parse \\
+\hline
+{\em peer\+\_\+list} & the structure where to store extracted peers \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacetracker_a38d52cf6dd86f2a26a719e285097c805}\label{namespacetracker_a38d52cf6dd86f2a26a719e285097c805}} 
+\index{tracker@{tracker}!parse\+\_\+dict\+\_\+peer@{parse\+\_\+dict\+\_\+peer}}
+\index{parse\+\_\+dict\+\_\+peer@{parse\+\_\+dict\+\_\+peer}!tracker@{tracker}}
+\subsubsection{\texorpdfstring{parse\+\_\+dict\+\_\+peer()}{parse\_dict\_peer()}}
+{\footnotesize\ttfamily int tracker\+::parse\+\_\+dict\+\_\+peer (\begin{DoxyParamCaption}\item[{\hyperlink{structbe__node}{be\+\_\+node} $\ast$}]{node,  }\item[{pwp\+::\+Peer\+List}]{peer\+\_\+list }\end{DoxyParamCaption})}
+
+
+
+Parse a non compact tracker response. 
+
+This function parse a non compact tracker\textquotesingle{}s response according to the following protocol~\newline
+ peers\+: (dictionary model) The value is a list of dictionaries, each with the following keys\+:~\newline
+peer id\+: peer\textquotesingle{}s self-\/selected ID, as described above for the tracker request (string)~\newline
+ip\+: peer\textquotesingle{}s IP address either I\+Pv6 (hexed) or I\+Pv4 (dotted quad) or D\+NS name (string)~\newline
+port\+: peer\textquotesingle{}s port number (integer)~\newline
+ 
+\begin{DoxyParams}{Parameters}
+{\em node} & the bencoded node containing the list of dictionaries\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success, $<$ 0 otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacetracker_ab13f3471f16db9505c2853f4e1bde3aa}\label{namespacetracker_ab13f3471f16db9505c2853f4e1bde3aa}} 
+\index{tracker@{tracker}!process\+\_\+tracker\+\_\+request@{process\+\_\+tracker\+\_\+request}}
+\index{process\+\_\+tracker\+\_\+request@{process\+\_\+tracker\+\_\+request}!tracker@{tracker}}
+\subsubsection{\texorpdfstring{process\+\_\+tracker\+\_\+request()}{process\_tracker\_request()}}
+{\footnotesize\ttfamily void tracker\+::process\+\_\+tracker\+\_\+request (\begin{DoxyParamCaption}\item[{const string \&}]{tracker\+\_\+url,  }\item[{const \hyperlink{structtracker_1_1TParameter}{T\+Parameter} $\ast$}]{param,  }\item[{pwp\+::\+Peer\+List}]{peer\+\_\+list }\end{DoxyParamCaption})}
+
+
+
+Main http tracker manager. 
+
+Manage the entire tracker request \+: it craft the \char`\"{}announce\char`\"{} request and parse the response to extract peers data, that subsequently is pushed inside peer\+\_\+list
+
+
+\begin{DoxyParams}{Parameters}
+{\em tracker\+\_\+url} & \+: the url of the tracker to contact \\
+\hline
+{\em param} & \+: the torrent file param \\
+\hline
+{\em peer\+\_\+list} & \+: a pointer to the vector where to store peers \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacetracker_ac31ad1c263b18cd7885f587823514abe}\label{namespacetracker_ac31ad1c263b18cd7885f587823514abe}} 
+\index{tracker@{tracker}!process\+\_\+tracker\+\_\+response@{process\+\_\+tracker\+\_\+response}}
+\index{process\+\_\+tracker\+\_\+response@{process\+\_\+tracker\+\_\+response}!tracker@{tracker}}
+\subsubsection{\texorpdfstring{process\+\_\+tracker\+\_\+response()}{process\_tracker\_response()}}
+{\footnotesize\ttfamily int tracker\+::process\+\_\+tracker\+\_\+response (\begin{DoxyParamCaption}\item[{string $\ast$}]{response,  }\item[{pwp\+::\+Peer\+List}]{peer\+\_\+list }\end{DoxyParamCaption})}
+
+
+
+Parse tracker response and extract peers. 
+
+Decode the bencoded tracker response and detect if the response is \char`\"{}compact\char`\"{} of \char`\"{}dictionary\char`\"{} After calling the appropriate function the Peer\+List is populated with extracted peers.
+
+
+\begin{DoxyParams}{Parameters}
+{\em response} & \\
+\hline
+{\em peer\+\_\+list} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int 0 on success, $<$0 otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacetracker_ab1ce1ce0570dd4742e06b6941f63dbe4}\label{namespacetracker_ab1ce1ce0570dd4742e06b6941f63dbe4}} 
+\index{tracker@{tracker}!remove\+\_\+duplicate\+\_\+peers@{remove\+\_\+duplicate\+\_\+peers}}
+\index{remove\+\_\+duplicate\+\_\+peers@{remove\+\_\+duplicate\+\_\+peers}!tracker@{tracker}}
+\subsubsection{\texorpdfstring{remove\+\_\+duplicate\+\_\+peers()}{remove\_duplicate\_peers()}}
+{\footnotesize\ttfamily uint tracker\+::remove\+\_\+duplicate\+\_\+peers (\begin{DoxyParamCaption}\item[{pwp\+::\+Peer\+List \&}]{peer\+\_\+list }\end{DoxyParamCaption})}
+
+
+
+Remove duplicate peers from a peer\+\_\+list. 
+
+Take a Peer\+List and delete al duplicate elements. See the code for the method used.
+
+/warning Unimplemented function
+
+
+\begin{DoxyParams}{Parameters}
+{\em peer\+\_\+list} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+uint the peers number after the processing 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacetracker_afd84715185a5e4a1351b77af43e7e01c}\label{namespacetracker_afd84715185a5e4a1351b77af43e7e01c}} 
+\index{tracker@{tracker}!scrape\+\_\+request@{scrape\+\_\+request}}
+\index{scrape\+\_\+request@{scrape\+\_\+request}!tracker@{tracker}}
+\subsubsection{\texorpdfstring{scrape\+\_\+request()}{scrape\_request()}}
+{\footnotesize\ttfamily int tracker\+::scrape\+\_\+request (\begin{DoxyParamCaption}\item[{string \&}]{url,  }\item[{const \hyperlink{structtracker_1_1TParameter}{T\+Parameter} \&}]{param,  }\item[{string $\ast$}]{response,  }\item[{C\+U\+RL $\ast$}]{curl }\end{DoxyParamCaption})}
+
+
+
+Generate a scrape request from a tracker url. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em url} & tracker url \\
+\hline
+{\em param} & \\
+\hline
+{\em response} & reference to a buffer that will store the response \\
+\hline
+{\em curl} & (Optional) instance of the curl library \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacetracker_afbc30ba2b5f62968e92fedaaa8eab454}\label{namespacetracker_afbc30ba2b5f62968e92fedaaa8eab454}} 
+\index{tracker@{tracker}!start\+\_\+tracker\+\_\+request@{start\+\_\+tracker\+\_\+request}}
+\index{start\+\_\+tracker\+\_\+request@{start\+\_\+tracker\+\_\+request}!tracker@{tracker}}
+\subsubsection{\texorpdfstring{start\+\_\+tracker\+\_\+request()}{start\_tracker\_request()}}
+{\footnotesize\ttfamily int tracker\+::start\+\_\+tracker\+\_\+request (\begin{DoxyParamCaption}\item[{\hyperlink{structtracker_1_1TParameter}{T\+Parameter} $\ast$}]{param,  }\item[{const T\+List \&}]{tracker\+\_\+list,  }\item[{pwp\+::\+Peer\+List}]{peer\+\_\+list }\end{DoxyParamCaption})}
+
+
+
+Send request to each tracker in tracker\+\_\+list. 
+
+Read from config file (to implement) the port. Then analize the files and fill the tracker parameter structure.
+
+The appropriate tracker protocol is then choosed and executed; the parsed peers are added to the peer\+\_\+list (passed by argument).
+
+/waring The config file and the \char`\"{}uploaded\char`\"{} and \char`\"{}downloaded\char`\"{} param are still unimplemented.
+
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$param} & the struct containing the tracker parameter \\
+\hline
+{\em peer\+\_\+id} & the client generated id \\
+\hline
+{\em peer\+\_\+list} & vector where to store received peers \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacetracker_a53773ba678237b3a3675d87a66c68aee}\label{namespacetracker_a53773ba678237b3a3675d87a66c68aee}} 
+\index{tracker@{tracker}!tracker\+\_\+send\+\_\+request@{tracker\+\_\+send\+\_\+request}}
+\index{tracker\+\_\+send\+\_\+request@{tracker\+\_\+send\+\_\+request}!tracker@{tracker}}
+\subsubsection{\texorpdfstring{tracker\+\_\+send\+\_\+request()}{tracker\_send\_request()}}
+{\footnotesize\ttfamily int tracker\+::tracker\+\_\+send\+\_\+request (\begin{DoxyParamCaption}\item[{shared\+\_\+ptr$<$ string $>$}]{url,  }\item[{string $\ast$}]{response,  }\item[{C\+U\+RL $\ast$}]{curl }\end{DoxyParamCaption})}
+
+
+
+Execute the http(s) request and print the response. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$url} & \+: the url to contact (with the G\+ET parameter) \\
+\hline
+{\em curl} & \+: (Optional) the instance of the curl lib\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if it\textquotesingle{}s a success, $<$0 otherwise; 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacetracker_a60c22f265981fba0a5dad14d6d3d516a}\label{namespacetracker_a60c22f265981fba0a5dad14d6d3d516a}} 
+\index{tracker@{tracker}!url\+\_\+builder@{url\+\_\+builder}}
+\index{url\+\_\+builder@{url\+\_\+builder}!tracker@{tracker}}
+\subsubsection{\texorpdfstring{url\+\_\+builder()}{url\_builder()}}
+{\footnotesize\ttfamily shared\+\_\+ptr$<$ string $>$ tracker\+::url\+\_\+builder (\begin{DoxyParamCaption}\item[{const string \&}]{tracker\+\_\+url,  }\item[{const \hyperlink{structtracker_1_1TParameter}{T\+Parameter} \&}]{t\+\_\+param,  }\item[{event\+\_\+type}]{event,  }\item[{const string \&}]{tracker\+\_\+key,  }\item[{C\+U\+RL $\ast$}]{curl,  }\item[{bool}]{tls }\end{DoxyParamCaption})}
+
+
+
+Create the tracker G\+ET request. 
+
+An H\+T\+TP G\+ET request is crafted using tracker\textquotesingle{}s url and request parameters
+
+In case of error the request is equal to \char`\"{}\char`\"{}
+
+
+\begin{DoxyParams}{Parameters}
+{\em tracker\+\_\+url} & tracker\textquotesingle{}s url \\
+\hline
+{\em param} & param to send to the tracker \\
+\hline
+{\em curl} & \+: (Optional) curl library instance \\
+\hline
+{\em tls} & \+: (Optional) specify if https should be used; default = false\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a shared pointer to a string containing the url 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacetracker_a0158d3629445e060aef8608eefff5f09}\label{namespacetracker_a0158d3629445e060aef8608eefff5f09}} 
+\index{tracker@{tracker}!urlencode\+\_\+paramenter@{urlencode\+\_\+paramenter}}
+\index{urlencode\+\_\+paramenter@{urlencode\+\_\+paramenter}!tracker@{tracker}}
+\subsubsection{\texorpdfstring{urlencode\+\_\+paramenter()}{urlencode\_paramenter()}}
+{\footnotesize\ttfamily int tracker\+::urlencode\+\_\+paramenter (\begin{DoxyParamCaption}\item[{\hyperlink{structtracker_1_1TParameter}{T\+Parameter} $\ast$}]{param,  }\item[{C\+U\+RL $\ast$}]{curl }\end{DoxyParamCaption})}
+
+This function take the tracker\textquotesingle{}s param and urlencode the info\+\_\+hash and the peer\+\_\+id, the other parameters are left untouched
+
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$param} & pointer to a struct containing parameters \\
+\hline
+{\em $\ast$curl} & (Optional) instance of curl library\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if success, $<$ 0 otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacetracker_a6486613c238a5415481c5ae6234aa91b}\label{namespacetracker_a6486613c238a5415481c5ae6234aa91b}} 
+\index{tracker@{tracker}!write\+Function@{write\+Function}}
+\index{write\+Function@{write\+Function}!tracker@{tracker}}
+\subsubsection{\texorpdfstring{write\+Function()}{writeFunction()}}
+{\footnotesize\ttfamily size\+\_\+t tracker\+::write\+Function (\begin{DoxyParamCaption}\item[{void $\ast$}]{ptr,  }\item[{size\+\_\+t}]{size,  }\item[{size\+\_\+t}]{nmemb,  }\item[{std\+::string $\ast$}]{data }\end{DoxyParamCaption})}
+
+
+
+Manage the curl response. 
+
+Default function (take from curl example) that write the response into \char`\"{}data\char`\"{} 

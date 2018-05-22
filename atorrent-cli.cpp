@@ -16,6 +16,7 @@
 #include <iostream>
 #include <string>
 #include <string.h>
+#include <glog/logging.h>   //Logging Library
 
 #include "torrentparser.hpp"
 #include "tracker.h"
@@ -99,7 +100,7 @@ int main(int argc, char* argv[]) {
         _io_service.reset();
         _io_service.run();
     }
-    boost::this_thread::sleep_for(boost::chrono::seconds(5));  //Sleep for 30 seconds
+    boost::this_thread::sleep_for(boost::chrono::seconds(5));  //Sleep for 5 seconds
 
 
   }while(active_peer < PEER_TREESHOLD);
