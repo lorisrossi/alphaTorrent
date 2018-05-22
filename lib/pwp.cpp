@@ -3,6 +3,8 @@
 #include "peer.h"
 #include "filehandler.hpp"
 
+using namespace torr;
+using namespace fileio;
 
 /**
  *  Checks if the address is equal to "0.0.0.0"

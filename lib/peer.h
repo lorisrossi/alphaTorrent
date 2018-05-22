@@ -111,8 +111,7 @@ namespace pwp{
     int verify_handshake(const std::vector<uint8_t> handshake, size_t len, const pwp::peer t_peer, const char *info_hash);
 
     void remove_invalid_peer(pwp::PeerList peer_list);
-    void pwp_protocol_manager(pwp::peer peer_, const std::vector<uint8_t> &handshake, const char *info_hash, Torrent &torrent);
-
+    void pwp_protocol_manager(pwp::peer peer_, const std::vector<uint8_t> &handshake, const char *info_hash, torr::Torrent &torrent);
 }
 
 

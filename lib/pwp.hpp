@@ -50,9 +50,9 @@ namespace pwp_msg{
     void enable_keep_alive_message(pwp::peer_connection& peerc_t);
     int send_msg(pwp::peer_connection& peerc_t, std::vector<uint8_t> msg);
 
-    int get_bitfield(pwp::peer_connection &peer_c, Torrent &torrent);
-    void read_msg_handler(std::vector<uint8_t>& response, pwp::peer_connection& peer_c, Torrent &torrent, bool& dead_peer,  boost::asio::deadline_timer &timer_, const boost::system::error_code& error, size_t bytes_read);
-    int sender(pwp::peer_connection &peer_conn, Torrent &torrent, int &old_begin);
+    int get_bitfield(pwp::peer_connection &peer_c, torr::Torrent &torrent);
+    void read_msg_handler(std::vector<uint8_t>& response, pwp::peer_connection& peer_c, torr::Torrent &torrent, bool& dead_peer,  boost::asio::deadline_timer &timer_, const boost::system::error_code& error, size_t bytes_read);
+    int sender(pwp::peer_connection &peer_conn, torr::Torrent &torrent, int &old_begin);
 }
 
 #endif

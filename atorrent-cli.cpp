@@ -24,6 +24,8 @@
 #include "pwp.hpp"  //For is_inv_address
 
 using namespace std;
+using namespace torr;
+using namespace fileio;
 
 #define PEER_TREESHOLD 10
 

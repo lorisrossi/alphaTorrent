@@ -1,9 +1,10 @@
 #include "peer.h"
 #include "pwp.hpp"
-#include "torrentparser.hpp"
 #include <boost/dynamic_bitset.hpp>
 #include <fstream>
+
 using namespace std;
+using namespace torr;
 
 boost::asio::io_service _io_service;    /*!< Global IO-Service */
 
