@@ -173,7 +173,7 @@ namespace pwp{
             nullptr,                    //Socket pointer
         };
 
-        cout << endl << "Creating socket" << endl;
+        // cout << endl << "Creating socket" << endl;
 
         int error_code = create_socket(peer_conn);
 
@@ -191,7 +191,7 @@ namespace pwp{
             return;
         }
         
-        cout << endl << "Handshake received" << endl;
+        // cout << endl << "Handshake received" << endl;
 
         //If there was no error (result >= 0) thet it's value is the length of the received handshake
         size_t len = result;        
@@ -230,10 +230,10 @@ namespace pwp{
             // Receive 4 bytes
             bool dead_peer = false;
 
-            cout << endl << peer_.addr.to_string() << " | Staring timeout count...";
+            // cout << endl << peer_.addr.to_string() << " | Starting timeout count...";
             
 
-            cout << peer_conn.peer_.addr << " reading something, byte available : " << peer_conn.socket->available() << "\n";
+            // cout << peer_conn.peer_.addr << " reading something, byte available : " << peer_conn.socket->available() << "\n";
             boost::asio::async_read(*(peer_conn.socket), boost::asio::buffer(response, sizeof(uint8_t)*4), 
                 boost::asio::transfer_exactly(4),
                 boost::bind(&pwp_msg::read_msg_handler, boost::ref(response), 

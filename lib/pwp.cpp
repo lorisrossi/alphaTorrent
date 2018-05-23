@@ -289,27 +289,27 @@ namespace pwp_msg{
         switch(msg_id){
 
             case 255:
-                // cout << peer_c.peer_.addr << " KEEP ALIVE received" << endl;
+                // cout << setw(15) << left << peer_c.peer_.addr << " KEEP ALIVE received" << endl;
                 break;
 
             case pwp_msg::chocked:
                 peer_c.pstate.peer_choking = true;
-                cout << peer_c.peer_.addr << " CHOKED, stop sending requests" << endl;
+                cout << setw(15) << left << peer_c.peer_.addr << " CHOKED, stop sending requests" << endl;
                 break;
 
             case pwp_msg::unchocked:
                 peer_c.pstate.peer_choking = false;
-                cout << peer_c.peer_.addr << " UNCHOKED received" << endl;
+                cout << setw(15) << left << peer_c.peer_.addr << " UNCHOKED received" << endl;
                 break;
             
             case pwp_msg::interested:
                 peer_c.pstate.peer_interested = true;
-                cout << peer_c.peer_.addr << " INTERESTED received" << endl;
+                cout << setw(15) << left << peer_c.peer_.addr << " INTERESTED received" << endl;
                 break;
 
             case pwp_msg::not_interested:
                 peer_c.pstate.peer_interested = false;
-                cout << peer_c.peer_.addr << " NOT INTERESTED received" << endl;
+                cout << setw(15) << left << peer_c.peer_.addr << " NOT INTERESTED received" << endl;
                 break;
             
             case pwp_msg::have: {
@@ -322,7 +322,7 @@ namespace pwp_msg{
                 }
                 uint32_t piece = response[0] << 24 | response[1] << 16 | response[2] << 8 | response[3];
                 
-                cout << peer_c.peer_.addr << " HAVE piece n°" << piece << endl;
+                cout << setw(15) << left << peer_c.peer_.addr << " HAVE piece n°" << piece << endl;
                 if (piece < (torrent.num_pieces/8 +1)) {
                     peer_c.bitfield.set(piece);
                 }
@@ -338,7 +338,7 @@ namespace pwp_msg{
                     dead_peer = true;
                     return;
                 }
-                cout << peer_c.peer_.addr << " REQUEST received" << endl;
+                cout << setw(15) << left << peer_c.peer_.addr << " REQUEST received" << endl;
                 break;
 
             case pwp_msg::piece: {
@@ -382,7 +382,7 @@ namespace pwp_msg{
                     dead_peer = true;
                     return;
                 }
-                cout << peer_c.peer_.addr << " CANCEL received" << endl;
+                cout << setw(15) << left << peer_c.peer_.addr << " CANCEL received" << endl;
                 break;
 
             case pwp_msg::port:
@@ -394,7 +394,7 @@ namespace pwp_msg{
                     dead_peer = true;
                     return;
                 }
-                cout << peer_c.peer_.addr << " PORT received" << endl;
+                cout << setw(15) << left << peer_c.peer_.addr << " PORT received" << endl;
                 break;
             
             default:
@@ -464,7 +464,7 @@ namespace pwp_msg{
 
                 if (request.begin != std::string::npos) {
                     vector<uint8_t> msg = make_request_msg(request);
-                    cout << peer_conn.peer_.addr << " sending REQUEST: " << string_to_hex(msg) << std::endl;
+                    // cout << peer_conn.peer_.addr << " sending REQUEST: " << string_to_hex(msg) << std::endl;
                     return send_msg(peer_conn, msg);                    
                 }
             }
