@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include <iostream>
 
 #include <glog/logging.h>   //Logging Library
 
