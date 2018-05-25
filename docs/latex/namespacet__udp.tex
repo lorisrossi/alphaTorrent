@@ -33,7 +33,7 @@ void \hyperlink{namespacet__udp_a0e87c0151a7bceaace19434206566199}{get\+\_\+trac
 void \hyperlink{namespacet__udp_adb2cdd5090cae67a7de482be4e281f23}{get\+\_\+connect\+\_\+request} (\hyperlink{structt__udp_1_1connect__request}{connect\+\_\+request} c, std\+::vector$<$ uint8\+\_\+t $>$ \&req)
 \item 
 void \hyperlink{namespacet__udp_af26a254f05566a7066b6930ad998a656}{udp\+\_\+manager} (const std\+::string tracker\+\_\+url, \hyperlink{structtracker_1_1TParameter}{tracker\+::\+T\+Parameter} param, pwp\+::\+Peer\+List peer\+\_\+list)
-\item 
+\begin{DoxyCompactList}\small\item\em Main manager of the U\+DP tracker protocol. \end{DoxyCompactList}\item 
 void \hyperlink{namespacet__udp_af6b2788d8ce8ab98f367838a7e3b7b09}{verify\+\_\+connect\+\_\+resp} (const std\+::vector$<$ uint8\+\_\+t $>$ \&resp, uint32\+\_\+t \&trans\+\_\+id, uint64\+\_\+t \&conn\+\_\+id, std\+::vector$<$ uint8\+\_\+t $>$ \&conn\+\_\+id\+\_\+v)
 \begin{DoxyCompactList}\small\item\em Verify and reconstruct the connection ID bytes from tracker\textquotesingle{}s response. \end{DoxyCompactList}\item 
 void \hyperlink{namespacet__udp_a5e968355a7c45dae0749b80e1be8308a}{get\+\_\+announce\+\_\+req} (std\+::vector$<$ uint8\+\_\+t $>$ \&req, const \hyperlink{structtracker_1_1TParameter}{tracker\+::\+T\+Parameter} \&param, std\+::vector$<$ uint8\+\_\+t $>$ \&conn\+\_\+id\+\_\+v)
@@ -240,6 +240,10 @@ int8\+\_\+t &error\+\_\+string &The rest of the packet is a string describing th
 \subsubsection{\texorpdfstring{udp\+\_\+manager()}{udp\_manager()}}
 {\footnotesize\ttfamily void t\+\_\+udp\+::udp\+\_\+manager (\begin{DoxyParamCaption}\item[{const std\+::string}]{tracker\+\_\+url,  }\item[{\hyperlink{structtracker_1_1TParameter}{tracker\+::\+T\+Parameter}}]{param,  }\item[{pwp\+::\+Peer\+List}]{peer\+\_\+list }\end{DoxyParamCaption})}
 
+
+
+Main manager of the U\+DP tracker protocol. 
+
 Manage the entire U\+DP tracker protocol procedure and automatically add parsed peers in the passed peer\+\_\+list.
 
 A simple description of the protocol
@@ -272,6 +276,12 @@ A simple description of the protocol
 
 
 Verify and reconstruct the connection ID bytes from tracker\textquotesingle{}s response. 
+
+Parse the connect response and put transaction\+\_\+id and connection\+\_\+id inside the passed buffer.
+
+\begin{DoxyRefDesc}{Bug}
+\item[\hyperlink{bug__bug000002}{Bug}]In reality no checking is done, to be fixed soon\end{DoxyRefDesc}
+
 
 
 \begin{DoxyParams}{Parameters}

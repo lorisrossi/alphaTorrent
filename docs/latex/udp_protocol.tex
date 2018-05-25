@@ -1,1 +1,17 @@
-This page contains a brief explaination of the tracker U\+DP protocol 
+This page contains a brief explaination of the tracker U\+DP protocol.
+
+\begin{DoxyNote}{Note}
+The official and detailed specification can be found at \href{http://www.bittorrent.org/beps/bep_0015.html}{\tt http\+://www.\+bittorrent.\+org/beps/bep\+\_\+0015.\+html}
+\end{DoxyNote}
+\begin{DoxyParagraph}{Why use U\+DP Tracker Protocol insted of H\+T\+TP?}
+Initially the Bittorrent protocol specify that the only way to contact the tracker and craft the appropriate request was via H\+T\+TP G\+ET request. In 2008 the protocol become extremely popular and the overhead caused by this choice start becoming a problem. (See link for detailed overhead estimation). Depending on the case the tracker should be contacted from a period to 30 minutes to 30 seconds, so a new protocol extension that uses U\+DP insted of T\+CP was created. With this approach only (in the ideal case) two packets are necessary to complete the tracker request. Obviously due the unreliable nature of the U\+DP protocol the application is responsible for manage retransmission in case of packet loss.
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Our procotol implementation}
+alpha\+Torrent doesn\textquotesingle{}t implement the protocol completely (at the moment) and this list contains a list of all features lacks\+:
+\begin{DoxyEnumerate}
+\item Timeout \+: The application does not retransmit the request if a timeout occurs, it simply consider the peer dead.
+\item I\+Pv6 support \+: I\+Pv6 announce response is not supported (neither implemented).
+\item Scrape request \+: Scrape request (and response) are not supported (neither implemented).
+\item Connection ID verification \+: No check is perfomed on the connection\+\_\+id (while the procotol say that is should be done). 
+\end{DoxyEnumerate}
+\end{DoxyParagraph}

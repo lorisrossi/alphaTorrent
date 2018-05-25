@@ -101,6 +101,7 @@ Functions</h2></td></tr>
 <tr class="memitem:adb2cdd5090cae67a7de482be4e281f23"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#adb2cdd5090cae67a7de482be4e281f23">get_connect_request</a> (<a class="el" href="structt__udp_1_1connect__request.html">connect_request</a> c, std::vector&lt; uint8_t &gt; &amp;req)</td></tr>
 <tr class="separator:adb2cdd5090cae67a7de482be4e281f23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af26a254f05566a7066b6930ad998a656"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#af26a254f05566a7066b6930ad998a656">udp_manager</a> (const std::string tracker_url, <a class="el" href="structtracker_1_1TParameter.html">tracker::TParameter</a> param, pwp::PeerList peer_list)</td></tr>
+<tr class="memdesc:af26a254f05566a7066b6930ad998a656"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main manager of the UDP tracker protocol.  <a href="#af26a254f05566a7066b6930ad998a656">More...</a><br /></td></tr>
 <tr class="separator:af26a254f05566a7066b6930ad998a656"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6b2788d8ce8ab98f367838a7e3b7b09"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#af6b2788d8ce8ab98f367838a7e3b7b09">verify_connect_resp</a> (const std::vector&lt; uint8_t &gt; &amp;resp, uint32_t &amp;trans_id, uint64_t &amp;conn_id, std::vector&lt; uint8_t &gt; &amp;conn_id_v)</td></tr>
 <tr class="memdesc:af6b2788d8ce8ab98f367838a7e3b7b09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verify and reconstruct the connection ID bytes from tracker's response.  <a href="#af6b2788d8ce8ab98f367838a7e3b7b09">More...</a><br /></td></tr>
@@ -469,6 +470,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Main manager of the UDP tracker protocol. </p>
 <p>Manage the entire UDP tracker protocol procedure and automatically add parsed peers in the passed peer_list.</p>
 <p>A simple description of the protocol</p>
 <ol type="1">
@@ -529,6 +532,8 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Verify and reconstruct the connection ID bytes from tracker's response. </p>
+<p>Parse the connect response and put transaction_id and connection_id inside the passed buffer.</p>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000002">Bug:</a></b></dt><dd>In reality no checking is done, to be fixed soon</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">resp</td><td>The tracker response </td></tr>

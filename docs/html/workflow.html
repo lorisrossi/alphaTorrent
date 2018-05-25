@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>alphaTorrent: UDP Protocol Specification</title>
+<title>alphaTorrent: Application workflow</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -59,19 +59,10 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">UDP Protocol Specification </div>  </div>
+<div class="title">Application workflow </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>This page contains a brief explaination of the tracker UDP protocol.</p>
-<dl class="section note"><dt>Note</dt><dd>The official and detailed specification can be found at <a href="http://www.bittorrent.org/beps/bep_0015.html">http://www.bittorrent.org/beps/bep_0015.html</a></dd></dl>
-<dl class="section user"><dt>Why use UDP Tracker Protocol insted of HTTP?</dt><dd>Initially the Bittorrent protocol specify that the only way to contact the tracker and craft the appropriate request was via HTTP GET request. In 2008 the protocol become extremely popular and the overhead caused by this choice start becoming a problem. (See link for detailed overhead estimation). Depending on the case the tracker should be contacted from a period to 30 minutes to 30 seconds, so a new protocol extension that uses UDP insted of TCP was created. With this approach only (in the ideal case) two packets are necessary to complete the tracker request. Obviously due the unreliable nature of the UDP protocol the application is responsible for manage retransmission in case of packet loss.</dd></dl>
-<dl class="section user"><dt>Our procotol implementation</dt><dd>alphaTorrent doesn't implement the protocol completely (at the moment) and this list contains a list of all features lacks:<ol type="1">
-<li>Timeout : The application does not retransmit the request if a timeout occurs, it simply consider the peer dead.</li>
-<li>IPv6 support : IPv6 announce response is not supported (neither implemented).</li>
-<li>Scrape request : Scrape request (and response) are not supported (neither implemented).</li>
-<li>Connection ID verification : No check is perfomed on the connection_id (while the procotol say that is should be done). </li>
-</ol>
-</dd></dl>
+<div class="textblock"><p>This page contains the application workflow. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -143,6 +143,10 @@ This is the manager of the entire peer comunication. After creating the socket t
 \item Loop and send appropriate messages
 \end{DoxyEnumerate}
 
+\begin{DoxyRefDesc}{Bug}
+\item[\hyperlink{bug__bug000001}{Bug}]No timeout control is performed so if there is a dead peer that does not respond the software blocks until the default SO timeout is reacher (tipically 2 minutes).\end{DoxyRefDesc}
+
+
 
 \begin{DoxyParams}{Parameters}
 {\em peer\+\_\+} & The peer on which execute the protocol \\

@@ -272,6 +272,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>verify_handshake</b> (
 <li>Wait (asynchronously) for messages</li>
 <li>Loop and send appropriate messages</li>
 </ol>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000001">Bug:</a></b></dt><dd>No timeout control is performed so if there is a dead peer that does not respond the software blocks until the default SO timeout is reacher (tipically 2 minutes).</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">peer_</td><td>The peer on which execute the protocol </td></tr>

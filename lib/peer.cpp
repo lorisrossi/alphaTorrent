@@ -154,6 +154,8 @@ namespace pwp{
      * 4. Wait (asynchronously) for messages
      * 5. Loop and send appropriate messages
      * 
+     * \bug No timeout control is performed so if there is a dead peer that does not respond the software
+     * blocks until the default SO timeout is reacher (tipically 2 minutes).
      * 
      * @param peer_         The peer on which execute the protocol
      * @param handshake     The initial handshake to send

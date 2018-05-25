@@ -1,0 +1,9 @@
+
+\begin{DoxyRefList}
+\item[\label{bug__bug000001}%
+\Hypertarget{bug__bug000001}%
+Member \hyperlink{namespacepwp_a62060bdcdc80541b0892e26fbeab1e91}{pwp\+:\+:pwp\+\_\+protocol\+\_\+manager} (\hyperlink{structpwp_1_1peer}{pwp\+::peer} peer\+\_\+, const std\+::vector$<$ uint8\+\_\+t $>$ \&handshake, const char $\ast$info\+\_\+hash, Torrent \&torrent)]No timeout control is performed so if there is a dead peer that does not respond the software blocks until the default SO timeout is reacher (tipically 2 minutes). 
+\item[\label{bug__bug000002}%
+\Hypertarget{bug__bug000002}%
+Member \hyperlink{namespacet__udp_af6b2788d8ce8ab98f367838a7e3b7b09}{t\+\_\+udp\+:\+:verify\+\_\+connect\+\_\+resp} (const std\+::vector$<$ uint8\+\_\+t $>$ \&resp, uint32\+\_\+t \&trans\+\_\+id, uint64\+\_\+t \&conn\+\_\+id, std\+::vector$<$ uint8\+\_\+t $>$ \&conn\+\_\+id\+\_\+v)]In reality no checking is done, to be fixed soon
+\end{DoxyRefList}

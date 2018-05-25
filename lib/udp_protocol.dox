@@ -1,4 +1,25 @@
 /**
  * @page udp_protocol UDP Protocol Specification
- * This page contains a brief explaination of the tracker UDP protocol
+ * This page contains a brief explaination of the tracker UDP protocol.
+
+    \note
+    The official and detailed specification can be found at http://www.bittorrent.org/beps/bep_0015.html
+
+    \par Why use UDP Tracker Protocol insted of HTTP?
+    Initially the Bittorrent protocol specify that the only way to contact the tracker and craft the appropriate
+    request was via HTTP GET request. In 2008 the protocol become extremely popular and the overhead caused by
+    this choice start becoming a problem. (See link for detailed overhead estimation).
+    Depending on the case the tracker should be contacted from a period to 30 minutes to 30 seconds, so a new 
+    protocol extension that uses UDP insted of TCP was created. With this approach only (in the ideal case)
+    two packets are necessary to complete the tracker request.
+    Obviously due the unreliable nature of the UDP protocol the application is responsible for manage retransmission
+    in case of packet loss.
+
+    \par Our procotol implementation
+    alphaTorrent doesn't implement the protocol completely (at the moment) and this list contains a list of all features lacks:
+    1. Timeout : The application does not retransmit the request if a timeout occurs, it simply consider the peer dead.
+    2. IPv6 support : IPv6 announce response is not supported (neither implemented).
+    3. Scrape request : Scrape request (and response) are not supported (neither implemented).
+    4. Connection ID verification : No check is perfomed on the connection_id (while the procotol say that is should be done).
+
  */

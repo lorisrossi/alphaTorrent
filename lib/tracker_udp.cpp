@@ -139,6 +139,8 @@ namespace t_udp{
 
 
     /**
+     *  @brief Main manager of the UDP tracker protocol
+     * 
      *  Manage the entire UDP tracker protocol procedure and automatically add parsed peers in the passed
      *  peer_list.
      *      
@@ -162,7 +164,6 @@ namespace t_udp{
 
 
         DLOG(INFO) << "Called UDP procedure on " << tracker_url << endl;
-
 
         uint port;
         string tracker_domain;
@@ -216,9 +217,7 @@ namespace t_udp{
 
             std::vector<uint8_t> recv_buf(16);
             udp::endpoint sender_endpoint;
-
             std::size_t length = 0;
-
 
             socket.receive(boost::asio::buffer(recv_buf));
             
@@ -272,6 +271,10 @@ namespace t_udp{
 
     /**
      *  @brief Verify and reconstruct the connection ID bytes from tracker's response.
+     * 
+     *  Parse the connect response and put transaction_id and connection_id inside the passed buffer.
+     * 
+     *  \bug In reality no checking is done, to be fixed soon
      * 
      *  @param resp         The tracker response
      *  @param trans_id     Protocol transaction ID (Unused)
