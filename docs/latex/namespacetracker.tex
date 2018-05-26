@@ -9,7 +9,7 @@ Contains all tracker method and structures.
 \begin{DoxyCompactItemize}
 \item 
 struct \hyperlink{structtracker_1_1TParameter}{T\+Parameter}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Struct contains all param to send to the tracker. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Typedefs}
 \begin{DoxyCompactItemize}
 \item 
@@ -27,11 +27,11 @@ enum {\bfseries event\+\_\+type} \{ {\bfseries S\+T\+A\+R\+T\+ED},
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-int \hyperlink{namespacetracker_afbc30ba2b5f62968e92fedaaa8eab454}{start\+\_\+tracker\+\_\+request} (\hyperlink{structtracker_1_1TParameter}{T\+Parameter} $\ast$param, const T\+List \&tracker\+\_\+list, pwp\+::\+Peer\+List peer\+\_\+list)
+int \hyperlink{namespacetracker_afbc30ba2b5f62968e92fedaaa8eab454}{start\+\_\+tracker\+\_\+request} (\hyperlink{structtracker_1_1TParameter}{T\+Parameter} $\ast$param, const T\+List \&tracker\+\_\+list, \hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} peer\+\_\+list)
 \begin{DoxyCompactList}\small\item\em Send request to each tracker in tracker\+\_\+list. \end{DoxyCompactList}\item 
-uint \hyperlink{namespacetracker_ab1ce1ce0570dd4742e06b6941f63dbe4}{remove\+\_\+duplicate\+\_\+peers} (pwp\+::\+Peer\+List \&peer\+\_\+list)
+uint \hyperlink{namespacetracker_ab1ce1ce0570dd4742e06b6941f63dbe4}{remove\+\_\+duplicate\+\_\+peers} (\hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} \&peer\+\_\+list)
 \begin{DoxyCompactList}\small\item\em Remove duplicate peers from a peer\+\_\+list. \end{DoxyCompactList}\item 
-void \hyperlink{namespacetracker_ab13f3471f16db9505c2853f4e1bde3aa}{process\+\_\+tracker\+\_\+request} (const string \&tracker\+\_\+url, const \hyperlink{structtracker_1_1TParameter}{T\+Parameter} $\ast$param, pwp\+::\+Peer\+List peer\+\_\+list)
+void \hyperlink{namespacetracker_ab13f3471f16db9505c2853f4e1bde3aa}{process\+\_\+tracker\+\_\+request} (const string \&tracker\+\_\+url, const \hyperlink{structtracker_1_1TParameter}{T\+Parameter} $\ast$param, \hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} peer\+\_\+list)
 \begin{DoxyCompactList}\small\item\em Main http tracker manager. \end{DoxyCompactList}\item 
 int \hyperlink{namespacetracker_a0158d3629445e060aef8608eefff5f09}{urlencode\+\_\+paramenter} (\hyperlink{structtracker_1_1TParameter}{T\+Parameter} $\ast$param, C\+U\+RL $\ast$curl)
 \item 
@@ -43,7 +43,7 @@ int \hyperlink{namespacetracker_a53773ba678237b3a3675d87a66c68aee}{tracker\+\_\+
 \begin{DoxyCompactList}\small\item\em Execute the http(s) request and print the response. \end{DoxyCompactList}\item 
 bool \hyperlink{namespacetracker_a2ceea8b68053534e15cb3ac3fd1702fb}{check\+\_\+url} (const string \&url, C\+U\+RL $\ast$curl)
 \begin{DoxyCompactList}\small\item\em Checks if the url is valid. \end{DoxyCompactList}\item 
-int \hyperlink{namespacetracker_ac31ad1c263b18cd7885f587823514abe}{process\+\_\+tracker\+\_\+response} (string $\ast$response, pwp\+::\+Peer\+List peer\+\_\+list)
+int \hyperlink{namespacetracker_ac31ad1c263b18cd7885f587823514abe}{process\+\_\+tracker\+\_\+response} (string $\ast$response, \hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} peer\+\_\+list)
 \begin{DoxyCompactList}\small\item\em Parse tracker response and extract peers. \end{DoxyCompactList}\item 
 int \hyperlink{namespacetracker_afd84715185a5e4a1351b77af43e7e01c}{scrape\+\_\+request} (string \&url, const \hyperlink{structtracker_1_1TParameter}{T\+Parameter} \&param, string $\ast$response, C\+U\+RL $\ast$curl)
 \begin{DoxyCompactList}\small\item\em Generate a scrape request from a tracker url. \end{DoxyCompactList}\item 
@@ -51,9 +51,9 @@ shared\+\_\+ptr$<$ string $>$ \hyperlink{namespacetracker_ace1983d55d0f9efca5948
 \begin{DoxyCompactList}\small\item\em Get tracker url and return the scraped version of it. \end{DoxyCompactList}\item 
 string \hyperlink{namespacetracker_a722dfd0ec93e84bbbd448d2c9d6a9f1b}{create\+\_\+tracker\+\_\+key} ()
 \begin{DoxyCompactList}\small\item\em Create the key needed for tracker protocol. \end{DoxyCompactList}\item 
-int \hyperlink{namespacetracker_a38d52cf6dd86f2a26a719e285097c805}{parse\+\_\+dict\+\_\+peer} (\hyperlink{structbe__node}{be\+\_\+node} $\ast$node, pwp\+::\+Peer\+List peer\+\_\+list)
+int \hyperlink{namespacetracker_a38d52cf6dd86f2a26a719e285097c805}{parse\+\_\+dict\+\_\+peer} (\hyperlink{structbe__node}{be\+\_\+node} $\ast$node, \hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} peer\+\_\+list)
 \begin{DoxyCompactList}\small\item\em Parse a non compact tracker response. \end{DoxyCompactList}\item 
-void \hyperlink{namespacetracker_a237de4c8b0282af2d59cd5d0b7bfd1fd}{parse\+\_\+binary\+\_\+peers} (const string \&resp, pwp\+::\+Peer\+List peer\+\_\+list)
+void \hyperlink{namespacetracker_a237de4c8b0282af2d59cd5d0b7bfd1fd}{parse\+\_\+binary\+\_\+peers} (const string \&resp, \hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} peer\+\_\+list)
 \begin{DoxyCompactList}\small\item\em Parse a binary tracker response. \end{DoxyCompactList}\item 
 bool \hyperlink{namespacetracker_ae542bb4bf17f34b8cadc3a4ae2f5ced2}{is\+\_\+compact\+\_\+response} (const string $\ast$response)
 \begin{DoxyCompactList}\small\item\em Check if a response is in a compact format. \end{DoxyCompactList}\item 
@@ -136,6 +136,10 @@ a pointer to the new url or nullptr if the tracker doesn\textquotesingle{}t supp
 
 Check if a response is in a compact format. 
 
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000005}{Todo}]Improve and re-\/test this function\end{DoxyRefDesc}
+
+
 
 \begin{DoxyParams}{Parameters}
 {\em $\ast$response} & \+: the response to check \\
@@ -148,7 +152,7 @@ Check if a response is in a compact format.
 \index{tracker@{tracker}!parse\+\_\+binary\+\_\+peers@{parse\+\_\+binary\+\_\+peers}}
 \index{parse\+\_\+binary\+\_\+peers@{parse\+\_\+binary\+\_\+peers}!tracker@{tracker}}
 \subsubsection{\texorpdfstring{parse\+\_\+binary\+\_\+peers()}{parse\_binary\_peers()}}
-{\footnotesize\ttfamily void tracker\+::parse\+\_\+binary\+\_\+peers (\begin{DoxyParamCaption}\item[{const string \&}]{resp,  }\item[{pwp\+::\+Peer\+List}]{peer\+\_\+list }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void tracker\+::parse\+\_\+binary\+\_\+peers (\begin{DoxyParamCaption}\item[{const string \&}]{resp,  }\item[{\hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List}}]{peer\+\_\+list }\end{DoxyParamCaption})}
 
 
 
@@ -169,7 +173,7 @@ peers\+: (binary model) Instead of using the dictionary model described above, t
 \index{tracker@{tracker}!parse\+\_\+dict\+\_\+peer@{parse\+\_\+dict\+\_\+peer}}
 \index{parse\+\_\+dict\+\_\+peer@{parse\+\_\+dict\+\_\+peer}!tracker@{tracker}}
 \subsubsection{\texorpdfstring{parse\+\_\+dict\+\_\+peer()}{parse\_dict\_peer()}}
-{\footnotesize\ttfamily int tracker\+::parse\+\_\+dict\+\_\+peer (\begin{DoxyParamCaption}\item[{\hyperlink{structbe__node}{be\+\_\+node} $\ast$}]{node,  }\item[{pwp\+::\+Peer\+List}]{peer\+\_\+list }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int tracker\+::parse\+\_\+dict\+\_\+peer (\begin{DoxyParamCaption}\item[{\hyperlink{structbe__node}{be\+\_\+node} $\ast$}]{node,  }\item[{\hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List}}]{peer\+\_\+list }\end{DoxyParamCaption})}
 
 
 
@@ -180,7 +184,13 @@ This function parse a non compact tracker\textquotesingle{}s response according 
 peer id\+: peer\textquotesingle{}s self-\/selected ID, as described above for the tracker request (string)~\newline
 ip\+: peer\textquotesingle{}s IP address either I\+Pv6 (hexed) or I\+Pv4 (dotted quad) or D\+NS name (string)~\newline
 port\+: peer\textquotesingle{}s port number (integer)~\newline
- 
+ \begin{DoxyRefDesc}{Bug}
+\item[\hyperlink{bug__bug000002}{Bug}]The address of the peer could be of three types \+: I\+Pv6, D\+NS and I\+Pv6. Currently just I\+Pv4 is supported. \end{DoxyRefDesc}
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000004}{Todo}]Add support for I\+Pv6 and D\+NS addresses.\end{DoxyRefDesc}
+
+
+
 \begin{DoxyParams}{Parameters}
 {\em node} & the bencoded node containing the list of dictionaries\\
 \hline
@@ -192,7 +202,7 @@ port\+: peer\textquotesingle{}s port number (integer)~\newline
 \index{tracker@{tracker}!process\+\_\+tracker\+\_\+request@{process\+\_\+tracker\+\_\+request}}
 \index{process\+\_\+tracker\+\_\+request@{process\+\_\+tracker\+\_\+request}!tracker@{tracker}}
 \subsubsection{\texorpdfstring{process\+\_\+tracker\+\_\+request()}{process\_tracker\_request()}}
-{\footnotesize\ttfamily void tracker\+::process\+\_\+tracker\+\_\+request (\begin{DoxyParamCaption}\item[{const string \&}]{tracker\+\_\+url,  }\item[{const \hyperlink{structtracker_1_1TParameter}{T\+Parameter} $\ast$}]{param,  }\item[{pwp\+::\+Peer\+List}]{peer\+\_\+list }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void tracker\+::process\+\_\+tracker\+\_\+request (\begin{DoxyParamCaption}\item[{const string \&}]{tracker\+\_\+url,  }\item[{const \hyperlink{structtracker_1_1TParameter}{T\+Parameter} $\ast$}]{param,  }\item[{\hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List}}]{peer\+\_\+list }\end{DoxyParamCaption})}
 
 
 
@@ -213,7 +223,7 @@ Manage the entire tracker request \+: it craft the \char`\"{}announce\char`\"{} 
 \index{tracker@{tracker}!process\+\_\+tracker\+\_\+response@{process\+\_\+tracker\+\_\+response}}
 \index{process\+\_\+tracker\+\_\+response@{process\+\_\+tracker\+\_\+response}!tracker@{tracker}}
 \subsubsection{\texorpdfstring{process\+\_\+tracker\+\_\+response()}{process\_tracker\_response()}}
-{\footnotesize\ttfamily int tracker\+::process\+\_\+tracker\+\_\+response (\begin{DoxyParamCaption}\item[{string $\ast$}]{response,  }\item[{pwp\+::\+Peer\+List}]{peer\+\_\+list }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int tracker\+::process\+\_\+tracker\+\_\+response (\begin{DoxyParamCaption}\item[{string $\ast$}]{response,  }\item[{\hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List}}]{peer\+\_\+list }\end{DoxyParamCaption})}
 
 
 
@@ -235,13 +245,15 @@ int 0 on success, $<$0 otherwise
 \index{tracker@{tracker}!remove\+\_\+duplicate\+\_\+peers@{remove\+\_\+duplicate\+\_\+peers}}
 \index{remove\+\_\+duplicate\+\_\+peers@{remove\+\_\+duplicate\+\_\+peers}!tracker@{tracker}}
 \subsubsection{\texorpdfstring{remove\+\_\+duplicate\+\_\+peers()}{remove\_duplicate\_peers()}}
-{\footnotesize\ttfamily uint tracker\+::remove\+\_\+duplicate\+\_\+peers (\begin{DoxyParamCaption}\item[{pwp\+::\+Peer\+List \&}]{peer\+\_\+list }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily uint tracker\+::remove\+\_\+duplicate\+\_\+peers (\begin{DoxyParamCaption}\item[{\hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} \&}]{peer\+\_\+list }\end{DoxyParamCaption})}
 
 
 
 Remove duplicate peers from a peer\+\_\+list. 
 
-Take a Peer\+List and delete al duplicate elements. See the code for the method used.
+Take a Peer\+List and delete al duplicate elements. Following this response (\href{https://stackoverflow.com/questions/1041620/whats-the-most-efficient-way-to-erase-duplicates-and-sort-a-vector}{\tt https\+://stackoverflow.\+com/questions/1041620/whats-\/the-\/most-\/efficient-\/way-\/to-\/erase-\/duplicates-\/and-\/sort-\/a-\/vector}) is better to convert the vector to a set and then convert back if the number element is low \begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000002}{Todo}]The test was with integers, re-\/test with \hyperlink{structpwp_1_1peer}{pwp\+::peer}\end{DoxyRefDesc}
+
 
 /warning Unimplemented function
 
@@ -281,7 +293,7 @@ int
 \index{tracker@{tracker}!start\+\_\+tracker\+\_\+request@{start\+\_\+tracker\+\_\+request}}
 \index{start\+\_\+tracker\+\_\+request@{start\+\_\+tracker\+\_\+request}!tracker@{tracker}}
 \subsubsection{\texorpdfstring{start\+\_\+tracker\+\_\+request()}{start\_tracker\_request()}}
-{\footnotesize\ttfamily int tracker\+::start\+\_\+tracker\+\_\+request (\begin{DoxyParamCaption}\item[{\hyperlink{structtracker_1_1TParameter}{T\+Parameter} $\ast$}]{param,  }\item[{const T\+List \&}]{tracker\+\_\+list,  }\item[{pwp\+::\+Peer\+List}]{peer\+\_\+list }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int tracker\+::start\+\_\+tracker\+\_\+request (\begin{DoxyParamCaption}\item[{\hyperlink{structtracker_1_1TParameter}{T\+Parameter} $\ast$}]{param,  }\item[{const T\+List \&}]{tracker\+\_\+list,  }\item[{\hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List}}]{peer\+\_\+list }\end{DoxyParamCaption})}
 
 
 
@@ -291,7 +303,9 @@ Read from config file (to implement) the port. Then analize the files and fill t
 
 The appropriate tracker protocol is then choosed and executed; the parsed peers are added to the peer\+\_\+list (passed by argument).
 
-/waring The config file and the \char`\"{}uploaded\char`\"{} and \char`\"{}downloaded\char`\"{} param are still unimplemented.
+The config file and the \char`\"{}uploaded\char`\"{} and \char`\"{}downloaded\char`\"{} param are still unimplemented. \begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000001}{Todo}]Read che config parameter from a config file\end{DoxyRefDesc}
+
 
 
 \begin{DoxyParams}{Parameters}
@@ -335,6 +349,14 @@ Create the tracker G\+ET request.
 An H\+T\+TP G\+ET request is crafted using tracker\textquotesingle{}s url and request parameters
 
 In case of error the request is equal to \char`\"{}\char`\"{}
+
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000003}{Todo}]Improve this function parmeters, since trakcer\+\_\+url is already inside \hyperlink{structtracker_1_1TParameter}{T\+Parameter} 
+
+Check if tracker\+\_\+url is a proper url by validating it with regex 
+
+Manage errors\end{DoxyRefDesc}
+
 
 
 \begin{DoxyParams}{Parameters}

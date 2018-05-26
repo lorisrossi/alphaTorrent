@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['unchoke_5fmsg',['unchoke_msg',['../namespacepwp__msg.html#acdc5eb698534e84a15db0e061c511e7c',1,'pwp_msg']]]
+  ['mtx_5fpeer_5fnum',['mtx_peer_num',['../peer_8h.html#a821fac971970c19e5d4f57dd0486f019',1,'mtx_peer_num():&#160;peer.cpp'],['../pwp_8hpp.html#a821fac971970c19e5d4f57dd0486f019',1,'mtx_peer_num():&#160;peer.cpp']]]
 ];

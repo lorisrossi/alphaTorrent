@@ -144,12 +144,8 @@ Variables</h2></td></tr>
 <tr class="memitem:afd3bb609482f388199b44f364c870321"><td class="memItemLeft" align="right" valign="top"><a id="afd3bb609482f388199b44f364c870321"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>active_peer</b></td></tr>
 <tr class="separator:afd3bb609482f388199b44f364c870321"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a821fac971970c19e5d4f57dd0486f019"><td class="memItemLeft" align="right" valign="top"><a id="a821fac971970c19e5d4f57dd0486f019"></a>
-boost::mutex&#160;</td><td class="memItemRight" valign="bottom"><b>mtx_peer_num</b></td></tr>
+<tr class="memitem:a821fac971970c19e5d4f57dd0486f019"><td class="memItemLeft" align="right" valign="top">boost::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pwp_8hpp.html#a821fac971970c19e5d4f57dd0486f019">mtx_peer_num</a></td></tr>
 <tr class="separator:a821fac971970c19e5d4f57dd0486f019"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae962e65b1871714756b6aeb4722a8caf"><td class="memItemLeft" align="right" valign="top"><a id="ae962e65b1871714756b6aeb4722a8caf"></a>
-enum <a class="el" href="namespacepwp__msg.html#a0b9a29508f00a30e5138d2b78f4b1daf">pwp_msg::msg_id</a>&#160;</td><td class="memItemRight" valign="bottom"><b>pwp_msg::PeerList</b></td></tr>
-<tr class="separator:ae962e65b1871714756b6aeb4722a8caf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a695ee2efb59a7c258559f19440fe6998"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp__msg.html#a695ee2efb59a7c258559f19440fe6998">pwp_msg::choke_msg</a> = {0,0,0,1,0}</td></tr>
 <tr class="separator:a695ee2efb59a7c258559f19440fe6998"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acdc5eb698534e84a15db0e061c511e7c"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp__msg.html#acdc5eb698534e84a15db0e061c511e7c">pwp_msg::unchoke_msg</a> = {0,0,0,1,1}</td></tr>
@@ -218,6 +214,21 @@ enum <a class="el" href="namespacepwp__msg.html#a0b9a29508f00a30e5138d2b78f4b1da
       </table>
 </div><div class="memdoc">
 <p>Global IO-Service </p>
+
+</div>
+</div>
+<a id="a821fac971970c19e5d4f57dd0486f019"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a821fac971970c19e5d4f57dd0486f019">&#9670;&nbsp;</a></span>mtx_peer_num</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boost::mutex mtx_peer_num</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Mutex for the alive peers number </p>
 
 </div>
 </div>

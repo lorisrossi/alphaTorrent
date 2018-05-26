@@ -100,7 +100,7 @@ Functions</h2></td></tr>
 <tr class="separator:a0e87c0151a7bceaace19434206566199"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb2cdd5090cae67a7de482be4e281f23"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#adb2cdd5090cae67a7de482be4e281f23">get_connect_request</a> (<a class="el" href="structt__udp_1_1connect__request.html">connect_request</a> c, std::vector&lt; uint8_t &gt; &amp;req)</td></tr>
 <tr class="separator:adb2cdd5090cae67a7de482be4e281f23"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af26a254f05566a7066b6930ad998a656"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#af26a254f05566a7066b6930ad998a656">udp_manager</a> (const std::string tracker_url, <a class="el" href="structtracker_1_1TParameter.html">tracker::TParameter</a> param, pwp::PeerList peer_list)</td></tr>
+<tr class="memitem:af26a254f05566a7066b6930ad998a656"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#af26a254f05566a7066b6930ad998a656">udp_manager</a> (const std::string tracker_url, <a class="el" href="structtracker_1_1TParameter.html">tracker::TParameter</a> param, <a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a> peer_list)</td></tr>
 <tr class="memdesc:af26a254f05566a7066b6930ad998a656"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main manager of the UDP tracker protocol.  <a href="#af26a254f05566a7066b6930ad998a656">More...</a><br /></td></tr>
 <tr class="separator:af26a254f05566a7066b6930ad998a656"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6b2788d8ce8ab98f367838a7e3b7b09"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#af6b2788d8ce8ab98f367838a7e3b7b09">verify_connect_resp</a> (const std::vector&lt; uint8_t &gt; &amp;resp, uint32_t &amp;trans_id, uint64_t &amp;conn_id, std::vector&lt; uint8_t &gt; &amp;conn_id_v)</td></tr>
@@ -109,14 +109,14 @@ Functions</h2></td></tr>
 <tr class="memitem:a5e968355a7c45dae0749b80e1be8308a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#a5e968355a7c45dae0749b80e1be8308a">get_announce_req</a> (std::vector&lt; uint8_t &gt; &amp;req, const <a class="el" href="structtracker_1_1TParameter.html">tracker::TParameter</a> &amp;param, std::vector&lt; uint8_t &gt; &amp;conn_id_v)</td></tr>
 <tr class="memdesc:a5e968355a7c45dae0749b80e1be8308a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate the announce request from tracker param.  <a href="#a5e968355a7c45dae0749b80e1be8308a">More...</a><br /></td></tr>
 <tr class="separator:a5e968355a7c45dae0749b80e1be8308a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f2a0ab9801cbc55002e67c166895a0e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#a1f2a0ab9801cbc55002e67c166895a0e">parse_announce_resp</a> (std::vector&lt; uint8_t &gt; &amp;resp, pwp::PeerList peer_list)</td></tr>
+<tr class="memitem:a1f2a0ab9801cbc55002e67c166895a0e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#a1f2a0ab9801cbc55002e67c166895a0e">parse_announce_resp</a> (std::vector&lt; uint8_t &gt; &amp;resp, <a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a> peer_list)</td></tr>
 <tr class="memdesc:a1f2a0ab9801cbc55002e67c166895a0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the first byte of the announce response and parse data.  <a href="#a1f2a0ab9801cbc55002e67c166895a0e">More...</a><br /></td></tr>
 <tr class="separator:a1f2a0ab9801cbc55002e67c166895a0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab582ebbfac6fd929e811527e44384c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#aab582ebbfac6fd929e811527e44384c1">process_error</a> (std::vector&lt; uint8_t &gt; &amp;resp)</td></tr>
 <tr class="separator:aab582ebbfac6fd929e811527e44384c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42ced8af1acd3fb2bc46358effe48dbc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#a42ced8af1acd3fb2bc46358effe48dbc">parse_announce_resp_info</a> (std::vector&lt; uint8_t &gt; &amp;resp)</td></tr>
 <tr class="separator:a42ced8af1acd3fb2bc46358effe48dbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8aa6906fdd81689928634df34688fed1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#a8aa6906fdd81689928634df34688fed1">parse_announce_resp_peers</a> (std::vector&lt; uint8_t &gt; &amp;resp, pwp::PeerList peer_list)</td></tr>
+<tr class="memitem:a8aa6906fdd81689928634df34688fed1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacet__udp.html#a8aa6906fdd81689928634df34688fed1">parse_announce_resp_peers</a> (std::vector&lt; uint8_t &gt; &amp;resp, <a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a> peer_list)</td></tr>
 <tr class="memdesc:a8aa6906fdd81689928634df34688fed1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peer-ID string are setted to "" since it's not sendend with this procotol.  <a href="#a8aa6906fdd81689928634df34688fed1">More...</a><br /></td></tr>
 <tr class="separator:a8aa6906fdd81689928634df34688fed1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -156,6 +156,8 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Generate the announce request from tracker param. </p>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000004">Bug:</a></b></dt><dd>Actually a hardcoded key and port is used. </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>Read port from config file and generate a key (insted of using the hardcoded one)</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">req</td><td>The array where the request will be stored </td></tr>
@@ -306,7 +308,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">pwp::PeerList&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a>&#160;</td>
           <td class="paramname"><em>peer_list</em>&#160;</td>
         </tr>
         <tr>
@@ -329,6 +331,7 @@ Functions</h2></td></tr>
 <tr>
 <td>Announce </td><td>Parse peers and add to peer_list </td></tr>
 </table>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000007">Todo:</a></b></dt><dd>Check if it's at least 20 bytes len response</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">resp</td><td>The announce response </td></tr>
@@ -380,7 +383,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">pwp::PeerList&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a>&#160;</td>
           <td class="paramname"><em>peer_list</em>&#160;</td>
         </tr>
         <tr>
@@ -460,7 +463,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">pwp::PeerList&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a>&#160;</td>
           <td class="paramname"><em>peer_list</em>&#160;</td>
         </tr>
         <tr>
@@ -533,7 +536,7 @@ Functions</h2></td></tr>
 
 <p>Verify and reconstruct the connection ID bytes from tracker's response. </p>
 <p>Parse the connect response and put transaction_id and connection_id inside the passed buffer.</p>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000002">Bug:</a></b></dt><dd>In reality no checking is done, to be fixed soon</dd></dl>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000003">Bug:</a></b></dt><dd>In reality no checking is done, to be fixed soon</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">resp</td><td>The tracker response </td></tr>

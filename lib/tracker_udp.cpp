@@ -124,7 +124,7 @@ namespace t_udp{
 
     void get_connect_request(connect_request c, std::vector<uint8_t>& req){
        
-        std::vector<uint8_t> pid_action = {0,0,4,23,39,16,25,128,0,0, 0,0,0,0}; //Protocol Constandt
+        std::vector<uint8_t> pid_action = {0,0,4,23,39,16,25,128,0,0, 0,0,0,0}; //Protocol Constant
        
         //std::vector<uint8_t> pid = from_int_to_bint(c.protocol_id);
         //std::vector<uint8_t> action = {0,0,0,0};
@@ -319,6 +319,10 @@ namespace t_udp{
     /**
      *  @brief Generate the announce request from tracker param.
      * 
+     *  \bug Actually a hardcoded key and port is used.
+     *  \todo Read port from config file and generate a key (insted of using the hardcoded one)
+     * 
+     * 
      *  @param req          The array where the request will be stored
      *  @param param        Tracker parameters (Port, info_hash etc..)
      *  @param conn_id_v    The connection ID sended from trakcer in a previous connect request
@@ -401,6 +405,9 @@ namespace t_udp{
      *  None     | Ignored
      *  Error    | Print Error
      *  Announce | Parse peers and add to peer_list
+     * 
+     * 
+     *  \todo Check if it's at least 20 bytes len response
      * 
      *  @param resp         The announce response
      *  @param peer_list    The peer_list where to store fetched peers in case of a positive response

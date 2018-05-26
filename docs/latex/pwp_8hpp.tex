@@ -63,11 +63,7 @@ boost\+::asio\+::io\+\_\+service \hyperlink{pwp_8hpp_a7efe93eb3d4e0f0c9ab96fa5ae
 \mbox{\Hypertarget{pwp_8hpp_afd3bb609482f388199b44f364c870321}\label{pwp_8hpp_afd3bb609482f388199b44f364c870321}} 
 int {\bfseries active\+\_\+peer}
 \item 
-\mbox{\Hypertarget{pwp_8hpp_a821fac971970c19e5d4f57dd0486f019}\label{pwp_8hpp_a821fac971970c19e5d4f57dd0486f019}} 
-boost\+::mutex {\bfseries mtx\+\_\+peer\+\_\+num}
-\item 
-\mbox{\Hypertarget{namespacepwp__msg_ae962e65b1871714756b6aeb4722a8caf}\label{namespacepwp__msg_ae962e65b1871714756b6aeb4722a8caf}} 
-enum \hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1daf}{pwp\+\_\+msg\+::msg\+\_\+id} {\bfseries pwp\+\_\+msg\+::\+Peer\+List}
+boost\+::mutex \hyperlink{pwp_8hpp_a821fac971970c19e5d4f57dd0486f019}{mtx\+\_\+peer\+\_\+num}
 \item 
 const std\+::vector$<$ uint8\+\_\+t $>$ \hyperlink{namespacepwp__msg_a695ee2efb59a7c258559f19440fe6998}{pwp\+\_\+msg\+::choke\+\_\+msg} = \{0,0,0,1,0\}
 \item 
@@ -119,4 +115,10 @@ true if it\textquotesingle{}s invalid, false otherwise
 \subsubsection{\texorpdfstring{\+\_\+io\+\_\+service}{\_io\_service}}
 {\footnotesize\ttfamily boost\+::asio\+::io\+\_\+service \+\_\+io\+\_\+service}
 
-Global I\+O-\/\+Service 
+Global I\+O-\/\+Service \mbox{\Hypertarget{pwp_8hpp_a821fac971970c19e5d4f57dd0486f019}\label{pwp_8hpp_a821fac971970c19e5d4f57dd0486f019}} 
+\index{pwp.\+hpp@{pwp.\+hpp}!mtx\+\_\+peer\+\_\+num@{mtx\+\_\+peer\+\_\+num}}
+\index{mtx\+\_\+peer\+\_\+num@{mtx\+\_\+peer\+\_\+num}!pwp.\+hpp@{pwp.\+hpp}}
+\subsubsection{\texorpdfstring{mtx\+\_\+peer\+\_\+num}{mtx\_peer\_num}}
+{\footnotesize\ttfamily boost\+::mutex mtx\+\_\+peer\+\_\+num}
+
+Mutex for the alive peers number 

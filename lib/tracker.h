@@ -45,20 +45,24 @@ namespace tracker{
 
     extern boost::mutex peer_list_mutex;
 
-    //Struct that contains all tracker param
+    /**
+     * @brief Struct contains all param to send to the tracker
+     * 
+     * 
+     */
 
     typedef struct {
-        string info_hash;      //Strings for urlencode
-        string peer_id;        //parameters
+        string info_hash;      /*!<Strings for urlencode parameters */
+        string peer_id;        
 
         uint port;
         uint uploaded;
         uint downloaded;
-        uint left;              //Bytes left to download
+        uint left;              /*!< Bytes left to download*/
         bool compact;
-        uint16_t numwant;       //Number of peer requested
-        string key;             //Key used in the request
-        char* info_hash_raw;    //Raw Bytes
+        uint16_t numwant;       /*!< Number of peer requested */
+        string key;             /*!< Key used in the request */
+        char* info_hash_raw;    /*!< Raw Bytes **/
     }TParameter;
 
 

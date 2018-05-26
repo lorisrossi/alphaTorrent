@@ -20,7 +20,7 @@ Include dependency graph for tracker.\+h\+:\nopagebreak
 \begin{DoxyCompactItemize}
 \item 
 struct \hyperlink{structtracker_1_1TParameter}{tracker\+::\+T\+Parameter}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Struct contains all param to send to the tracker. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Namespaces}
 \begin{DoxyCompactItemize}
 \item 
@@ -69,9 +69,9 @@ shared\+\_\+ptr$<$ string $>$ \hyperlink{namespacetracker_a60c22f265981fba0a5dad
 \begin{DoxyCompactList}\small\item\em Create the tracker G\+ET request. \end{DoxyCompactList}\item 
 int \hyperlink{namespacetracker_a0158d3629445e060aef8608eefff5f09}{tracker\+::urlencode\+\_\+paramenter} (T\+Parameter $\ast$param, C\+U\+RL $\ast$curl)
 \item 
-int \hyperlink{namespacetracker_afbc30ba2b5f62968e92fedaaa8eab454}{tracker\+::start\+\_\+tracker\+\_\+request} (T\+Parameter $\ast$param, const T\+List \&tracker\+\_\+list, pwp\+::\+Peer\+List peer\+\_\+list)
+int \hyperlink{namespacetracker_afbc30ba2b5f62968e92fedaaa8eab454}{tracker\+::start\+\_\+tracker\+\_\+request} (T\+Parameter $\ast$param, const T\+List \&tracker\+\_\+list, \hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} peer\+\_\+list)
 \begin{DoxyCompactList}\small\item\em Send request to each tracker in tracker\+\_\+list. \end{DoxyCompactList}\item 
-void \hyperlink{namespacetracker_ab13f3471f16db9505c2853f4e1bde3aa}{tracker\+::process\+\_\+tracker\+\_\+request} (const string \&tracker\+\_\+url, const T\+Parameter $\ast$param, pwp\+::\+Peer\+List peer\+\_\+list)
+void \hyperlink{namespacetracker_ab13f3471f16db9505c2853f4e1bde3aa}{tracker\+::process\+\_\+tracker\+\_\+request} (const string \&tracker\+\_\+url, const T\+Parameter $\ast$param, \hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} peer\+\_\+list)
 \begin{DoxyCompactList}\small\item\em Main http tracker manager. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{namespacetracker_a3426052cbc1ef8f22a629e4468cd70e6}\label{namespacetracker_a3426052cbc1ef8f22a629e4468cd70e6}} 
 int {\bfseries tracker\+::scrape\+\_\+request} (string \&url, string $\ast$response, C\+U\+RL $\ast$curl=N\+U\+LL)
@@ -80,15 +80,15 @@ shared\+\_\+ptr$<$ string $>$ \hyperlink{namespacetracker_ace1983d55d0f9efca5948
 \begin{DoxyCompactList}\small\item\em Get tracker url and return the scraped version of it. \end{DoxyCompactList}\item 
 string \hyperlink{namespacetracker_a722dfd0ec93e84bbbd448d2c9d6a9f1b}{tracker\+::create\+\_\+tracker\+\_\+key} ()
 \begin{DoxyCompactList}\small\item\em Create the key needed for tracker protocol. \end{DoxyCompactList}\item 
-int \hyperlink{namespacetracker_a38d52cf6dd86f2a26a719e285097c805}{tracker\+::parse\+\_\+dict\+\_\+peer} (\hyperlink{structbe__node}{be\+\_\+node} $\ast$node, pwp\+::\+Peer\+List peer\+\_\+list)
+int \hyperlink{namespacetracker_a38d52cf6dd86f2a26a719e285097c805}{tracker\+::parse\+\_\+dict\+\_\+peer} (\hyperlink{structbe__node}{be\+\_\+node} $\ast$node, \hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} peer\+\_\+list)
 \begin{DoxyCompactList}\small\item\em Parse a non compact tracker response. \end{DoxyCompactList}\item 
-void \hyperlink{namespacetracker_a237de4c8b0282af2d59cd5d0b7bfd1fd}{tracker\+::parse\+\_\+binary\+\_\+peers} (const string \&resp, pwp\+::\+Peer\+List peer\+\_\+list)
+void \hyperlink{namespacetracker_a237de4c8b0282af2d59cd5d0b7bfd1fd}{tracker\+::parse\+\_\+binary\+\_\+peers} (const string \&resp, \hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} peer\+\_\+list)
 \begin{DoxyCompactList}\small\item\em Parse a binary tracker response. \end{DoxyCompactList}\item 
 bool \hyperlink{namespacetracker_ae542bb4bf17f34b8cadc3a4ae2f5ced2}{tracker\+::is\+\_\+compact\+\_\+response} (const string $\ast$response)
 \begin{DoxyCompactList}\small\item\em Check if a response is in a compact format. \end{DoxyCompactList}\item 
-int \hyperlink{namespacetracker_ac31ad1c263b18cd7885f587823514abe}{tracker\+::process\+\_\+tracker\+\_\+response} (string $\ast$response, pwp\+::\+Peer\+List peer\+\_\+list)
+int \hyperlink{namespacetracker_ac31ad1c263b18cd7885f587823514abe}{tracker\+::process\+\_\+tracker\+\_\+response} (string $\ast$response, \hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} peer\+\_\+list)
 \begin{DoxyCompactList}\small\item\em Parse tracker response and extract peers. \end{DoxyCompactList}\item 
-uint \hyperlink{namespacetracker_ab1ce1ce0570dd4742e06b6941f63dbe4}{tracker\+::remove\+\_\+duplicate\+\_\+peers} (pwp\+::\+Peer\+List \&peer\+\_\+list)
+uint \hyperlink{namespacetracker_ab1ce1ce0570dd4742e06b6941f63dbe4}{tracker\+::remove\+\_\+duplicate\+\_\+peers} (\hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} \&peer\+\_\+list)
 \begin{DoxyCompactList}\small\item\em Remove duplicate peers from a peer\+\_\+list. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 

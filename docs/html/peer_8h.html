@@ -129,8 +129,7 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ad07fa6df116b205302ad5ec172277184"><td class="memItemLeft" align="right" valign="top"><a id="ad07fa6df116b205302ad5ec172277184"></a>
-typedef std::shared_ptr&lt; std::vector&lt; <a class="el" href="structpwp_1_1peer.html">pwp::peer</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pwp::PeerList</b></td></tr>
+<tr class="memitem:ad07fa6df116b205302ad5ec172277184"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; std::vector&lt; <a class="el" href="structpwp_1_1peer.html">pwp::peer</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a></td></tr>
 <tr class="separator:ad07fa6df116b205302ad5ec172277184"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a174e8f020062fa10258b0d28f00d79ff"><td class="memItemLeft" align="right" valign="top"><a id="a174e8f020062fa10258b0d28f00d79ff"></a>
 typedef std::shared_ptr&lt; std::vector&lt; <a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pwp::PeerConnected</b></td></tr>
@@ -148,7 +147,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>add_active_peer</b> (
 void&#160;</td><td class="memItemRight" valign="bottom"><b>rm_active_peer</b> ()</td></tr>
 <tr class="separator:a536da2a1a4821536d1ae07a26a96e60a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab82c0d015f6ba23e766c4b942a125b5f"><td class="memItemLeft" align="right" valign="top"><a id="ab82c0d015f6ba23e766c4b942a125b5f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>pwp::manage_peer_connection</b> (pwp::PeerList peer_list, char *info_hash)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>pwp::manage_peer_connection</b> (<a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a> peer_list, char *info_hash)</td></tr>
 <tr class="separator:ab82c0d015f6ba23e766c4b942a125b5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f03cde749af88a393c999545830b192"><td class="memItemLeft" align="right" valign="top"><a id="a5f03cde749af88a393c999545830b192"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>pwp::get_peer_id</b> (std::string *id)</td></tr>
@@ -163,7 +162,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>pwp::handshake_reques
 <tr class="memitem:aed118903b8345e62507ade49c6032d32"><td class="memItemLeft" align="right" valign="top"><a id="aed118903b8345e62507ade49c6032d32"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>pwp::verify_handshake</b> (const std::vector&lt; uint8_t &gt; handshake, size_t len, const <a class="el" href="structpwp_1_1peer.html">pwp::peer</a> t_peer, const char *info_hash)</td></tr>
 <tr class="separator:aed118903b8345e62507ade49c6032d32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8331eb5e3c98deddc6022dad92352f6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp.html#ae8331eb5e3c98deddc6022dad92352f6">pwp::remove_invalid_peer</a> (pwp::PeerList peer_list)</td></tr>
+<tr class="memitem:ae8331eb5e3c98deddc6022dad92352f6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp.html#ae8331eb5e3c98deddc6022dad92352f6">pwp::remove_invalid_peer</a> (<a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a> peer_list)</td></tr>
 <tr class="memdesc:ae8331eb5e3c98deddc6022dad92352f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find invalid peers and remove it.  <a href="namespacepwp.html#ae8331eb5e3c98deddc6022dad92352f6">More...</a><br /></td></tr>
 <tr class="separator:ae8331eb5e3c98deddc6022dad92352f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62060bdcdc80541b0892e26fbeab1e91"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp.html#a62060bdcdc80541b0892e26fbeab1e91">pwp::pwp_protocol_manager</a> (<a class="el" href="structpwp_1_1peer.html">pwp::peer</a> peer_, const std::vector&lt; uint8_t &gt; &amp;handshake, const char *info_hash, <a class="el" href="structtorr_1_1Torrent.html">Torrent</a> &amp;torrent)</td></tr>
@@ -191,12 +190,11 @@ Variables</h2></td></tr>
 <tr class="memitem:afd3bb609482f388199b44f364c870321"><td class="memItemLeft" align="right" valign="top"><a id="afd3bb609482f388199b44f364c870321"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>active_peer</b></td></tr>
 <tr class="separator:afd3bb609482f388199b44f364c870321"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a821fac971970c19e5d4f57dd0486f019"><td class="memItemLeft" align="right" valign="top"><a id="a821fac971970c19e5d4f57dd0486f019"></a>
-boost::mutex&#160;</td><td class="memItemRight" valign="bottom"><b>mtx_peer_num</b></td></tr>
+<tr class="memitem:a821fac971970c19e5d4f57dd0486f019"><td class="memItemLeft" align="right" valign="top">boost::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="peer_8h.html#a821fac971970c19e5d4f57dd0486f019">mtx_peer_num</a></td></tr>
 <tr class="separator:a821fac971970c19e5d4f57dd0486f019"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="classPeer.html">Peer</a>'s data and PWP protocol interface</p>
+<div class="textblock"><p>Peer's data and PWP protocol interface</p>
 <p>This define the basic PWP protocol structure along with peer interface </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a9a16c464cd63530a7fbd80134c32f264"></a>
@@ -239,6 +237,21 @@ boost::mutex&#160;</td><td class="memItemRight" valign="bottom"><b>mtx_peer_num<
       </table>
 </div><div class="memdoc">
 <p>Global IO-Service </p>
+
+</div>
+</div>
+<a id="a821fac971970c19e5d4f57dd0486f019"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a821fac971970c19e5d4f57dd0486f019">&#9670;&nbsp;</a></span>mtx_peer_num</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boost::mutex mtx_peer_num</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Mutex for the alive peers number </p>
 
 </div>
 </div>

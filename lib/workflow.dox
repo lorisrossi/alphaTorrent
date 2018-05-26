@@ -1,6 +1,59 @@
 /**
  * @page workflow Application workflow
  * This page contains the application workflow.
+ *
+ * \image html alphatorrent_flowchart.svg
+ * \image latex alphatorrent_flowchart.svg
+
+    \note The official and detailed bittorrent procotol specification could be found here http://www.bittorrent.org/beps/bep_0003.html
+
+
+    Main
+    ==========
+    Argument Parsing
+    ------------------
+    The only supported program argument is a path containing the .torrent file.
+    By using the GLog logging library you could pass several flags to influence the output (See the Glog docs for details).
+    Output verbosity could be specified for example by using the flag "minloglevel", where the numbers of severity levels INFO, WARNING, ERROR, and FATAL are 0, 1, 2, and 3, respectively.
+
+    Metainfo Parsing (.torrent)
+    -------------
+    The file is opened and the decoding procedure starts. The Metainfo file (also know as .torrent) is encoded with a bencoded tecnique (https://en.wikipedia.org/wiki/Bencode).
+    The file structure could be summarized in two parts:
+        1. Announce : Contains the trackers url
+        2. Info     : A dictionary bencoded data
+
+    The Info parts is divided into 
+    Name          | Description
+    --------------|--------------
+    piece length  | number of bytes in each piece (integer)
+    pieces        | string consisting of the concatenation of all 20-byte SHA1 hash values, one per piece (byte string, i.e. not urlencoded)
+
+
+    The data is parsed using the bencode library (https://sourceforge.net/p/funzix/code/ci/master/tree/bencode/)
+
+
+    Tracker
+    =========
+    After the Metainfo file is parsed and the peer extracted the tracker procedure is called.
+
+    Initialization
+    ------------------
+    A peer list  (@ref pwp::PeerList) is created (and allocated) inside the "Main" to contains the peers sended from the tracker.
+    At the start of tracker request routine a param (@ref tracker::TParameter) structure is filled with configuration parameters (to be implemented).
+    
+    Announce request
+    ------------------
+    A function then differentiate the tracker based on the protocol (UDP or HTTP) and call the appropriate function inside a thread.
+    For detailed description of the tracker protocol manager see @ref udp_protocol and .
+    After the peer list is populated the duplicates and invalid peers are removed and thet the PWP protocol starts.
+
+
+    PWP
+    ================
+    Handshaking
+    ----------------
+
 
 
  */

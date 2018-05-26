@@ -50,8 +50,7 @@ struct \hyperlink{structbInt}{b\+Int}
 \subsection*{Typedefs}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{namespacepwp_ad07fa6df116b205302ad5ec172277184}\label{namespacepwp_ad07fa6df116b205302ad5ec172277184}} 
-typedef std\+::shared\+\_\+ptr$<$ std\+::vector$<$ \hyperlink{structpwp_1_1peer}{pwp\+::peer} $>$ $>$ {\bfseries pwp\+::\+Peer\+List}
+typedef std\+::shared\+\_\+ptr$<$ std\+::vector$<$ \hyperlink{structpwp_1_1peer}{pwp\+::peer} $>$ $>$ \hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List}
 \item 
 \mbox{\Hypertarget{namespacepwp_a174e8f020062fa10258b0d28f00d79ff}\label{namespacepwp_a174e8f020062fa10258b0d28f00d79ff}} 
 typedef std\+::shared\+\_\+ptr$<$ std\+::vector$<$ \hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} $>$ $>$ {\bfseries pwp\+::\+Peer\+Connected}
@@ -69,7 +68,7 @@ void {\bfseries add\+\_\+active\+\_\+peer} ()
 void {\bfseries rm\+\_\+active\+\_\+peer} ()
 \item 
 \mbox{\Hypertarget{namespacepwp_ab82c0d015f6ba23e766c4b942a125b5f}\label{namespacepwp_ab82c0d015f6ba23e766c4b942a125b5f}} 
-void {\bfseries pwp\+::manage\+\_\+peer\+\_\+connection} (pwp\+::\+Peer\+List peer\+\_\+list, char $\ast$info\+\_\+hash)
+void {\bfseries pwp\+::manage\+\_\+peer\+\_\+connection} (\hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} peer\+\_\+list, char $\ast$info\+\_\+hash)
 \item 
 \mbox{\Hypertarget{namespacepwp_a5f03cde749af88a393c999545830b192}\label{namespacepwp_a5f03cde749af88a393c999545830b192}} 
 void {\bfseries pwp\+::get\+\_\+peer\+\_\+id} (std\+::string $\ast$id)
@@ -84,7 +83,7 @@ void {\bfseries pwp\+::handshake\+\_\+request\+\_\+manager} (const std\+::array$
 \mbox{\Hypertarget{namespacepwp_aed118903b8345e62507ade49c6032d32}\label{namespacepwp_aed118903b8345e62507ade49c6032d32}} 
 int {\bfseries pwp\+::verify\+\_\+handshake} (const std\+::vector$<$ uint8\+\_\+t $>$ handshake, size\+\_\+t len, const \hyperlink{structpwp_1_1peer}{pwp\+::peer} t\+\_\+peer, const char $\ast$info\+\_\+hash)
 \item 
-void \hyperlink{namespacepwp_ae8331eb5e3c98deddc6022dad92352f6}{pwp\+::remove\+\_\+invalid\+\_\+peer} (pwp\+::\+Peer\+List peer\+\_\+list)
+void \hyperlink{namespacepwp_ae8331eb5e3c98deddc6022dad92352f6}{pwp\+::remove\+\_\+invalid\+\_\+peer} (\hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} peer\+\_\+list)
 \begin{DoxyCompactList}\small\item\em Find invalid peers and remove it. \end{DoxyCompactList}\item 
 void \hyperlink{namespacepwp_a62060bdcdc80541b0892e26fbeab1e91}{pwp\+::pwp\+\_\+protocol\+\_\+manager} (\hyperlink{structpwp_1_1peer}{pwp\+::peer} peer\+\_\+, const std\+::vector$<$ uint8\+\_\+t $>$ \&handshake, const char $\ast$info\+\_\+hash, \hyperlink{structtorr_1_1Torrent}{Torrent} \&torrent)
 \begin{DoxyCompactList}\small\item\em Manager of the entire P\+WP protocol. \end{DoxyCompactList}\item 
@@ -110,13 +109,12 @@ boost\+::asio\+::io\+\_\+service \hyperlink{peer_8h_a7efe93eb3d4e0f0c9ab96fa5ae4
 \mbox{\Hypertarget{peer_8h_afd3bb609482f388199b44f364c870321}\label{peer_8h_afd3bb609482f388199b44f364c870321}} 
 int {\bfseries active\+\_\+peer}
 \item 
-\mbox{\Hypertarget{peer_8h_a821fac971970c19e5d4f57dd0486f019}\label{peer_8h_a821fac971970c19e5d4f57dd0486f019}} 
-boost\+::mutex {\bfseries mtx\+\_\+peer\+\_\+num}
+boost\+::mutex \hyperlink{peer_8h_a821fac971970c19e5d4f57dd0486f019}{mtx\+\_\+peer\+\_\+num}
 \end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
-\hyperlink{classPeer}{Peer}\textquotesingle{}s data and P\+WP protocol interface
+Peer\textquotesingle{}s data and P\+WP protocol interface
 
 This define the basic P\+WP protocol structure along with peer interface 
 
@@ -146,4 +144,10 @@ T\+O\+DO rename this nonsense function name
 \subsubsection{\texorpdfstring{\+\_\+io\+\_\+service}{\_io\_service}}
 {\footnotesize\ttfamily boost\+::asio\+::io\+\_\+service \+\_\+io\+\_\+service}
 
-Global I\+O-\/\+Service 
+Global I\+O-\/\+Service \mbox{\Hypertarget{peer_8h_a821fac971970c19e5d4f57dd0486f019}\label{peer_8h_a821fac971970c19e5d4f57dd0486f019}} 
+\index{peer.\+h@{peer.\+h}!mtx\+\_\+peer\+\_\+num@{mtx\+\_\+peer\+\_\+num}}
+\index{mtx\+\_\+peer\+\_\+num@{mtx\+\_\+peer\+\_\+num}!peer.\+h@{peer.\+h}}
+\subsubsection{\texorpdfstring{mtx\+\_\+peer\+\_\+num}{mtx\_peer\_num}}
+{\footnotesize\ttfamily boost\+::mutex mtx\+\_\+peer\+\_\+num}
+
+Mutex for the alive peers number 

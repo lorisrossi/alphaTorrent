@@ -93,7 +93,7 @@ namespace pwp{
 
 
 
-    typedef std::shared_ptr<std::vector<pwp::peer>> PeerList;
+    typedef std::shared_ptr<std::vector<pwp::peer>> PeerList;  /*!< peer list extracted from tracker */
     typedef std::shared_ptr<std::vector<pwp::peer_connection>> PeerConnected;
 
 

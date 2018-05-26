@@ -44,17 +44,17 @@ bool \hyperlink{namespacet__udp_af6fbd38370a6f5f7d8520144de7104c4}{t\+\_\+udp\+:
 \begin{DoxyCompactList}\small\item\em Check if the tracker support U\+DP. \end{DoxyCompactList}\item 
 void \hyperlink{namespacet__udp_a0e87c0151a7bceaace19434206566199}{t\+\_\+udp\+::get\+\_\+tracker\+\_\+domain} (std\+::string tracker\+\_\+url, std\+::string \&udp\+\_\+tracker, uint \&port)
 \begin{DoxyCompactList}\small\item\em Take the tracker url and extract the corrensponding domain. This function only work on U\+DP tracker U\+RL, if an H\+T\+TP url is passed it returns empty udp\+\_\+tracker and port equal to zero. \end{DoxyCompactList}\item 
-void \hyperlink{namespacet__udp_af26a254f05566a7066b6930ad998a656}{t\+\_\+udp\+::udp\+\_\+manager} (const std\+::string tracker\+\_\+url, \hyperlink{structtracker_1_1TParameter}{tracker\+::\+T\+Parameter} param, pwp\+::\+Peer\+List peer\+\_\+list)
+void \hyperlink{namespacet__udp_af26a254f05566a7066b6930ad998a656}{t\+\_\+udp\+::udp\+\_\+manager} (const std\+::string tracker\+\_\+url, \hyperlink{structtracker_1_1TParameter}{tracker\+::\+T\+Parameter} param, \hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} peer\+\_\+list)
 \begin{DoxyCompactList}\small\item\em Main manager of the U\+DP tracker protocol. \end{DoxyCompactList}\item 
 void \hyperlink{namespacet__udp_af6b2788d8ce8ab98f367838a7e3b7b09}{t\+\_\+udp\+::verify\+\_\+connect\+\_\+resp} (const std\+::vector$<$ uint8\+\_\+t $>$ \&resp, uint32\+\_\+t \&trans\+\_\+id, uint64\+\_\+t \&conn\+\_\+id, std\+::vector$<$ uint8\+\_\+t $>$ \&conn\+\_\+id\+\_\+v)
 \begin{DoxyCompactList}\small\item\em Verify and reconstruct the connection ID bytes from tracker\textquotesingle{}s response. \end{DoxyCompactList}\item 
 void \hyperlink{namespacet__udp_a5e968355a7c45dae0749b80e1be8308a}{t\+\_\+udp\+::get\+\_\+announce\+\_\+req} (std\+::vector$<$ uint8\+\_\+t $>$ \&req, const \hyperlink{structtracker_1_1TParameter}{tracker\+::\+T\+Parameter} \&param, std\+::vector$<$ uint8\+\_\+t $>$ \&conn\+\_\+id\+\_\+v)
 \begin{DoxyCompactList}\small\item\em Generate the announce request from tracker param. \end{DoxyCompactList}\item 
-void \hyperlink{namespacet__udp_a1f2a0ab9801cbc55002e67c166895a0e}{t\+\_\+udp\+::parse\+\_\+announce\+\_\+resp} (std\+::vector$<$ uint8\+\_\+t $>$ \&resp, pwp\+::\+Peer\+List peer\+\_\+list)
+void \hyperlink{namespacet__udp_a1f2a0ab9801cbc55002e67c166895a0e}{t\+\_\+udp\+::parse\+\_\+announce\+\_\+resp} (std\+::vector$<$ uint8\+\_\+t $>$ \&resp, \hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} peer\+\_\+list)
 \begin{DoxyCompactList}\small\item\em Parse the first byte of the announce response and parse data. \end{DoxyCompactList}\item 
 void \hyperlink{namespacet__udp_aab582ebbfac6fd929e811527e44384c1}{t\+\_\+udp\+::process\+\_\+error} (std\+::vector$<$ uint8\+\_\+t $>$ \&resp)
 \item 
-void \hyperlink{namespacet__udp_a8aa6906fdd81689928634df34688fed1}{t\+\_\+udp\+::parse\+\_\+announce\+\_\+resp\+\_\+peers} (std\+::vector$<$ uint8\+\_\+t $>$ \&resp, pwp\+::\+Peer\+List peer\+\_\+list)
+void \hyperlink{namespacet__udp_a8aa6906fdd81689928634df34688fed1}{t\+\_\+udp\+::parse\+\_\+announce\+\_\+resp\+\_\+peers} (std\+::vector$<$ uint8\+\_\+t $>$ \&resp, \hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} peer\+\_\+list)
 \begin{DoxyCompactList}\small\item\em Peer-\/\+ID string are setted to \char`\"{}\char`\"{} since it\textquotesingle{}s not sendend with this procotol. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 

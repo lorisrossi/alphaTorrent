@@ -62,7 +62,36 @@ $(function() {
 <div class="title">Application workflow </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>This page contains the application workflow. </p>
+<div class="textblock"><p>This page contains the application workflow.</p>
+<div class="image">
+<object type="image/svg+xml" data="alphatorrent_flowchart.svg">alphatorrent_flowchart.svg</object>
+</div>
+ <dl class="section note"><dt>Note</dt><dd>The official and detailed bittorrent procotol specification could be found here <a href="http://www.bittorrent.org/beps/bep_0003.html">http://www.bittorrent.org/beps/bep_0003.html</a></dd></dl>
+<h1>Main </h1>
+<h2>Argument Parsing </h2>
+<p>The only supported program argument is a path containing the .torrent file. By using the GLog logging library you could pass several flags to influence the output (See the Glog docs for details). Output verbosity could be specified for example by using the flag "minloglevel", where the numbers of severity levels INFO, WARNING, ERROR, and FATAL are 0, 1, 2, and 3, respectively.</p>
+<h2>Metainfo Parsing (.torrent) </h2>
+<p>The file is opened and the decoding procedure starts. The Metainfo file (also know as .torrent) is encoded with a bencoded tecnique (<a href="https://en.wikipedia.org/wiki/Bencode">https://en.wikipedia.org/wiki/Bencode</a>). The file structure could be summarized in two parts:</p><ol type="1">
+<li>Announce : Contains the trackers url</li>
+<li>Info : A dictionary bencoded data</li>
+</ol>
+<p>The Info parts is divided into </p><table class="doxtable">
+<tr>
+<th>Name </th><th>Description  </th></tr>
+<tr>
+<td>piece length </td><td>number of bytes in each piece (integer) </td></tr>
+<tr>
+<td>pieces </td><td>string consisting of the concatenation of all 20-byte SHA1 hash values, one per piece (byte string, i.e. not urlencoded) </td></tr>
+</table>
+<p>The data is parsed using the bencode library (<a href="https://sourceforge.net/p/funzix/code/ci/master/tree/bencode/">https://sourceforge.net/p/funzix/code/ci/master/tree/bencode/</a>)</p>
+<h1>Tracker </h1>
+<p>After the Metainfo file is parsed and the peer extracted the tracker procedure is called.</p>
+<h2>Initialization </h2>
+<p>A peer list (<a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a>) is created (and allocated) inside the "Main" to contains the peers sended from the tracker. At the start of tracker request routine a param (<a class="el" href="structtracker_1_1TParameter.html">tracker::TParameter</a>) structure is filled with configuration parameters (to be implemented).</p>
+<h2>Announce request </h2>
+<p>A function then differentiate the tracker based on the protocol (UDP or HTTP) and call the appropriate function inside a thread. For detailed description of the tracker protocol manager see <a class="el" href="udp_protocol.html">UDP Protocol Specification</a> and . After the peer list is populated the duplicates and invalid peers are removed and thet the PWP protocol starts.</p>
+<h1>PWP </h1>
+<h2>Handshaking </h2>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

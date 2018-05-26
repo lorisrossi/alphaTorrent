@@ -14,8 +14,7 @@ struct \hyperlink{structpwp_1_1peer__state}{peer\+\_\+state}
 \subsection*{Typedefs}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{namespacepwp_ad07fa6df116b205302ad5ec172277184}\label{namespacepwp_ad07fa6df116b205302ad5ec172277184}} 
-typedef std\+::shared\+\_\+ptr$<$ std\+::vector$<$ \hyperlink{structpwp_1_1peer}{pwp\+::peer} $>$ $>$ {\bfseries Peer\+List}
+typedef std\+::shared\+\_\+ptr$<$ std\+::vector$<$ \hyperlink{structpwp_1_1peer}{pwp\+::peer} $>$ $>$ \hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{Peer\+List}
 \item 
 \mbox{\Hypertarget{namespacepwp_a174e8f020062fa10258b0d28f00d79ff}\label{namespacepwp_a174e8f020062fa10258b0d28f00d79ff}} 
 typedef std\+::shared\+\_\+ptr$<$ std\+::vector$<$ \hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} $>$ $>$ {\bfseries Peer\+Connected}
@@ -23,7 +22,7 @@ typedef std\+::shared\+\_\+ptr$<$ std\+::vector$<$ \hyperlink{structpwp_1_1peer_
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \hyperlink{namespacepwp_ae8331eb5e3c98deddc6022dad92352f6}{remove\+\_\+invalid\+\_\+peer} (pwp\+::\+Peer\+List peer\+\_\+list)
+void \hyperlink{namespacepwp_ae8331eb5e3c98deddc6022dad92352f6}{remove\+\_\+invalid\+\_\+peer} (\hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} peer\+\_\+list)
 \begin{DoxyCompactList}\small\item\em Find invalid peers and remove it. \end{DoxyCompactList}\item 
 int \hyperlink{namespacepwp_a73acf05b954e39825a88036d5793db6b}{create\+\_\+socket} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+conn\+\_\+p)
 \begin{DoxyCompactList}\small\item\em Create the socket and connect to the peer. \end{DoxyCompactList}\item 
@@ -38,7 +37,7 @@ void \hyperlink{namespacepwp_ada6a8613896dbbfd6fba63b17d51684c}{get\+\_\+peer\+\
 int \hyperlink{namespacepwp_a58c780495f2139a56b95662dc7c0345f}{verify\+\_\+handshake} (const vector$<$ uint8\+\_\+t $>$ handshake, size\+\_\+t len, const \hyperlink{structpwp_1_1peer}{pwp\+::peer} t\+\_\+peer, const char $\ast$info\+\_\+hash)
 \item 
 \mbox{\Hypertarget{namespacepwp_ab82c0d015f6ba23e766c4b942a125b5f}\label{namespacepwp_ab82c0d015f6ba23e766c4b942a125b5f}} 
-void {\bfseries manage\+\_\+peer\+\_\+connection} (pwp\+::\+Peer\+List peer\+\_\+list, char $\ast$info\+\_\+hash)
+void {\bfseries manage\+\_\+peer\+\_\+connection} (\hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} peer\+\_\+list, char $\ast$info\+\_\+hash)
 \item 
 \mbox{\Hypertarget{namespacepwp_a5f03cde749af88a393c999545830b192}\label{namespacepwp_a5f03cde749af88a393c999545830b192}} 
 void {\bfseries get\+\_\+peer\+\_\+id} (std\+::string $\ast$id)
@@ -53,6 +52,15 @@ int {\bfseries verify\+\_\+handshake} (const std\+::vector$<$ uint8\+\_\+t $>$ h
 
 \subsection{Detailed Description}
 Namespace used to define all peer\textquotesingle{}s related data and P\+WP protocol 
+
+\subsection{Typedef Documentation}
+\mbox{\Hypertarget{namespacepwp_ad07fa6df116b205302ad5ec172277184}\label{namespacepwp_ad07fa6df116b205302ad5ec172277184}} 
+\index{pwp@{pwp}!Peer\+List@{Peer\+List}}
+\index{Peer\+List@{Peer\+List}!pwp@{pwp}}
+\subsubsection{\texorpdfstring{Peer\+List}{PeerList}}
+{\footnotesize\ttfamily typedef std\+::shared\+\_\+ptr$<$std\+::vector$<$\hyperlink{structpwp_1_1peer}{pwp\+::peer}$>$ $>$ \hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List}}
+
+peer list extracted from tracker 
 
 \subsection{Function Documentation}
 \mbox{\Hypertarget{namespacepwp_a6062876f4d4d4d6ee19341a79a797864}\label{namespacepwp_a6062876f4d4d4d6ee19341a79a797864}} 
@@ -162,7 +170,7 @@ This is the manager of the entire peer comunication. After creating the socket t
 \index{pwp@{pwp}!remove\+\_\+invalid\+\_\+peer@{remove\+\_\+invalid\+\_\+peer}}
 \index{remove\+\_\+invalid\+\_\+peer@{remove\+\_\+invalid\+\_\+peer}!pwp@{pwp}}
 \subsubsection{\texorpdfstring{remove\+\_\+invalid\+\_\+peer()}{remove\_invalid\_peer()}}
-{\footnotesize\ttfamily void pwp\+::remove\+\_\+invalid\+\_\+peer (\begin{DoxyParamCaption}\item[{pwp\+::\+Peer\+List}]{peer\+\_\+list }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void pwp\+::remove\+\_\+invalid\+\_\+peer (\begin{DoxyParamCaption}\item[{\hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List}}]{peer\+\_\+list }\end{DoxyParamCaption})}
 
 
 
@@ -230,7 +238,7 @@ Verify if an handshake (received) is correct
 -\/1 &First byte is not 19 \\\cline{1-2}
 -\/2 &Invalid protocol string \\\cline{1-2}
 -\/3 &Info hash does not match (with the one sended) \\\cline{1-2}
--\/4 &\hyperlink{classPeer}{Peer} ID does not match (Bypassed) \\\cline{1-2}
+-\/4 &Peer ID does not match (Bypassed) \\\cline{1-2}
 \end{longtabu}
 \begin{DoxyWarning}{Warning}
 The comparison of the {\itshape peer-\/\+ID} often fail so it\textquotesingle{}s skipped (no return -\/4)

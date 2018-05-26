@@ -75,6 +75,7 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracker_1_1TParameter.html">TParameter</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct contains all param to send to the tracker.  <a href="structtracker_1_1TParameter.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
@@ -92,13 +93,13 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:afbc30ba2b5f62968e92fedaaa8eab454"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracker.html#afbc30ba2b5f62968e92fedaaa8eab454">start_tracker_request</a> (<a class="el" href="structtracker_1_1TParameter.html">TParameter</a> *param, const TList &amp;tracker_list, pwp::PeerList peer_list)</td></tr>
+<tr class="memitem:afbc30ba2b5f62968e92fedaaa8eab454"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracker.html#afbc30ba2b5f62968e92fedaaa8eab454">start_tracker_request</a> (<a class="el" href="structtracker_1_1TParameter.html">TParameter</a> *param, const TList &amp;tracker_list, <a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a> peer_list)</td></tr>
 <tr class="memdesc:afbc30ba2b5f62968e92fedaaa8eab454"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send request to each tracker in tracker_list.  <a href="#afbc30ba2b5f62968e92fedaaa8eab454">More...</a><br /></td></tr>
 <tr class="separator:afbc30ba2b5f62968e92fedaaa8eab454"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab1ce1ce0570dd4742e06b6941f63dbe4"><td class="memItemLeft" align="right" valign="top">uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracker.html#ab1ce1ce0570dd4742e06b6941f63dbe4">remove_duplicate_peers</a> (pwp::PeerList &amp;peer_list)</td></tr>
+<tr class="memitem:ab1ce1ce0570dd4742e06b6941f63dbe4"><td class="memItemLeft" align="right" valign="top">uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracker.html#ab1ce1ce0570dd4742e06b6941f63dbe4">remove_duplicate_peers</a> (<a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a> &amp;peer_list)</td></tr>
 <tr class="memdesc:ab1ce1ce0570dd4742e06b6941f63dbe4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove duplicate peers from a peer_list.  <a href="#ab1ce1ce0570dd4742e06b6941f63dbe4">More...</a><br /></td></tr>
 <tr class="separator:ab1ce1ce0570dd4742e06b6941f63dbe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab13f3471f16db9505c2853f4e1bde3aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracker.html#ab13f3471f16db9505c2853f4e1bde3aa">process_tracker_request</a> (const string &amp;tracker_url, const <a class="el" href="structtracker_1_1TParameter.html">TParameter</a> *param, pwp::PeerList peer_list)</td></tr>
+<tr class="memitem:ab13f3471f16db9505c2853f4e1bde3aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracker.html#ab13f3471f16db9505c2853f4e1bde3aa">process_tracker_request</a> (const string &amp;tracker_url, const <a class="el" href="structtracker_1_1TParameter.html">TParameter</a> *param, <a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a> peer_list)</td></tr>
 <tr class="memdesc:ab13f3471f16db9505c2853f4e1bde3aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main http tracker manager.  <a href="#ab13f3471f16db9505c2853f4e1bde3aa">More...</a><br /></td></tr>
 <tr class="separator:ab13f3471f16db9505c2853f4e1bde3aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0158d3629445e060aef8608eefff5f09"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracker.html#a0158d3629445e060aef8608eefff5f09">urlencode_paramenter</a> (<a class="el" href="structtracker_1_1TParameter.html">TParameter</a> *param, CURL *curl)</td></tr>
@@ -115,7 +116,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a2ceea8b68053534e15cb3ac3fd1702fb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracker.html#a2ceea8b68053534e15cb3ac3fd1702fb">check_url</a> (const string &amp;url, CURL *curl)</td></tr>
 <tr class="memdesc:a2ceea8b68053534e15cb3ac3fd1702fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the url is valid.  <a href="#a2ceea8b68053534e15cb3ac3fd1702fb">More...</a><br /></td></tr>
 <tr class="separator:a2ceea8b68053534e15cb3ac3fd1702fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac31ad1c263b18cd7885f587823514abe"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracker.html#ac31ad1c263b18cd7885f587823514abe">process_tracker_response</a> (string *response, pwp::PeerList peer_list)</td></tr>
+<tr class="memitem:ac31ad1c263b18cd7885f587823514abe"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracker.html#ac31ad1c263b18cd7885f587823514abe">process_tracker_response</a> (string *response, <a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a> peer_list)</td></tr>
 <tr class="memdesc:ac31ad1c263b18cd7885f587823514abe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse tracker response and extract peers.  <a href="#ac31ad1c263b18cd7885f587823514abe">More...</a><br /></td></tr>
 <tr class="separator:ac31ad1c263b18cd7885f587823514abe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd84715185a5e4a1351b77af43e7e01c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracker.html#afd84715185a5e4a1351b77af43e7e01c">scrape_request</a> (string &amp;url, const <a class="el" href="structtracker_1_1TParameter.html">TParameter</a> &amp;param, string *response, CURL *curl)</td></tr>
@@ -127,10 +128,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a722dfd0ec93e84bbbd448d2c9d6a9f1b"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracker.html#a722dfd0ec93e84bbbd448d2c9d6a9f1b">create_tracker_key</a> ()</td></tr>
 <tr class="memdesc:a722dfd0ec93e84bbbd448d2c9d6a9f1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the key needed for tracker protocol.  <a href="#a722dfd0ec93e84bbbd448d2c9d6a9f1b">More...</a><br /></td></tr>
 <tr class="separator:a722dfd0ec93e84bbbd448d2c9d6a9f1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38d52cf6dd86f2a26a719e285097c805"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracker.html#a38d52cf6dd86f2a26a719e285097c805">parse_dict_peer</a> (<a class="el" href="structbe__node.html">be_node</a> *node, pwp::PeerList peer_list)</td></tr>
+<tr class="memitem:a38d52cf6dd86f2a26a719e285097c805"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracker.html#a38d52cf6dd86f2a26a719e285097c805">parse_dict_peer</a> (<a class="el" href="structbe__node.html">be_node</a> *node, <a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a> peer_list)</td></tr>
 <tr class="memdesc:a38d52cf6dd86f2a26a719e285097c805"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a non compact tracker response.  <a href="#a38d52cf6dd86f2a26a719e285097c805">More...</a><br /></td></tr>
 <tr class="separator:a38d52cf6dd86f2a26a719e285097c805"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a237de4c8b0282af2d59cd5d0b7bfd1fd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracker.html#a237de4c8b0282af2d59cd5d0b7bfd1fd">parse_binary_peers</a> (const string &amp;resp, pwp::PeerList peer_list)</td></tr>
+<tr class="memitem:a237de4c8b0282af2d59cd5d0b7bfd1fd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracker.html#a237de4c8b0282af2d59cd5d0b7bfd1fd">parse_binary_peers</a> (const string &amp;resp, <a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a> peer_list)</td></tr>
 <tr class="memdesc:a237de4c8b0282af2d59cd5d0b7bfd1fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a binary tracker response.  <a href="#a237de4c8b0282af2d59cd5d0b7bfd1fd">More...</a><br /></td></tr>
 <tr class="separator:a237de4c8b0282af2d59cd5d0b7bfd1fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae542bb4bf17f34b8cadc3a4ae2f5ced2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracker.html#ae542bb4bf17f34b8cadc3a4ae2f5ced2">is_compact_response</a> (const string *response)</td></tr>
@@ -252,6 +253,7 @@ boost::mutex&#160;</td><td class="memItemRight" valign="bottom"><b>peer_list_mut
 </div><div class="memdoc">
 
 <p>Check if a response is in a compact format. </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>Improve and re-test this function</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">*response</td><td>: the response to check </td></tr>
@@ -277,7 +279,7 @@ boost::mutex&#160;</td><td class="memItemRight" valign="bottom"><b>peer_list_mut
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">pwp::PeerList&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a>&#160;</td>
           <td class="paramname"><em>peer_list</em>&#160;</td>
         </tr>
         <tr>
@@ -316,7 +318,7 @@ boost::mutex&#160;</td><td class="memItemRight" valign="bottom"><b>peer_list_mut
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">pwp::PeerList&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a>&#160;</td>
           <td class="paramname"><em>peer_list</em>&#160;</td>
         </tr>
         <tr>
@@ -333,7 +335,9 @@ boost::mutex&#160;</td><td class="memItemRight" valign="bottom"><b>peer_list_mut
 peer id: peer's self-selected ID, as described above for the tracker request (string)<br />
 ip: peer's IP address either IPv6 (hexed) or IPv4 (dotted quad) or DNS name (string)<br />
 port: peer's port number (integer)<br />
- </p><dl class="params"><dt>Parameters</dt><dd>
+ </p><dl class="bug"><dt><b><a class="el" href="bug.html#_bug000002">Bug:</a></b></dt><dd>The address of the peer could be of three types : IPv6, DNS and IPv6. Currently just IPv4 is supported. </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>Add support for IPv6 and DNS addresses.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">node</td><td>the bencoded node containing the list of dictionaries</td></tr>
   </table>
@@ -364,7 +368,7 @@ port: peer's port number (integer)<br />
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">pwp::PeerList&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a>&#160;</td>
           <td class="paramname"><em>peer_list</em>&#160;</td>
         </tr>
         <tr>
@@ -403,7 +407,7 @@ port: peer's port number (integer)<br />
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">pwp::PeerList&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a>&#160;</td>
           <td class="paramname"><em>peer_list</em>&#160;</td>
         </tr>
         <tr>
@@ -436,7 +440,7 @@ port: peer's port number (integer)<br />
         <tr>
           <td class="memname">uint tracker::remove_duplicate_peers </td>
           <td>(</td>
-          <td class="paramtype">pwp::PeerList &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a> &amp;&#160;</td>
           <td class="paramname"><em>peer_list</em></td><td>)</td>
           <td></td>
         </tr>
@@ -444,7 +448,7 @@ port: peer's port number (integer)<br />
 </div><div class="memdoc">
 
 <p>Remove duplicate peers from a peer_list. </p>
-<p>Take a PeerList and delete al duplicate elements. See the code for the method used.</p>
+<p>Take a PeerList and delete al duplicate elements. Following this response (<a href="https://stackoverflow.com/questions/1041620/whats-the-most-efficient-way-to-erase-duplicates-and-sort-a-vector">https://stackoverflow.com/questions/1041620/whats-the-most-efficient-way-to-erase-duplicates-and-sort-a-vector</a>) is better to convert the vector to a set and then convert back if the number element is low </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>The test was with integers, re-test with <a class="el" href="structpwp_1_1peer.html">pwp::peer</a></dd></dl>
 <p>/warning Unimplemented function</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -529,7 +533,7 @@ port: peer's port number (integer)<br />
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">pwp::PeerList&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a>&#160;</td>
           <td class="paramname"><em>peer_list</em>&#160;</td>
         </tr>
         <tr>
@@ -543,7 +547,7 @@ port: peer's port number (integer)<br />
 <p>Send request to each tracker in tracker_list. </p>
 <p>Read from config file (to implement) the port. Then analize the files and fill the tracker parameter structure.</p>
 <p>The appropriate tracker protocol is then choosed and executed; the parsed peers are added to the peer_list (passed by argument).</p>
-<p>/waring The config file and the "uploaded" and "downloaded" param are still unimplemented.</p>
+<p>The config file and the "uploaded" and "downloaded" param are still unimplemented. </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>Read che config parameter from a config file</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">*param</td><td>the struct containing the tracker parameter </td></tr>
@@ -652,6 +656,10 @@ port: peer's port number (integer)<br />
 <p>Create the tracker GET request. </p>
 <p>An HTTP GET request is crafted using tracker's url and request parameters</p>
 <p>In case of error the request is equal to ""</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd><p class="startdd">Improve this function parmeters, since trakcer_url is already inside <a class="el" href="structtracker_1_1TParameter.html" title="Struct contains all param to send to the tracker. ">TParameter</a> </p>
+<p>Check if tracker_url is a proper url by validating it with regex </p>
+<p class="enddd">Manage errors</p>
+</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tracker_url</td><td>tracker's url </td></tr>

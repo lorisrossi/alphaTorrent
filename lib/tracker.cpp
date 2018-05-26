@@ -27,8 +27,8 @@ namespace tracker{
      *  The appropriate tracker protocol is then choosed and executed; the parsed peers
      *  are added to the peer_list (passed by argument).
      * 
-     *  /waring The config file and the "uploaded" and "downloaded" param are still unimplemented.
-     * 
+     *  \waring The config file and the "uploaded" and "downloaded" param are still unimplemented.
+     *  \todo Read che config parameter from a config file
      * 
      *  @param *param       the struct containing the tracker parameter
      *  @param peer_id      the client generated id
@@ -97,7 +97,10 @@ namespace tracker{
      * @brief Remove duplicate peers from a peer_list
      * 
      * Take a PeerList and delete al duplicate elements.
-     * See the code for the method used.
+     * Following this response (https://stackoverflow.com/questions/1041620/whats-the-most-efficient-way-to-erase-duplicates-and-sort-a-vector)
+     * is better to convert the vector to a set and then convert back if the number element is low
+     * \todo The test was with integers, re-test with pwp::peer
+     * 
      * 
      * /warning Unimplemented function
      * 
@@ -106,11 +109,6 @@ namespace tracker{
      */
 
     uint remove_duplicate_peers(pwp::PeerList& peer_list){
-        /*  Remove duplicate peers
-        *   Following this response (https://stackoverflow.com/questions/1041620/whats-the-most-efficient-way-to-erase-duplicates-and-sort-a-vector)
-        *   is better to convert the vector to a set and then convert back if the number element is low
-        *   TODO : the test was with integers, re-test with pwp::peer
-        */
         
         DLOG(WARNING) << "REMOVE DUPLICATE PEER : Unimplemented function";
         return 0;
@@ -256,6 +254,10 @@ namespace tracker{
      * 
      *  In case of error the request is equal to ""
      *
+     *  \todo Improve this function parmeters, since trakcer_url is already inside TParameter
+     *  \todo Check if tracker_url is a proper url by validating it with regex
+     *  \todo Manage errors
+     * 
      *  @param tracker_url      tracker's url
      *  @param param            param to send to the tracker
      *  @param curl             : (Optional) curl library instance
@@ -266,9 +268,6 @@ namespace tracker{
 
     shared_ptr<string> url_builder(const string& tracker_url, const TParameter& t_param, event_type event, const string& tracker_key, CURL *curl, bool tls){
 
-        /*
-        *   TODO : Improve this function parmeters, since trakcer_url is already inside TParameter
-        */
         bool curl_passed=true;;
 
         if(curl == NULL){
@@ -296,7 +295,7 @@ namespace tracker{
         *url_req += "info_hash=" + param.info_hash;
         *url_req += "&peer_id=" + param.peer_id;
 
-        assert(param.port <= MAX_PORT_VALUE); //TODO Sostituire con un gestore dell'errore
+        assert(param.port <= MAX_PORT_VALUE); //TODO Manage with error handler
 
 
         *url_req += "&port=" + to_string(param.port);
@@ -626,6 +625,10 @@ namespace tracker{
      *  ip: peer's IP address either IPv6 (hexed) or IPv4 (dotted quad) or DNS name (string)\n
      *  port: peer's port number (integer)\n
      * 
+     *  \bug The address of the peer could be of three types : IPv6, DNS and IPv6. Currently just IPv4 is supported.
+     *  \todo Add support for IPv6 and DNS addresses.
+     * 
+     * 
      *  @param node  the bencoded node containing the list of dictionaries
      * 
      *  @return      0 on success, < 0 otherwise
@@ -734,6 +737,8 @@ namespace tracker{
 
     /**
      *  @brief Check if a response is in a compact format
+     * 
+     *  \todo Improve and re-test this function
      * 
      *  @param *response    : the response to check
      *  @return             : true if it's compact, otherwise false

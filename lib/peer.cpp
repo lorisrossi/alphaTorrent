@@ -19,7 +19,7 @@ using namespace torr;
 boost::asio::io_service _io_service;    /*!< Global IO-Service */
 
 int active_peer =0;
-boost::mutex mtx_peer_num;
+boost::mutex mtx_peer_num;              /*!< Mutex for the alive peers number */
 
 
 

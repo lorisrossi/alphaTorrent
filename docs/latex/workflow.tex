@@ -1,1 +1,57 @@
-This page contains the application workflow. 
+This page contains the application workflow.
+
+ 
+\begin{DoxyImageNoCaption}
+  \mbox{\includegraphics[width=\textwidth,height=\textheight/2,keepaspectratio=true]{alphatorrent_flowchart.svg}}
+\end{DoxyImageNoCaption}
+
+
+\begin{DoxyNote}{Note}
+The official and detailed bittorrent procotol specification could be found here \href{http://www.bittorrent.org/beps/bep_0003.html}{\tt http\+://www.\+bittorrent.\+org/beps/bep\+\_\+0003.\+html}
+\end{DoxyNote}
+\section*{Main }
+
+\subsection*{Argument Parsing }
+
+The only supported program argument is a path containing the .torrent file. By using the G\+Log logging library you could pass several flags to influence the output (See the Glog docs for details). Output verbosity could be specified for example by using the flag \char`\"{}minloglevel\char`\"{}, where the numbers of severity levels I\+N\+FO, W\+A\+R\+N\+I\+NG, E\+R\+R\+OR, and F\+A\+T\+AL are 0, 1, 2, and 3, respectively.
+
+\subsection*{Metainfo Parsing (.torrent) }
+
+The file is opened and the decoding procedure starts. The Metainfo file (also know as .torrent) is encoded with a bencoded tecnique (\href{https://en.wikipedia.org/wiki/Bencode}{\tt https\+://en.\+wikipedia.\+org/wiki/\+Bencode}). The file structure could be summarized in two parts\+:
+\begin{DoxyEnumerate}
+\item Announce \+: Contains the trackers url
+\item Info \+: A dictionary bencoded data
+\end{DoxyEnumerate}
+
+The Info parts is divided into \tabulinesep=1mm
+\begin{longtabu} spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Name }&\textbf{ Description  }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Name }&\textbf{ Description  }\\\cline{1-2}
+\endhead
+piece length &number of bytes in each piece (integer) \\\cline{1-2}
+pieces &string consisting of the concatenation of all 20-\/byte S\+H\+A1 hash values, one per piece (byte string, i.\+e. not urlencoded) \\\cline{1-2}
+\end{longtabu}
+
+
+The data is parsed using the bencode library (\href{https://sourceforge.net/p/funzix/code/ci/master/tree/bencode/}{\tt https\+://sourceforge.\+net/p/funzix/code/ci/master/tree/bencode/})
+
+\section*{Tracker }
+
+After the Metainfo file is parsed and the peer extracted the tracker procedure is called.
+
+\subsection*{Initialization }
+
+A peer list (\hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List}) is created (and allocated) inside the \char`\"{}\+Main\char`\"{} to contains the peers sended from the tracker. At the start of tracker request routine a param (\hyperlink{structtracker_1_1TParameter}{tracker\+::\+T\+Parameter}) structure is filled with configuration parameters (to be implemented).
+
+\subsection*{Announce request }
+
+A function then differentiate the tracker based on the protocol (U\+DP or H\+T\+TP) and call the appropriate function inside a thread. For detailed description of the tracker protocol manager see \hyperlink{udp_protocol}{U\+DP Protocol Specification} and . After the peer list is populated the duplicates and invalid peers are removed and thet the P\+WP protocol starts.
+
+\section*{P\+WP }
+
+\subsection*{Handshaking }
