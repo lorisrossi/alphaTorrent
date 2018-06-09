@@ -9,6 +9,7 @@
 #include "tracker.h"
 #include "tracker_udp.hpp"
 #include "peer.h"
+#include "rang.hpp"
 
 namespace tracker{
 
@@ -36,10 +37,11 @@ namespace tracker{
      *
      */
     int start_tracker_request(TParameter *param, const TList &tracker_list, pwp::PeerList peer_list){
+        using namespace rang;
 
-        // cout << endl << "----------------------------------------------------------------------";
-        // cout << endl << "--------------Peer fetching from tracker------------------------------";
-        // cout << endl << "----------------------------------------------------------------------";
+        cout << endl << rang::fg::cyan << rang::bg::gray;
+        cout << "--------------Peer fetching from tracker------------------------------";
+        cout << fg::reset << bg::reset << endl;
 
         //TODO Read this info from config files
         param->info_hash = "";
@@ -85,7 +87,7 @@ namespace tracker{
 
         remove_duplicate_peers(peer_list);
 
-        LOG(INFO) << "Found " << peer_list->size() << " available peers";
+        cout << "Found " << style::bold << fg::green <<  peer_list->size() << fg::reset << style::reset << " available peers";
 
         return 0;
     }

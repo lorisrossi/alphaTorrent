@@ -64,6 +64,8 @@ namespace fileio {
   /**
    * @brief Initialize bitfield of a torrent, checking the pieces already downloaded.
    * 
+   * \todo Improve by using thread
+   * 
    * @param torrent  Torrent struct
    */
   void init_bitfield(Torrent &torrent) {

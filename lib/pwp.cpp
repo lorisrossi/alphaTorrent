@@ -6,7 +6,7 @@
 #include "peer.h"
 #include "filehandler.hpp"
 #include "torrentparser.hpp"
-
+#include "rang.hpp"
 
 
 using namespace torr;
@@ -87,6 +87,7 @@ namespace pwp_msg{
 
 
     /**
+     *  @brief Starts Keep-Alive request loop 
      *  Start the timer that each KEEP_ALIVE_TIME send a Keep-alive request
      * 
      *  @param peer_c   The peer's connection structure
@@ -199,10 +200,20 @@ namespace pwp_msg{
             LOG(ERROR) << peer_c.peer_.addr << ' ' << e.what() << endl;
             return -3;
         }
+
+        cout << endl << string_to_hex(response) << endl;
+
         uint8_t msg_id = response[4];
         if (msg_id != pwp_msg::bitfield) {
-            cout << peer_c.peer_.addr << " Error reading bitfield, abort.\n";
-            return -1;
+
+            if(response[3] == 1){
+                cout << peer_c.peer_.addr << "Received Choke request---------------" << endl;
+            }else{
+                cout << peer_c.peer_.addr << " Error reading bitfield, abort. Message ID : " << to_string(msg_id) << "\n";
+                return -1;
+            }
+
+
         }
 
         uint32_t bit_len = (response[0] << 24 | response[1] << 16 | response[2] << 8 | response[3]) - 1;
@@ -266,6 +277,7 @@ namespace pwp_msg{
     void read_msg_handler(std::vector<uint8_t>& response, pwp::peer_connection& peer_c, Torrent &torrent, bool& dead_peer,  boost::asio::deadline_timer &timer_, const boost::system::error_code& error, size_t bytes_read){
         using namespace std;
         using namespace boost::asio;
+        using namespace rang;
 
         uint32_t msg_len = response[0] << 24 | response[1] << 16 | response[2] << 8 | response[3];
         uint8_t msg_id;
@@ -294,12 +306,12 @@ namespace pwp_msg{
 
             case pwp_msg::chocked:
                 peer_c.pstate.peer_choking = true;
-                cout << setw(15) << left << peer_c.peer_.addr << " CHOKED, stop sending requests" << endl;
+                cout << setw(15) << left << peer_c.peer_.addr << bg::magenta << " CHOKED" << bg::reset << ", stop sending requests" << endl;
                 break;
 
             case pwp_msg::unchocked:
                 peer_c.pstate.peer_choking = false;
-                cout << setw(15) << left << peer_c.peer_.addr << " UNCHOKED received" << endl;
+                cout << setw(15) << left << peer_c.peer_.addr << bg::magenta << " UNCHOKED " << bg::reset << "received" << endl;
                 break;
             
             case pwp_msg::interested:
@@ -322,7 +334,7 @@ namespace pwp_msg{
                 }
                 uint32_t piece = response[0] << 24 | response[1] << 16 | response[2] << 8 | response[3];
                 
-                cout << setw(15) << left << peer_c.peer_.addr << " HAVE piece n°" << piece << endl;
+                cout << setw(15) << left << peer_c.peer_.addr << bg::green << " HAVE " << bg::reset << "piece n°" << piece << endl;
                 if (piece < (torrent.num_pieces/8 +1)) {
                     peer_c.bitfield.set(piece);
                 }
@@ -364,7 +376,7 @@ namespace pwp_msg{
                     dead_peer = true;
                     return;
                 }
-                cout << setw(15) << left << peer_c.peer_.addr << " PIECE received, index: "
+                cout << setw(15) << left << peer_c.peer_.addr << bg::cyan << " PIECE " << bg::reset << "received, index: "
                     << index  << ", begin: " << begin << ", length: " << piece_len << endl;
 
                 char *blockdata = reinterpret_cast<char*>(response.data());

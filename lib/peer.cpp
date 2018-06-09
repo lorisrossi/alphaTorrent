@@ -11,6 +11,7 @@
 
 #include "peer.h"
 #include "pwp.hpp"
+#include "rang.hpp"
 
 
 using namespace std;
@@ -165,7 +166,7 @@ namespace pwp{
 
     void pwp_protocol_manager(pwp::peer peer_, const std::vector<uint8_t> &handshake, const char *info_hash, Torrent &torrent){
             
-        std::vector<uint8_t> response = std::vector<uint8_t>(512);
+        std::vector<uint8_t> response = std::vector<uint8_t>(64);
 
         pwp::peer_connection peer_conn = {
             peer_,             //Peer Data
@@ -174,8 +175,6 @@ namespace pwp{
             boost::dynamic_bitset<>(),
             nullptr,                    //Socket pointer
         };
-
-        // cout << endl << "Creating socket" << endl;
 
         int error_code = create_socket(peer_conn);
 
@@ -189,26 +188,30 @@ namespace pwp{
         int result = send_handshake(peer_conn, handshake, response);
 
         if(result < 0){
-            LOG(ERROR) << "Exit thread ";
+            LOG(ERROR) << "Exit thread ";   
             return;
         }
         
-        // cout << endl << "Handshake received" << endl;
-
         //If there was no error (result >= 0) thet it's value is the length of the received handshake
         size_t len = result;        
 
         result = verify_handshake(response, len, peer_conn.peer_, info_hash);
 
         if(result < 0){
-            LOG(ERROR) << "[X] Handshake verification failed!! \t Code : " << result;
+            LOG(ERROR) << rang::fg::red << "[X] Handshake verification failed!! \t Code : " << result << rang::fg::reset;
             return;
         }
 
-        cout << peer_.addr.to_string() << " handshake done succesfully" << endl;
+        cout << peer_.addr.to_string() << rang::fg::green <<  " handshake done succesfully" << rang::fg::reset << endl;
 
         add_active_peer();  //The current peer is valid
 
+        result = pwp_msg::get_bitfield(peer_conn, torrent);
+        if(result < 0){
+            LOG(ERROR) << "Bitfield not sended, exit\n";
+            //rm_active_peer();
+            //return;
+        }
 
         if(pwp_msg::send_msg(peer_conn, pwp_msg::interested_msg) < 0)
             LOG(ERROR) << "Error sending interested_msg";
@@ -219,11 +222,7 @@ namespace pwp{
         LOG(INFO) << "Keep-Alive enabled";
         pwp_msg::enable_keep_alive_message(peer_conn);
 
-        result = pwp_msg::get_bitfield(peer_conn, torrent);
-        if(result < 0){
-            LOG(ERROR) << "Bitfield error, exit\n";
-            return;
-        }
+
 
         boost::asio::deadline_timer timer_(_io_service);
         boost::system::error_code ec = boost::asio::error::would_block;
@@ -269,7 +268,7 @@ namespace pwp{
             return;
         }
 
-        cout << endl << "DEAD-PEER - Exiting" << endl;
+        cout << endl << rang::fg::red << "DEAD-PEER - Exiting" << rang::fg::reset << endl;
         peer_conn.socket->close();
         rm_active_peer();
         return;

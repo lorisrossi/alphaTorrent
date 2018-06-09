@@ -23,10 +23,12 @@
 #include "filehandler.hpp"
 #include "peer.h"
 #include "pwp.hpp"  //For is_inv_address
+#include "rang.hpp"
 
 using namespace std;
 using namespace torr;
 using namespace fileio;
+using namespace rang;
 
 #define PEER_TREESHOLD 10
 
@@ -67,45 +69,60 @@ int main(int argc, char* argv[]) {
   pwp::PeerList peer_list = make_shared<vector<pwp::peer>>(); //Pre-Allocate the peers list
   boost::thread_group t_group;  //Thread Group for managing the peers
 
-  do{
+  while(1){
 
-    peer_list->clear();
-    peer_list->resize(10);
+    while(active_peer < PEER_TREESHOLD){
+
+      peer_list->clear();
+      peer_list->resize(10);
+      
+      //Start contacting the tracker
+
+      cout << fg::gray << bg::magenta << "Start Tracker Request\n" << style::reset << bg::reset;
+      int error_code = start_tracker_request(&param, mytorrent.trackers, peer_list);  
+      if(error_code < 0){
+        return -3;  //Error while encoding param, exit 
+      }
+
+      pwp::remove_invalid_peer(peer_list);
+
+      cout << "Building handshake...";
+      std::vector<uint8_t> handshake = std::vector<uint8_t>();
+      pwp::build_handshake(param.info_hash_raw, handshake);
+
+
+      //Start the PWP protocol with the peers
+
+      vector<pwp::peer>::iterator it = peer_list->begin();
+
+      for(;it != peer_list->end(); ++it){
+          if(!is_inv_address(it->addr)){
+            cout<< "Starting executing the protocol with " << it->addr.to_string() << ":" << it->port << "... " << endl;
+            t_group.add_thread(new boost::thread( &pwp::pwp_protocol_manager, *it, handshake, param.info_hash_raw, mytorrent));
+          }
+      }
+
+      if(_io_service.stopped()){
+          cout << endl << endl << "-------------------------STOPPED-----------------------" << endl;
+          _io_service.reset();
+          _io_service.run();
+      }
+      boost::this_thread::sleep_for(boost::chrono::seconds(10));  //Sleep for 10 seconds
+
+
+    };
+
+    cout << "--------------------EXITED : " << to_string(active_peer) << "------------------------" << endl;
     
-    //Start contacting the tracker
-    int error_code = start_tracker_request(&param, mytorrent.trackers, peer_list);  
-    if(error_code < 0){
-      return -3;  //Error while encoding param, exit 
+    
+    if(t_group.size() > active_peer){
+      cout << endl << "More thread than active peers!!!!!\t" << t_group.size() << endl;
+
     }
-
-    pwp::remove_invalid_peer(peer_list);
-
-    cout << "Building handshake...";
-    std::vector<uint8_t> handshake = std::vector<uint8_t>();
-    pwp::build_handshake(param.info_hash_raw, handshake);
-
-
-    //Start the PWP protocol with the peers
-
-    vector<pwp::peer>::iterator it = peer_list->begin();
-
-    for(;it != peer_list->end(); ++it){
-        if(!is_inv_address(it->addr)){
-          cout<< "Starting executing the protocol with " << it->addr.to_string() << ":" << it->port << "... " << endl;
-          t_group.add_thread(new boost::thread( &pwp::pwp_protocol_manager, *it, handshake, param.info_hash_raw, mytorrent));
-        }
-    }
-
-    if(_io_service.stopped()){
-        _io_service.reset();
-        _io_service.run();
-    }
-    boost::this_thread::sleep_for(boost::chrono::seconds(5));  //Sleep for 5 seconds
-
-
-  }while(active_peer < PEER_TREESHOLD);
-
+    boost::this_thread::sleep_for(boost::chrono::seconds(5));
+  }
   t_group.join_all();
+
 
 
   if(param.info_hash_raw != nullptr)
