@@ -51,9 +51,58 @@
 
     PWP
     ================
+
+    Introduction
+    ----------------
+    The procotol works by exchanging messages with other peer and by mantaining a *state* describing the peer connection state.
+
+    For each peer connection, the client should know
+    -am_chocking : If the client is chocking the peer
+    -am_interested : If the client is interested in the peer
+    -peer_choking : If the peer is chocking the client
+    -peer_interested : If the peer is interested 
+
+
+    \Warning During the protocol execution, all integers in the peer wire protocol are encoded as four byte big-endian values.
+
+
     Handshaking
     ----------------
+    After enstablishing a connection, the first thing to do according to the protocol is the handshake procedure.
+    The handshake is crafted referring to this table
+
+    Name        | Size | Description
+    ------------|------|---------------
+    pstrlen     | 1    | string length of <pstr>, as a single raw byte (19)
+    pstr        | 19   | the string "BitTorrent protocol"
+    reserved    | 8    |  eight (8) reserved bytes.
+    info_hash   | 20   | 20-byte SHA1 hash of the info key in the metainfo file.
+    peer_id     | 20   | Peer-ID string 
+
+    The reserved bytes is tipically used to communicate that the client is capable of managing a non-standard protocol by setting a specific bit to 1
+    alphaTorrent simply print a warning in case of a non-standard client is communicating.
+
+    So after sending the handshake request, the client listen for a response, and when arrives, it start the @ref pwp::verify_handshake routing,
+    which basically check if all element of the table is valid (according to the protocol).
+
+    \note 
+    Because peer-ID matching often fail during live test, in case of a non matching id nothing is done (excepting print a warning).
 
 
+    Pre-Loop phase
+    -----------------
+    After the handshake procedure is completed, the peer is flagged as "active_peer" and some messages are exchanged before starting donwload/upload pieces.
+
+    First of all, the client should check if a bitfiled was sended by the peer. This part is optional so it must be properly handled.
+    Then an "interested" and "unchocked" message are sended in order to enable piece downloading from the peer.
+    A timer which call the @ref pwp_msg::send_keep_alive is started in order to avoid a connection closing.
+
+    PWP Loop
+    ----------------
+    The PWP loop consist in two parts :
+        -Async Receive 
+        -Sync Send
+
+    
 
  */

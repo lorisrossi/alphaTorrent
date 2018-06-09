@@ -276,7 +276,7 @@ namespace pwp{
 
 
     /**
-     *  Create the handshake for a file
+     *  @brief Create the handshake for a file
      *  
      *  @param info_hash the info_hash of the file
      *  @param handshake the destination array for the handshake
@@ -421,7 +421,7 @@ namespace pwp{
      *  -4         | Peer ID does not match (Bypassed)
      * 
      *  \warning The comparison of the *peer-ID* often fail so it's skipped (no return -4)
-     *   
+     *  \bug     peer-ID is checked but nothing is done in case of failing 
      *  @param handshake : the handshake to check 
      *  @param t_peer    : the peer who sended the handshake
      *  @param info_hash : the info_hash of the file

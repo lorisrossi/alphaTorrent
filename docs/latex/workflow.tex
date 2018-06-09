@@ -54,4 +54,47 @@ A function then differentiate the tracker based on the protocol (U\+DP or H\+T\+
 
 \section*{P\+WP }
 
+\subsection*{Introduction }
+
+The procotol works by exchanging messages with other peer and by mantaining a {\itshape state} describing the peer connection state.
+
+For each peer connection, the client should know -\/am\+\_\+chocking \+: If the client is chocking the peer -\/am\+\_\+interested \+: If the client is interested in the peer -\/peer\+\_\+choking \+: If the peer is chocking the client -\/peer\+\_\+interested \+: If the peer is interested
+
+During the protocol execution, all integers in the peer wire protocol are encoded as four byte big-\/endian values.
+
 \subsection*{Handshaking }
+
+After enstablishing a connection, the first thing to do according to the protocol is the handshake procedure. The handshake is crafted referring to this table
+
+\tabulinesep=1mm
+\begin{longtabu} spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Name }&\textbf{ Size }&\textbf{ Description  }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Name }&\textbf{ Size }&\textbf{ Description  }\\\cline{1-3}
+\endhead
+pstrlen &1 &string length of $<$pstr$>$, as a single raw byte (19) \\\cline{1-3}
+pstr &19 &the string \char`\"{}\+Bit\+Torrent protocol\char`\"{} \\\cline{1-3}
+reserved &8 &eight (8) reserved bytes. \\\cline{1-3}
+info\+\_\+hash &20 &20-\/byte S\+H\+A1 hash of the info key in the metainfo file. \\\cline{1-3}
+peer\+\_\+id &20 &Peer-\/\+ID string \\\cline{1-3}
+\end{longtabu}
+The reserved bytes is tipically used to communicate that the client is capable of managing a non-\/standard protocol by setting a specific bit to 1 alpha\+Torrent simply print a warning in case of a non-\/standard client is communicating.
+
+So after sending the handshake request, the client listen for a response, and when arrives, it start the \hyperlink{namespacepwp_a58c780495f2139a56b95662dc7c0345f}{pwp\+::verify\+\_\+handshake} routing, which basically check if all element of the table is valid (according to the protocol).
+
+\begin{DoxyNote}{Note}
+Because peer-\/\+ID matching often fail during live test, in case of a non matching id nothing is done (excepting print a warning).
+\end{DoxyNote}
+\subsection*{Pre-\/\+Loop phase }
+
+After the handshake procedure is completed, the peer is flagged as \char`\"{}active\+\_\+peer\char`\"{} and some messages are exchanged before starting donwload/upload pieces.
+
+First of all, the client should check if a bitfiled was sended by the peer. This part is optional so it must be properly handled. Then an \char`\"{}interested\char`\"{} and \char`\"{}unchocked\char`\"{} message are sended in order to enable piece downloading from the peer. A timer which call the \hyperlink{namespacepwp__msg_a9a577f5a53b823d83bb4694f1ebf141e}{pwp\+\_\+msg\+::send\+\_\+keep\+\_\+alive} is started in order to avoid a connection closing.
+
+\subsection*{P\+WP Loop }
+
+The P\+WP loop consist in two parts \+: -\/\+Async Receive -\/\+Sync Send 

@@ -3,6 +3,8 @@ A simple BitTorrent Client.
 
 Project for the Computer Networks course held by A. Mancini at Univpm
 
+For detailed documentation check https://lorisrossi.github.io/alphaTorrent/
+
 ### Dependencies
 
 The client needs OpenSSL, Boost libraries and glog.

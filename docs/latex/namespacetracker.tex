@@ -137,7 +137,7 @@ a pointer to the new url or nullptr if the tracker doesn\textquotesingle{}t supp
 Check if a response is in a compact format. 
 
 \begin{DoxyRefDesc}{Todo}
-\item[\hyperlink{todo__todo000005}{Todo}]Improve and re-\/test this function\end{DoxyRefDesc}
+\item[\hyperlink{todo__todo000006}{Todo}]Improve and re-\/test this function\end{DoxyRefDesc}
 
 
 
@@ -185,9 +185,9 @@ peer id\+: peer\textquotesingle{}s self-\/selected ID, as described above for th
 ip\+: peer\textquotesingle{}s IP address either I\+Pv6 (hexed) or I\+Pv4 (dotted quad) or D\+NS name (string)~\newline
 port\+: peer\textquotesingle{}s port number (integer)~\newline
  \begin{DoxyRefDesc}{Bug}
-\item[\hyperlink{bug__bug000002}{Bug}]The address of the peer could be of three types \+: I\+Pv6, D\+NS and I\+Pv6. Currently just I\+Pv4 is supported. \end{DoxyRefDesc}
+\item[\hyperlink{bug__bug000003}{Bug}]The address of the peer could be of three types \+: I\+Pv6, D\+NS and I\+Pv6. Currently just I\+Pv4 is supported. \end{DoxyRefDesc}
 \begin{DoxyRefDesc}{Todo}
-\item[\hyperlink{todo__todo000004}{Todo}]Add support for I\+Pv6 and D\+NS addresses.\end{DoxyRefDesc}
+\item[\hyperlink{todo__todo000005}{Todo}]Add support for I\+Pv6 and D\+NS addresses.\end{DoxyRefDesc}
 
 
 
@@ -252,7 +252,7 @@ int 0 on success, $<$0 otherwise
 Remove duplicate peers from a peer\+\_\+list. 
 
 Take a Peer\+List and delete al duplicate elements. Following this response (\href{https://stackoverflow.com/questions/1041620/whats-the-most-efficient-way-to-erase-duplicates-and-sort-a-vector}{\tt https\+://stackoverflow.\+com/questions/1041620/whats-\/the-\/most-\/efficient-\/way-\/to-\/erase-\/duplicates-\/and-\/sort-\/a-\/vector}) is better to convert the vector to a set and then convert back if the number element is low \begin{DoxyRefDesc}{Todo}
-\item[\hyperlink{todo__todo000002}{Todo}]The test was with integers, re-\/test with \hyperlink{structpwp_1_1peer}{pwp\+::peer}\end{DoxyRefDesc}
+\item[\hyperlink{todo__todo000003}{Todo}]The test was with integers, re-\/test with \hyperlink{structpwp_1_1peer}{pwp\+::peer}\end{DoxyRefDesc}
 
 
 /warning Unimplemented function
@@ -304,7 +304,7 @@ Read from config file (to implement) the port. Then analize the files and fill t
 The appropriate tracker protocol is then choosed and executed; the parsed peers are added to the peer\+\_\+list (passed by argument).
 
 The config file and the \char`\"{}uploaded\char`\"{} and \char`\"{}downloaded\char`\"{} param are still unimplemented. \begin{DoxyRefDesc}{Todo}
-\item[\hyperlink{todo__todo000001}{Todo}]Read che config parameter from a config file\end{DoxyRefDesc}
+\item[\hyperlink{todo__todo000002}{Todo}]Read che config parameter from a config file\end{DoxyRefDesc}
 
 
 
@@ -351,7 +351,7 @@ An H\+T\+TP G\+ET request is crafted using tracker\textquotesingle{}s url and re
 In case of error the request is equal to \char`\"{}\char`\"{}
 
 \begin{DoxyRefDesc}{Todo}
-\item[\hyperlink{todo__todo000003}{Todo}]Improve this function parmeters, since trakcer\+\_\+url is already inside \hyperlink{structtracker_1_1TParameter}{T\+Parameter} 
+\item[\hyperlink{todo__todo000004}{Todo}]Improve this function parmeters, since trakcer\+\_\+url is already inside \hyperlink{structtracker_1_1TParameter}{T\+Parameter} 
 
 Check if tracker\+\_\+url is a proper url by validating it with regex 
 
