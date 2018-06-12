@@ -118,7 +118,12 @@ $(function() {
 <p>After the handshake procedure is completed, the peer is flagged as "active_peer" and some messages are exchanged before starting donwload/upload pieces.</p>
 <p>First of all, the client should check if a bitfiled was sended by the peer. This part is optional so it must be properly handled. Then an "interested" and "unchocked" message are sended in order to enable piece downloading from the peer. A timer which call the <a class="el" href="namespacepwp__msg.html#a9a577f5a53b823d83bb4694f1ebf141e">pwp_msg::send_keep_alive</a> is started in order to avoid a connection closing.</p>
 <h2>PWP Loop </h2>
-<p>The PWP loop consist in two parts : -Async Receive -Sync Send </p>
+<p>The PWP loop consist in two parts :</p><ul>
+<li>Async Receive</li>
+<li>Sync Send</li>
+</ul>
+<p>The <b>async handler</b>(pwp::read_msg_handler) is called when 4 bytes are received. After checking that the msg_len is greater than zero, a new byte (the msg_id[<a class="el" href="namespacepwp__msg.html#a0b9a29508f00a30e5138d2b78f4b1daf">pwp_msg::msg_id</a>]) is readed. The message is then switched based on its id. If a message like "(not) interested" and "(un)chocked" is received then the conresponding structure inside the <a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> is updated (client_state and peer_state). </p><dl class="section note"><dt>Note</dt><dd>REQUEST, PORT and CANCEL message are ignored since seeding is not supported. When a PIECE message arrives the response is passeto to the <a class="el" href="namespacefileio.html#acc37418d350d6d36c3f691c99de9cf39">fileio::save_block</a> function wich is responsible of putting the piece in the right position inside the file. After finishing the procedure, another async read is started in order to continually parse received data.</dd></dl>
+<p>The <b>Sync Sender</b> insted is placed inside a loop that exit only if the send fails (dead peer). The <a class="el" href="namespacepwp__msg.html#ab578b213d293636d33efc24382f16b25">pwp_msg::sender</a> simply compare the bitfiled of the peer with the client ones and send a REQUEST message to the peer referring to the client's missing pieces. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

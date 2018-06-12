@@ -100,9 +100,21 @@
     PWP Loop
     ----------------
     The PWP loop consist in two parts :
-        -Async Receive 
-        -Sync Send
+        - Async Receive 
+        - Sync Send
 
-    
+    The **async handler**(@ref pwp::read_msg_handler) is called when 4 bytes are received. After checking that the msg_len is greater than zero, a new byte (the msg_id[@ref pwp_msg::msg_id]) is readed.
+    The message is then switched based on its id. If a message like "(not) interested" and "(un)chocked" is received then the conresponding structure inside 
+    the @ref pwp::peer_connection is updated (client_state and peer_state).
+    \note REQUEST, PORT and CANCEL message are ignored since seeding is not supported.
+    When a PIECE message arrives the response is passeto to the @ref fileio::save_block function wich is responsible of
+    putting the piece in the right position inside the file.
+    After finishing the procedure, another async read is started in order to continually parse received data.
+
+    The **Sync Sender** insted is placed inside a loop that exit only if the send fails (dead peer).
+    The @ref pwp_msg::sender simply compare the bitfiled of the peer with the client ones and send a REQUEST message to the peer
+    referring to the client's missing pieces.
+
+
 
  */

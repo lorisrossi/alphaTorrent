@@ -1,15 +1,4 @@
-/*! \mainpage alphaTorrent Documentation
- *
- * \section intro_sec Introduction
- *
- * alphaTorrent is a CLI program that allow to download files by passing a .torrent file.
- *
- * \section install_sec Installation
- *
- * \subsection step1 Step 1: Clone the repository
- *
- * 
- */
+
 
 
 

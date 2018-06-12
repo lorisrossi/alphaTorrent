@@ -281,6 +281,15 @@ namespace pwp_msg{
 
         uint32_t msg_len = response[0] << 24 | response[1] << 16 | response[2] << 8 | response[3];
         uint8_t msg_id;
+
+        if(dead_peer){
+            cout << endl << "----------Closing  socket -------------------" << endl;
+            peer_c.socket->close();
+            return;
+        }
+
+
+
         if (msg_len > 0) {
             try{
                 boost::asio::read(*(peer_c.socket), buffer(response), transfer_exactly(1));
@@ -483,7 +492,8 @@ namespace pwp_msg{
             else {
                 peer_conn.cstate.am_interested = false;
             }
+            return 0;
         }
-        return 0;
+        //return -1; //Check Here
     }
 }

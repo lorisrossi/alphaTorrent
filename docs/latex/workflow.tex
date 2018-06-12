@@ -97,4 +97,13 @@ First of all, the client should check if a bitfiled was sended by the peer. This
 
 \subsection*{P\+WP Loop }
 
-The P\+WP loop consist in two parts \+: -\/\+Async Receive -\/\+Sync Send 
+The P\+WP loop consist in two parts \+:
+\begin{DoxyItemize}
+\item Async Receive
+\item Sync Send
+\end{DoxyItemize}
+
+The {\bfseries async handler}(pwp\+::read\+\_\+msg\+\_\+handler) is called when 4 bytes are received. After checking that the msg\+\_\+len is greater than zero, a new byte (the msg\+\_\+id\mbox{[}\hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1daf}{pwp\+\_\+msg\+::msg\+\_\+id}\mbox{]}) is readed. The message is then switched based on its id. If a message like \char`\"{}(not) interested\char`\"{} and \char`\"{}(un)chocked\char`\"{} is received then the conresponding structure inside the \hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} is updated (client\+\_\+state and peer\+\_\+state). \begin{DoxyNote}{Note}
+R\+E\+Q\+U\+E\+ST, P\+O\+RT and C\+A\+N\+C\+EL message are ignored since seeding is not supported. When a P\+I\+E\+CE message arrives the response is passeto to the \hyperlink{namespacefileio_acc37418d350d6d36c3f691c99de9cf39}{fileio\+::save\+\_\+block} function wich is responsible of putting the piece in the right position inside the file. After finishing the procedure, another async read is started in order to continually parse received data.
+\end{DoxyNote}
+The {\bfseries Sync Sender} insted is placed inside a loop that exit only if the send fails (dead peer). The \hyperlink{namespacepwp__msg_ab578b213d293636d33efc24382f16b25}{pwp\+\_\+msg\+::sender} simply compare the bitfiled of the peer with the client ones and send a R\+E\+Q\+U\+E\+ST message to the peer referring to the client\textquotesingle{}s missing pieces. 

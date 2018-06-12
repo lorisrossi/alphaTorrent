@@ -1,3 +1,38 @@
 \hypertarget{index_intro_sec}{}\section{Introduction}\label{index_intro_sec}
-alpha\+Torrent is a C\+LI program that allow to download files by passing a .torrent file.\hypertarget{index_install_sec}{}\section{Installation}\label{index_install_sec}
+alpha\+Torrent is a C\+LI program that allow to download files by passing a .torrent file. For a detailed explaination of the application workflow see \hyperlink{workflow}{Application workflow}. \hypertarget{index_install_sec}{}\section{Installation}\label{index_install_sec}
 \hypertarget{index_step1}{}\subsection{Step 1\+: Clone the repository}\label{index_step1}
+
+\begin{DoxyCode}
+git clone https:\textcolor{comment}{//github.com/lorisrossi/alphaTorrent.git}
+\end{DoxyCode}
+\hypertarget{index_step21}{}\subsection{Step2\+: Install dependencies (\+Linux)}\label{index_step21}
+This command will install the openssl, boost and glog libraries 
+\begin{DoxyCode}
+sudo apt-\textcolor{keyword}{get} install libssl-dev libboost-all-dev libgoogle-glog-dev
+\end{DoxyCode}
+\hypertarget{index_step22}{}\subsection{Step2\+: Install dependencies (\+Mac O\+S X)}\label{index_step22}
+This command will install the openssl 
+\begin{DoxyCode}
+brew install openssl
+cd /usr/local/include
+ln -s ../opt/openssl/include/openssl .
+\end{DoxyCode}
+ Boost 
+\begin{DoxyCode}
+brew install boost
+\end{DoxyCode}
+ Glog 
+\begin{DoxyCode}
+brew install glog
+\end{DoxyCode}
+\hypertarget{index_compiling}{}\subsection{Compiling}\label{index_compiling}
+Go to the main folder and execute 
+\begin{DoxyCode}
+make
+\end{DoxyCode}
+\hypertarget{index_usage}{}\section{Usage}\label{index_usage}
+
+\begin{DoxyCode}
+./alphatorrent-cli torrent-file.torrent
+\end{DoxyCode}
+ 

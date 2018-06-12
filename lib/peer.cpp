@@ -264,12 +264,15 @@ namespace pwp{
         }catch(std::exception& e){
             LOG(ERROR) << peer_.addr << ' ' << e.what() << std::endl;
             rm_active_peer();
-            peer_conn.socket->close();
+            //peer_conn.socket->close();
             return;
         }
 
         cout << endl << rang::fg::red << "DEAD-PEER - Exiting" << rang::fg::reset << endl;
-        peer_conn.socket->close();
+        //peer_conn.socket->close();
+        while(peer_conn.socket->is_open()){
+            boost::this_thread::sleep_for(boost::chrono::milliseconds(100));            
+        }
         rm_active_peer();
         return;
     }
