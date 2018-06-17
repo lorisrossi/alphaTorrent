@@ -43,6 +43,10 @@ tracker::TParameter set_parameter(const string& torrent_str, const Torrent& torr
 }
 
 
+void innerrupt_handler();
+
+
+
 int main(int argc, char* argv[]) {
 
   if (argc <= 1) {
@@ -69,9 +73,7 @@ int main(int argc, char* argv[]) {
   pwp::PeerList peer_list = make_shared<vector<pwp::peer>>(); //Pre-Allocate the peers list
   boost::thread_group t_group;  //Thread Group for managing the peers
 
-  while(1){
-
-    while(active_peer < PEER_TREESHOLD){
+  do{
 
       peer_list->clear();
       peer_list->resize(10);
@@ -109,18 +111,7 @@ int main(int argc, char* argv[]) {
       }
       boost::this_thread::sleep_for(boost::chrono::seconds(10));  //Sleep for 10 seconds
 
-
-    };
-
-    cout << "--------------------EXITED : " << to_string(active_peer) << "------------------------" << endl;
-    
-    
-    if(t_group.size() > active_peer){
-      cout << endl << "More thread than active peers!!!!!\t" << t_group.size() << endl;
-
-    }
-    boost::this_thread::sleep_for(boost::chrono::seconds(5));
-  }
+  }while(active_peer < PEER_TREESHOLD);
   t_group.join_all();
 
 

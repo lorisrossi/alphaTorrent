@@ -205,13 +205,13 @@ namespace pwp_msg{
 
         uint8_t msg_id = response[4];
         if (msg_id != pwp_msg::bitfield) {
-
+/*
             if(response[3] == 1){
                 cout << peer_c.peer_.addr << "Received Choke request---------------" << endl;
-            }else{
+            }else{*/
                 cout << peer_c.peer_.addr << " Error reading bitfield, abort. Message ID : " << to_string(msg_id) << "\n";
                 return -1;
-            }
+            //}
 
 
         }

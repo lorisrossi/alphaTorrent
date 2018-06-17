@@ -166,7 +166,7 @@ namespace pwp{
 
     void pwp_protocol_manager(pwp::peer peer_, const std::vector<uint8_t> &handshake, const char *info_hash, Torrent &torrent){
             
-        std::vector<uint8_t> response = std::vector<uint8_t>(64);
+        std::vector<uint8_t> response = std::vector<uint8_t>(512);
 
         pwp::peer_connection peer_conn = {
             peer_,             //Peer Data
@@ -206,13 +206,6 @@ namespace pwp{
 
         add_active_peer();  //The current peer is valid
 
-        result = pwp_msg::get_bitfield(peer_conn, torrent);
-        if(result < 0){
-            LOG(ERROR) << "Bitfield not sended, exit\n";
-            //rm_active_peer();
-            //return;
-        }
-
         if(pwp_msg::send_msg(peer_conn, pwp_msg::interested_msg) < 0)
             LOG(ERROR) << "Error sending interested_msg";
 
@@ -222,7 +215,12 @@ namespace pwp{
         LOG(INFO) << "Keep-Alive enabled";
         pwp_msg::enable_keep_alive_message(peer_conn);
 
-
+        result = pwp_msg::get_bitfield(peer_conn, torrent);
+        if(result < 0){
+            LOG(ERROR) << "Bitfield not sended, exit\n";
+            //rm_active_peer();
+            //return;
+        }
 
         boost::asio::deadline_timer timer_(_io_service);
         boost::system::error_code ec = boost::asio::error::would_block;
