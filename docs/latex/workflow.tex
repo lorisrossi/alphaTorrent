@@ -1,57 +1,55 @@
-This page contains the application workflow.
+\section*{P\+WP }
 
- 
-\begin{DoxyImageNoCaption}
-  \mbox{\includegraphics[width=\textwidth,height=\textheight/2,keepaspectratio=true]{alphatorrent_flowchart.svg}}
-\end{DoxyImageNoCaption}
+\subsection*{Introduction }
 
+The procotol works by exchanging messages with other peer and by mantaining a {\itshape state} describing the peer connection state.
 
-\begin{DoxyNote}{Note}
-The official and detailed bittorrent procotol specification could be found here \href{http://www.bittorrent.org/beps/bep_0003.html}{\tt http\+://www.\+bittorrent.\+org/beps/bep\+\_\+0003.\+html}
-\end{DoxyNote}
-\section*{Main }
+For each peer connection, the client should know -\/am\+\_\+chocking \+: If the client is chocking the peer -\/am\+\_\+interested \+: If the client is interested in the peer -\/peer\+\_\+choking \+: If the peer is chocking the client -\/peer\+\_\+interested \+: If the peer is interested
 
-\subsection*{Argument Parsing }
+During the protocol execution, all integers in the peer wire protocol are encoded as four byte big-\/endian values.
 
-The only supported program argument is a path containing the .torrent file. By using the G\+Log logging library you could pass several flags to influence the output (See the Glog docs for details). Output verbosity could be specified for example by using the flag \char`\"{}minloglevel\char`\"{}, where the numbers of severity levels I\+N\+FO, W\+A\+R\+N\+I\+NG, E\+R\+R\+OR, and F\+A\+T\+AL are 0, 1, 2, and 3, respectively.
+\subsection*{Handshaking }
 
-\subsection*{Metainfo Parsing (.torrent) }
+After enstablishing a connection, the first thing to do according to the protocol is the handshake procedure. The handshake is crafted referring to this table
 
-The file is opened and the decoding procedure starts. The Metainfo file (also know as .torrent) is encoded with a bencoded tecnique (\href{https://en.wikipedia.org/wiki/Bencode}{\tt https\+://en.\+wikipedia.\+org/wiki/\+Bencode}). The file structure could be summarized in two parts\+:
-\begin{DoxyEnumerate}
-\item Announce \+: Contains the trackers url
-\item Info \+: A dictionary bencoded data
-\end{DoxyEnumerate}
-
-The Info parts is divided into \tabulinesep=1mm
-\begin{longtabu} spread 0pt [c]{*{2}{|X[-1]}|}
+\tabulinesep=1mm
+\begin{longtabu} spread 0pt [c]{*{3}{|X[-1]}|}
 \hline
-\rowcolor{\tableheadbgcolor}\textbf{ Name }&\textbf{ Description  }\\\cline{1-2}
+\rowcolor{\tableheadbgcolor}\textbf{ Name }&\textbf{ Size }&\textbf{ Description  }\\\cline{1-3}
 \endfirsthead
 \hline
 \endfoot
 \hline
-\rowcolor{\tableheadbgcolor}\textbf{ Name }&\textbf{ Description  }\\\cline{1-2}
+\rowcolor{\tableheadbgcolor}\textbf{ Name }&\textbf{ Size }&\textbf{ Description  }\\\cline{1-3}
 \endhead
-piece length &number of bytes in each piece (integer) \\\cline{1-2}
-pieces &string consisting of the concatenation of all 20-\/byte S\+H\+A1 hash values, one per piece (byte string, i.\+e. not urlencoded) \\\cline{1-2}
+pstrlen &1 &string length of $<$pstr$>$, as a single raw byte (19) \\\cline{1-3}
+pstr &19 &the string \char`\"{}\+Bit\+Torrent protocol\char`\"{} \\\cline{1-3}
+reserved &8 &eight (8) reserved bytes. \\\cline{1-3}
+info\+\_\+hash &20 &20-\/byte S\+H\+A1 hash of the info key in the metainfo file. \\\cline{1-3}
+peer\+\_\+id &20 &Peer-\/\+ID string \\\cline{1-3}
 \end{longtabu}
+The reserved bytes is tipically used to communicate that the client is capable of managing a non-\/standard protocol by setting a specific bit to 1 alpha\+Torrent simply print a warning in case of a non-\/standard client is communicating.
 
+So after sending the handshake request, the client listen for a response, and when arrives, it start the \hyperlink{namespacepwp_a58c780495f2139a56b95662dc7c0345f}{pwp\+::verify\+\_\+handshake} routing, which basically check if all element of the table is valid (according to the protocol).
 
-The data is parsed using the bencode library (\href{https://sourceforge.net/p/funzix/code/ci/master/tree/bencode/}{\tt https\+://sourceforge.\+net/p/funzix/code/ci/master/tree/bencode/})
+\begin{DoxyNote}{Note}
+Because peer-\/\+ID matching often fail during live test, in case of a non matching id nothing is done (excepting print a warning).
+\end{DoxyNote}
+\subsection*{Pre-\/\+Loop phase }
 
-\section*{Tracker }
+After the handshake procedure is completed, the peer is flagged as \char`\"{}active\+\_\+peer\char`\"{} and some messages are exchanged before starting donwload/upload pieces.
 
-After the Metainfo file is parsed and the peer extracted the tracker procedure is called.
+First of all, the client should check if a bitfiled was sended by the peer. This part is optional so it must be properly handled. Then an \char`\"{}interested\char`\"{} and \char`\"{}unchocked\char`\"{} message are sended in order to enable piece downloading from the peer. A timer which call the \hyperlink{namespacepwp__msg_a9a577f5a53b823d83bb4694f1ebf141e}{pwp\+\_\+msg\+::send\+\_\+keep\+\_\+alive} is started in order to avoid a connection closing.
 
-\subsection*{Initialization }
+\subsection*{P\+WP Loop }
 
-A peer list (\hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List}) is created (and allocated) inside the \char`\"{}\+Main\char`\"{} to contains the peers sended from the tracker. At the start of tracker request routine a param (\hyperlink{structtracker_1_1TParameter}{tracker\+::\+T\+Parameter}) structure is filled with configuration parameters (to be implemented).
+The P\+WP loop consist in two parts \+:
+\begin{DoxyItemize}
+\item Async Receive
+\item Sync Send
+\end{DoxyItemize}
 
-\subsection*{Announce request }
-
-A function then differentiate the tracker based on the protocol (U\+DP or H\+T\+TP) and call the appropriate function inside a thread. For detailed description of the tracker protocol manager see \hyperlink{udp_protocol}{U\+DP Protocol Specification} and . After the peer list is populated the duplicates and invalid peers are removed and thet the P\+WP protocol starts.
-
-\section*{P\+WP }
-
-\subsection*{Handshaking }
+The {\bfseries async handler}(pwp\+::read\+\_\+msg\+\_\+handler) is called when 4 bytes are received. After checking that the msg\+\_\+len is greater than zero, a new byte (the msg\+\_\+id\mbox{[}\hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1daf}{pwp\+\_\+msg\+::msg\+\_\+id}\mbox{]}) is readed. The message is then switched based on its id. If a message like \char`\"{}(not) interested\char`\"{} and \char`\"{}(un)chocked\char`\"{} is received then the conresponding structure inside the \hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} is updated (client\+\_\+state and peer\+\_\+state). \begin{DoxyNote}{Note}
+R\+E\+Q\+U\+E\+ST, P\+O\+RT and C\+A\+N\+C\+EL message are ignored since seeding is not supported. When a P\+I\+E\+CE message arrives the response is passeto to the \hyperlink{namespacefileio_acc37418d350d6d36c3f691c99de9cf39}{fileio\+::save\+\_\+block} function wich is responsible of putting the piece in the right position inside the file. After finishing the procedure, another async read is started in order to continually parse received data.
+\end{DoxyNote}
+The {\bfseries Sync Sender} insted is placed inside a loop that exit only if the send fails (dead peer). The \hyperlink{namespacepwp__msg_ab578b213d293636d33efc24382f16b25}{pwp\+\_\+msg\+::sender} simply compare the bitfiled of the peer with the client ones and send a R\+E\+Q\+U\+E\+ST message to the peer referring to the client\textquotesingle{}s missing pieces. 

@@ -98,6 +98,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:a62060bdcdc80541b0892e26fbeab1e91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manager of the entire PWP protocol.  <a href="#a62060bdcdc80541b0892e26fbeab1e91">More...</a><br /></td></tr>
 <tr class="separator:a62060bdcdc80541b0892e26fbeab1e91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6062876f4d4d4d6ee19341a79a797864"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp.html#a6062876f4d4d4d6ee19341a79a797864">build_handshake</a> (char *info_hash, std::vector&lt; uint8_t &gt; &amp;handshake)</td></tr>
+<tr class="memdesc:a6062876f4d4d4d6ee19341a79a797864"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the handshake for a file.  <a href="#a6062876f4d4d4d6ee19341a79a797864">More...</a><br /></td></tr>
 <tr class="separator:a6062876f4d4d4d6ee19341a79a797864"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a851ddc0e8fb2eb0a86317cc944c4a927"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp.html#a851ddc0e8fb2eb0a86317cc944c4a927">send_handshake</a> (<a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;peerc_t, const std::vector&lt; uint8_t &gt; handshake, std::vector&lt; uint8_t &gt; &amp;response)</td></tr>
 <tr class="separator:a851ddc0e8fb2eb0a86317cc944c4a927"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -163,7 +164,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>verify_handshake</b> (
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Create the handshake for a file</p>
+
+<p>Create the handshake for a file. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">info_hash</td><td>the info_hash of the file </td></tr>
@@ -287,7 +289,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>verify_handshake</b> (
 <li>Wait (asynchronously) for messages</li>
 <li>Loop and send appropriate messages</li>
 </ol>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000001">Bug:</a></b></dt><dd>No timeout control is performed so if there is a dead peer that does not respond the software blocks until the default SO timeout is reacher (tipically 2 minutes).</dd></dl>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000002">Bug:</a></b></dt><dd>No timeout control is performed so if there is a dead peer that does not respond the software blocks until the default SO timeout is reacher (tipically 2 minutes).</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">peer_</td><td>The peer on which execute the protocol </td></tr>
@@ -317,6 +319,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>verify_handshake</b> (
 </div><div class="memdoc">
 
 <p>Find invalid peers and remove it. </p>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000001">Bug:</a></b></dt><dd>It does not check for already active peer </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">peer_list</td><td></td></tr>
@@ -431,6 +434,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>verify_handshake</b> (
 <td>-4 </td><td>Peer ID does not match (Bypassed) </td></tr>
 </table>
 <dl class="section warning"><dt>Warning</dt><dd>The comparison of the <em>peer-ID</em> often fail so it's skipped (no return -4)</dd></dl>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000003">Bug:</a></b></dt><dd>peer-ID is checked but nothing is done in case of failing</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">handshake</td><td>: the handshake to check </td></tr>

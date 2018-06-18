@@ -13,6 +13,7 @@ var searchData=
   ['peer_2eh',['peer.h',['../peer_8h.html',1,'']]],
   ['peer_5fconnection',['peer_connection',['../structpwp_1_1peer__connection.html',1,'pwp']]],
   ['peer_5fid',['peer_id',['../structpwp_1_1peer.html#a93c9dfe3e8766d364887f615d0880777',1,'pwp::peer']]],
+  ['peer_27s_20refreshing_20method',['Peer&apos;s Refreshing method',['../peer_refresh.html',1,'']]],
   ['peer_5fstate',['peer_state',['../structpwp_1_1peer__state.html',1,'pwp']]],
   ['peerlist',['PeerList',['../namespacepwp.html#ad07fa6df116b205302ad5ec172277184',1,'pwp']]],
   ['print_5ffile',['print_file',['../namespacetorr.html#a86e0a9eb7815111ee9ab4b41e3edeca6',1,'torr']]],

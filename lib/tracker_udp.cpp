@@ -125,11 +125,12 @@ namespace t_udp{
     void get_connect_request(connect_request c, std::vector<uint8_t>& req){
        
         std::vector<uint8_t> pid_action = {0,0,4,23,39,16,25,128,0,0, 0,0,0,0}; //Protocol Constant
-       
-        //std::vector<uint8_t> pid = from_int_to_bint(c.protocol_id);
-        //std::vector<uint8_t> action = {0,0,0,0};
         std::vector<uint8_t> tid = from_int_to_bint(c.transaction_id);
         
+        if(tid.size() > 2){
+            tid.resize(2);
+        }
+
         req.clear();
         req = pid_action;
         req.insert( req.end(), tid.begin(), tid.end() );
@@ -232,7 +233,7 @@ namespace t_udp{
             DLOG(INFO) << "Transaction ID : " << std::to_string(trans_id_peer) << "\nConnection ID : " << std::to_string(conn_id);
 
             
-            cout << "Sending announce...";
+            DLOG(INFO) << "Sending announce...";
 
             req.resize(98);
             get_announce_req(req, param, conn_id_v);
@@ -244,11 +245,11 @@ namespace t_udp{
 
             socket.receive(boost::asio::buffer(recv_buf));
 
-            DLOG(INFO) << endl << tracker_url << "Response : \n" << string_to_hex(recv_buf);
+            //cout << endl << tracker_url << "Response : \n" << string_to_hex(recv_buf);
 
             parse_announce_resp(recv_buf, peer_list);
                              
-            DLOG(INFO) << endl <<  "Parsed  peers from " << recv_endpoint.address().to_string() << ":" << std::to_string(port) << endl;
+            cout << endl <<  "Parsed  peers from " << recv_endpoint.address().to_string() << ":" << std::to_string(port) << endl;
 
 
             if (error == boost::asio::error::eof){

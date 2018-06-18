@@ -100,7 +100,7 @@ namespace pwp_msg{
         timer.async_wait(boost::bind(send_keep_alive, peer_c, std::ref(timer)));
 
         if(_io_service.stopped()){
-            DLOG(INFO) << "IO-Service stopped, resetting";
+            std::cout << "IO-Service stopped, resetting" << std::endl;
             _io_service.reset();
             _io_service.run();
         }else{

@@ -74,7 +74,7 @@ void {\bfseries pwp\+::manage\+\_\+peer\+\_\+connection} (\hyperlink{namespacepw
 void {\bfseries pwp\+::get\+\_\+peer\+\_\+id} (std\+::string $\ast$id)
 \item 
 void \hyperlink{namespacepwp_a6062876f4d4d4d6ee19341a79a797864}{pwp\+::build\+\_\+handshake} (char $\ast$info\+\_\+hash, std\+::vector$<$ uint8\+\_\+t $>$ \&handshake)
-\item 
+\begin{DoxyCompactList}\small\item\em Create the handshake for a file. \end{DoxyCompactList}\item 
 int \hyperlink{namespacepwp_a851ddc0e8fb2eb0a86317cc944c4a927}{pwp\+::send\+\_\+handshake} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peerc\+\_\+t, const std\+::vector$<$ uint8\+\_\+t $>$ handshake, std\+::vector$<$ uint8\+\_\+t $>$ \&response)
 \item 
 \mbox{\Hypertarget{namespacepwp_ae2eeca61e271fabff5fa45308396009e}\label{namespacepwp_ae2eeca61e271fabff5fa45308396009e}} 
@@ -110,6 +110,8 @@ boost\+::asio\+::io\+\_\+service \hyperlink{peer_8h_a7efe93eb3d4e0f0c9ab96fa5ae4
 int {\bfseries active\+\_\+peer}
 \item 
 boost\+::mutex \hyperlink{peer_8h_a821fac971970c19e5d4f57dd0486f019}{mtx\+\_\+peer\+\_\+num}
+\item 
+\hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} \hyperlink{peer_8h_ab26bfa2539119d67527c33165db8742b}{active\+\_\+peer\+\_\+list}
 \end{DoxyCompactItemize}
 
 
@@ -144,7 +146,13 @@ T\+O\+DO rename this nonsense function name
 \subsubsection{\texorpdfstring{\+\_\+io\+\_\+service}{\_io\_service}}
 {\footnotesize\ttfamily boost\+::asio\+::io\+\_\+service \+\_\+io\+\_\+service}
 
-Global I\+O-\/\+Service \mbox{\Hypertarget{peer_8h_a821fac971970c19e5d4f57dd0486f019}\label{peer_8h_a821fac971970c19e5d4f57dd0486f019}} 
+Global I\+O-\/\+Service \mbox{\Hypertarget{peer_8h_ab26bfa2539119d67527c33165db8742b}\label{peer_8h_ab26bfa2539119d67527c33165db8742b}} 
+\index{peer.\+h@{peer.\+h}!active\+\_\+peer\+\_\+list@{active\+\_\+peer\+\_\+list}}
+\index{active\+\_\+peer\+\_\+list@{active\+\_\+peer\+\_\+list}!peer.\+h@{peer.\+h}}
+\subsubsection{\texorpdfstring{active\+\_\+peer\+\_\+list}{active\_peer\_list}}
+{\footnotesize\ttfamily \hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} active\+\_\+peer\+\_\+list}
+
+List of active peers (Actually unused) \mbox{\Hypertarget{peer_8h_a821fac971970c19e5d4f57dd0486f019}\label{peer_8h_a821fac971970c19e5d4f57dd0486f019}} 
 \index{peer.\+h@{peer.\+h}!mtx\+\_\+peer\+\_\+num@{mtx\+\_\+peer\+\_\+num}}
 \index{mtx\+\_\+peer\+\_\+num@{mtx\+\_\+peer\+\_\+num}!peer.\+h@{peer.\+h}}
 \subsubsection{\texorpdfstring{mtx\+\_\+peer\+\_\+num}{mtx\_peer\_num}}

@@ -1,0 +1,5 @@
+This page contains n explaination of the method used to guarantee list of valid peer during program execution.
+
+\begin{DoxyParagraph}{Motivation and Specification }
+After receiving the list of peers from the tracker, the client start executing the P\+WP protocol with each one. During the protocol, a lot of peer could bring the procedure to fail, and set itself to \char`\"{}dead peer\char`\"{}. Live tests showed that usually a single tracker request is not enought to get a reliable peers list, so alpha\+Torrent after each tracker request wait 10 seconds (in order to let the protocol fails) and check if the number of active peer (the ones who completed the P\+WP procotol without failing) is less than a specific threshold, and if it\textquotesingle{}s true a new tracker request is done. 
+\end{DoxyParagraph}

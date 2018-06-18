@@ -253,7 +253,7 @@ boost::mutex&#160;</td><td class="memItemRight" valign="bottom"><b>peer_list_mut
 </div><div class="memdoc">
 
 <p>Check if a response is in a compact format. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>Improve and re-test this function</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>Improve and re-test this function</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">*response</td><td>: the response to check </td></tr>
@@ -335,8 +335,8 @@ boost::mutex&#160;</td><td class="memItemRight" valign="bottom"><b>peer_list_mut
 peer id: peer's self-selected ID, as described above for the tracker request (string)<br />
 ip: peer's IP address either IPv6 (hexed) or IPv4 (dotted quad) or DNS name (string)<br />
 port: peer's port number (integer)<br />
- </p><dl class="bug"><dt><b><a class="el" href="bug.html#_bug000002">Bug:</a></b></dt><dd>The address of the peer could be of three types : IPv6, DNS and IPv6. Currently just IPv4 is supported. </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>Add support for IPv6 and DNS addresses.</dd></dl>
+ </p><dl class="bug"><dt><b><a class="el" href="bug.html#_bug000004">Bug:</a></b></dt><dd>The address of the peer could be of three types : IPv6, DNS and IPv6. Currently just IPv4 is supported. </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>Add support for IPv6 and DNS addresses.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">node</td><td>the bencoded node containing the list of dictionaries</td></tr>
@@ -448,7 +448,7 @@ port: peer's port number (integer)<br />
 </div><div class="memdoc">
 
 <p>Remove duplicate peers from a peer_list. </p>
-<p>Take a PeerList and delete al duplicate elements. Following this response (<a href="https://stackoverflow.com/questions/1041620/whats-the-most-efficient-way-to-erase-duplicates-and-sort-a-vector">https://stackoverflow.com/questions/1041620/whats-the-most-efficient-way-to-erase-duplicates-and-sort-a-vector</a>) is better to convert the vector to a set and then convert back if the number element is low </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>The test was with integers, re-test with <a class="el" href="structpwp_1_1peer.html">pwp::peer</a></dd></dl>
+<p>Take a PeerList and delete al duplicate elements. Following this response (<a href="https://stackoverflow.com/questions/1041620/whats-the-most-efficient-way-to-erase-duplicates-and-sort-a-vector">https://stackoverflow.com/questions/1041620/whats-the-most-efficient-way-to-erase-duplicates-and-sort-a-vector</a>) is better to convert the vector to a set and then convert back if the number element is low </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>The test was with integers, re-test with <a class="el" href="structpwp_1_1peer.html">pwp::peer</a></dd></dl>
 <p>/warning Unimplemented function</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -547,7 +547,7 @@ port: peer's port number (integer)<br />
 <p>Send request to each tracker in tracker_list. </p>
 <p>Read from config file (to implement) the port. Then analize the files and fill the tracker parameter structure.</p>
 <p>The appropriate tracker protocol is then choosed and executed; the parsed peers are added to the peer_list (passed by argument).</p>
-<p>The config file and the "uploaded" and "downloaded" param are still unimplemented. </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>Read che config parameter from a config file</dd></dl>
+<p>The config file and the "uploaded" and "downloaded" param are still unimplemented. </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>Read che config parameter from a config file</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">*param</td><td>the struct containing the tracker parameter </td></tr>
@@ -656,7 +656,7 @@ port: peer's port number (integer)<br />
 <p>Create the tracker GET request. </p>
 <p>An HTTP GET request is crafted using tracker's url and request parameters</p>
 <p>In case of error the request is equal to ""</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd><p class="startdd">Improve this function parmeters, since trakcer_url is already inside <a class="el" href="structtracker_1_1TParameter.html" title="Struct contains all param to send to the tracker. ">TParameter</a> </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd><p class="startdd">Improve this function parmeters, since trakcer_url is already inside <a class="el" href="structtracker_1_1TParameter.html" title="Struct contains all param to send to the tracker. ">TParameter</a> </p>
 <p>Check if tracker_url is a proper url by validating it with regex </p>
 <p class="enddd">Manage errors</p>
 </dd></dl>

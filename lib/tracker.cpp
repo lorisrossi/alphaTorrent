@@ -77,17 +77,26 @@ namespace tracker{
         }
     
 
-        LOG(INFO) << "Waiting for joining";
-        t_group.join_all(); //Sync all thread
+        cout << "Waiting for joining";
+
+        int retry = 0;
+
+        while(peer_list->size() < 20 && retry < 4){
+            cout << endl << "Peer List Size : " << peer_list->size() << endl;
+            boost::this_thread::sleep_for(boost::chrono::seconds(5));
+            retry++;
+        }
+        //t_group.join_all(); //Sync all thread
+        t_group.interrupt_all();
 
         LOG(INFO) << "Joinned";
 
-        _io_service.stop();
-        _io_service.reset();
+        //_io_service.stop();
+        //_io_service.reset();
 
         remove_duplicate_peers(peer_list);
 
-        cout << "Found " << style::bold << fg::green <<  peer_list->size() << fg::reset << style::reset << " available peers";
+        cout << "Found " << style::bold << fg::green <<  peer_list->size() << fg::reset << style::reset << " available peers" << endl;
 
         return 0;
     }

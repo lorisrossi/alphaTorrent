@@ -29,7 +29,7 @@ int \hyperlink{namespacepwp_a73acf05b954e39825a88036d5793db6b}{create\+\_\+socke
 void \hyperlink{namespacepwp_a62060bdcdc80541b0892e26fbeab1e91}{pwp\+\_\+protocol\+\_\+manager} (\hyperlink{structpwp_1_1peer}{pwp\+::peer} peer\+\_\+, const std\+::vector$<$ uint8\+\_\+t $>$ \&handshake, const char $\ast$info\+\_\+hash, \hyperlink{structtorr_1_1Torrent}{Torrent} \&torrent)
 \begin{DoxyCompactList}\small\item\em Manager of the entire P\+WP protocol. \end{DoxyCompactList}\item 
 void \hyperlink{namespacepwp_a6062876f4d4d4d6ee19341a79a797864}{build\+\_\+handshake} (char $\ast$info\+\_\+hash, std\+::vector$<$ uint8\+\_\+t $>$ \&handshake)
-\item 
+\begin{DoxyCompactList}\small\item\em Create the handshake for a file. \end{DoxyCompactList}\item 
 int \hyperlink{namespacepwp_a851ddc0e8fb2eb0a86317cc944c4a927}{send\+\_\+handshake} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peerc\+\_\+t, const std\+::vector$<$ uint8\+\_\+t $>$ handshake, std\+::vector$<$ uint8\+\_\+t $>$ \&response)
 \item 
 void \hyperlink{namespacepwp_ada6a8613896dbbfd6fba63b17d51684c}{get\+\_\+peer\+\_\+id} (string $\ast$id)
@@ -69,7 +69,9 @@ peer list extracted from tracker
 \subsubsection{\texorpdfstring{build\+\_\+handshake()}{build\_handshake()}}
 {\footnotesize\ttfamily void pwp\+::build\+\_\+handshake (\begin{DoxyParamCaption}\item[{char $\ast$}]{info\+\_\+hash,  }\item[{std\+::vector$<$ uint8\+\_\+t $>$ \&}]{handshake }\end{DoxyParamCaption})}
 
-Create the handshake for a file
+
+
+Create the handshake for a file. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -152,7 +154,7 @@ This is the manager of the entire peer comunication. After creating the socket t
 \end{DoxyEnumerate}
 
 \begin{DoxyRefDesc}{Bug}
-\item[\hyperlink{bug__bug000001}{Bug}]No timeout control is performed so if there is a dead peer that does not respond the software blocks until the default SO timeout is reacher (tipically 2 minutes).\end{DoxyRefDesc}
+\item[\hyperlink{bug__bug000002}{Bug}]No timeout control is performed so if there is a dead peer that does not respond the software blocks until the default SO timeout is reacher (tipically 2 minutes).\end{DoxyRefDesc}
 
 
 
@@ -175,6 +177,10 @@ This is the manager of the entire peer comunication. After creating the socket t
 
 
 Find invalid peers and remove it. 
+
+\begin{DoxyRefDesc}{Bug}
+\item[\hyperlink{bug__bug000001}{Bug}]It does not check for already active peer \end{DoxyRefDesc}
+
 
 
 \begin{DoxyParams}{Parameters}
@@ -243,6 +249,10 @@ Verify if an handshake (received) is correct
 \begin{DoxyWarning}{Warning}
 The comparison of the {\itshape peer-\/\+ID} often fail so it\textquotesingle{}s skipped (no return -\/4)
 \end{DoxyWarning}
+\begin{DoxyRefDesc}{Bug}
+\item[\hyperlink{bug__bug000003}{Bug}]peer-\/\+ID is checked but nothing is done in case of failing\end{DoxyRefDesc}
+
+
 
 \begin{DoxyParams}{Parameters}
 {\em handshake} & \+: the handshake to check \\

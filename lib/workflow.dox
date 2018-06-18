@@ -1,59 +1,69 @@
-/**
- * @page workflow Application workflow
- * This page contains the application workflow.
- *
- * \image html alphatorrent_flowchart.svg
- * \image latex alphatorrent_flowchart.svg
+ /**
+  *  @page workflow Application Workflow
 
-    \note The official and detailed bittorrent procotol specification could be found here http://www.bittorrent.org/beps/bep_0003.html
-
-
-    Main
-    ==========
-    Argument Parsing
-    ------------------
-    The only supported program argument is a path containing the .torrent file.
-    By using the GLog logging library you could pass several flags to influence the output (See the Glog docs for details).
-    Output verbosity could be specified for example by using the flag "minloglevel", where the numbers of severity levels INFO, WARNING, ERROR, and FATAL are 0, 1, 2, and 3, respectively.
-
-    Metainfo Parsing (.torrent)
-    -------------
-    The file is opened and the decoding procedure starts. The Metainfo file (also know as .torrent) is encoded with a bencoded tecnique (https://en.wikipedia.org/wiki/Bencode).
-    The file structure could be summarized in two parts:
-        1. Announce : Contains the trackers url
-        2. Info     : A dictionary bencoded data
-
-    The Info parts is divided into 
-    Name          | Description
-    --------------|--------------
-    piece length  | number of bytes in each piece (integer)
-    pieces        | string consisting of the concatenation of all 20-byte SHA1 hash values, one per piece (byte string, i.e. not urlencoded)
-
-
-    The data is parsed using the bencode library (https://sourceforge.net/p/funzix/code/ci/master/tree/bencode/)
-
-
-    Tracker
-    =========
-    After the Metainfo file is parsed and the peer extracted the tracker procedure is called.
-
-    Initialization
-    ------------------
-    A peer list  (@ref pwp::PeerList) is created (and allocated) inside the "Main" to contains the peers sended from the tracker.
-    At the start of tracker request routine a param (@ref tracker::TParameter) structure is filled with configuration parameters (to be implemented).
-    
-    Announce request
-    ------------------
-    A function then differentiate the tracker based on the protocol (UDP or HTTP) and call the appropriate function inside a thread.
-    For detailed description of the tracker protocol manager see @ref udp_protocol and .
-    After the peer list is populated the duplicates and invalid peers are removed and thet the PWP protocol starts.
-
-
-    PWP
-    ================
-    Handshaking
-    ----------------
-
-
-
+    PWP 
+    ================ 
+ 
+    Introduction 
+    ---------------- 
+    The procotol works by exchanging messages with other peer and by mantaining a *state* describing the peer connection state. 
+ 
+    For each peer connection, the client should know 
+    -am_chocking : If the client is chocking the peer 
+    -am_interested : If the client is interested in the peer 
+    -peer_choking : If the peer is chocking the client 
+    -peer_interested : If the peer is interested  
+ 
+ 
+    \Warning During the protocol execution, all integers in the peer wire protocol are encoded as four byte big-endian values. 
+ 
+ 
+    Handshaking 
+    ---------------- 
+    After enstablishing a connection, the first thing to do according to the protocol is the handshake procedure. 
+    The handshake is crafted referring to this table 
+ 
+    Name        | Size | Description 
+    ------------|------|--------------- 
+    pstrlen     | 1    | string length of <pstr>, as a single raw byte (19) 
+    pstr        | 19   | the string "BitTorrent protocol" 
+    reserved    | 8    |  eight (8) reserved bytes. 
+    info_hash   | 20   | 20-byte SHA1 hash of the info key in the metainfo file. 
+    peer_id     | 20   | Peer-ID string  
+ 
+    The reserved bytes is tipically used to communicate that the client is capable of managing a non-standard protocol by setting a specific bit to 1 
+    alphaTorrent simply print a warning in case of a non-standard client is communicating. 
+ 
+    So after sending the handshake request, the client listen for a response, and when arrives, it start the @ref pwp::verify_handshake routing, 
+    which basically check if all element of the table is valid (according to the protocol). 
+ 
+    \note  
+    Because peer-ID matching often fail during live test, in case of a non matching id nothing is done (excepting print a warning). 
+ 
+ 
+    Pre-Loop phase 
+    ----------------- 
+    After the handshake procedure is completed, the peer is flagged as "active_peer" and some messages are exchanged before starting donwload/upload pieces. 
+ 
+    First of all, the client should check if a bitfiled was sended by the peer. This part is optional so it must be properly handled. 
+    Then an "interested" and "unchocked" message are sended in order to enable piece downloading from the peer. 
+    A timer which call the @ref pwp_msg::send_keep_alive is started in order to avoid a connection closing. 
+ 
+    PWP Loop 
+    ---------------- 
+    The PWP loop consist in two parts : 
+        - Async Receive  
+        - Sync Send 
+ 
+    The **async handler**(@ref pwp::read_msg_handler) is called when 4 bytes are received. After checking that the msg_len is greater than zero, a new byte (the msg_id[@ref pwp_msg::msg_id]) is readed. 
+    The message is then switched based on its id. If a message like "(not) interested" and "(un)chocked" is received then the conresponding structure inside  
+    the @ref pwp::peer_connection is updated (client_state and peer_state). 
+    \note REQUEST, PORT and CANCEL message are ignored since seeding is not supported. 
+    When a PIECE message arrives the response is passeto to the @ref fileio::save_block function wich is responsible of 
+    putting the piece in the right position inside the file. 
+    After finishing the procedure, another async read is started in order to continually parse received data. 
+ 
+    The **Sync Sender** insted is placed inside a loop that exit only if the send fails (dead peer). 
+    The @ref pwp_msg::sender simply compare the bitfiled of the peer with the client ones and send a REQUEST message to the peer 
+    referring to the client's missing pieces. 
  */

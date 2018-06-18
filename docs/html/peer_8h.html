@@ -153,6 +153,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>pwp::manage_peer_conn
 void&#160;</td><td class="memItemRight" valign="bottom"><b>pwp::get_peer_id</b> (std::string *id)</td></tr>
 <tr class="separator:a5f03cde749af88a393c999545830b192"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6062876f4d4d4d6ee19341a79a797864"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp.html#a6062876f4d4d4d6ee19341a79a797864">pwp::build_handshake</a> (char *info_hash, std::vector&lt; uint8_t &gt; &amp;handshake)</td></tr>
+<tr class="memdesc:a6062876f4d4d4d6ee19341a79a797864"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the handshake for a file.  <a href="namespacepwp.html#a6062876f4d4d4d6ee19341a79a797864">More...</a><br /></td></tr>
 <tr class="separator:a6062876f4d4d4d6ee19341a79a797864"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a851ddc0e8fb2eb0a86317cc944c4a927"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacepwp.html#a851ddc0e8fb2eb0a86317cc944c4a927">pwp::send_handshake</a> (<a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> &amp;peerc_t, const std::vector&lt; uint8_t &gt; handshake, std::vector&lt; uint8_t &gt; &amp;response)</td></tr>
 <tr class="separator:a851ddc0e8fb2eb0a86317cc944c4a927"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -192,6 +193,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>active_peer</b></td></
 <tr class="separator:afd3bb609482f388199b44f364c870321"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a821fac971970c19e5d4f57dd0486f019"><td class="memItemLeft" align="right" valign="top">boost::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="peer_8h.html#a821fac971970c19e5d4f57dd0486f019">mtx_peer_num</a></td></tr>
 <tr class="separator:a821fac971970c19e5d4f57dd0486f019"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab26bfa2539119d67527c33165db8742b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="peer_8h.html#ab26bfa2539119d67527c33165db8742b">active_peer_list</a></td></tr>
+<tr class="separator:ab26bfa2539119d67527c33165db8742b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Peer's data and PWP protocol interface</p>
@@ -237,6 +240,21 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>active_peer</b></td></
       </table>
 </div><div class="memdoc">
 <p>Global IO-Service </p>
+
+</div>
+</div>
+<a id="ab26bfa2539119d67527c33165db8742b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab26bfa2539119d67527c33165db8742b">&#9670;&nbsp;</a></span>active_peer_list</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a> active_peer_list</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>List of active peers (Actually unused) </p>
 
 </div>
 </div>

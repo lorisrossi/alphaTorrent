@@ -1,0 +1,63 @@
+/** 
+ * @page peer_refresh Peer's Refreshing method  
+ * This page contains n explaination of the method used to guarantee list of valid peer during program execution. 
+ 
+    \par Motivation and Specification 
+    After receiving the list of peers from the tracker, the client start executing the PWP protocol with each one. 
+    During the protocol, a lot of peer could bring the procedure to fail, and set itself to "dead peer". 
+    Live tests showed that usually a single tracker request is not enought to get a reliable peers list, so  
+    alphaTorrent after each tracker request wait 10 seconds (in order to let the protocol fails) and check if 
+    the number of active peer (the ones who completed the PWP procotol without failing) is less than a specific 
+    threshold, and if it's true a new tracker request is done. 
+ */ 
+ 
+
+ /*! \mainpage alphaTorrent Documentation 
+ * 
+ * \section intro_sec Introduction 
+ * 
+ * alphaTorrent is a CLI program that allow to download files by passing a .torrent file. 
+ * For a detailed explaination of the application workflow see @ref workflow. 
+ * \section install_sec Installation 
+ * 
+ * \subsection step1 Step 1: Clone the repository 
+ * \code 
+ * git clone https://github.com/lorisrossi/alphaTorrent.git 
+ * \endcode 
+ *  
+ *  
+ * \subsection step21 Step2: Install dependencies (Linux) 
+ * This command will install the openssl, boost and glog libraries 
+ * \code 
+ * sudo apt-get install libssl-dev libboost-all-dev libgoogle-glog-dev 
+ * \endcode 
+ *  
+  * \subsection step22 Step2: Install dependencies (Mac OS X) 
+ * This command will install the openssl 
+ * \code 
+ * brew install openssl 
+ * cd /usr/local/include 
+ * ln -s ../opt/openssl/include/openssl . 
+ * \endcode 
+ * Boost 
+ * \code 
+ * brew install boost 
+ * \endcode 
+ * Glog 
+ * \code 
+ * brew install glog 
+ * \endcode 
+ *  
+ * \subsection compiling Compiling 
+ * Go to the main folder and execute 
+ * \code 
+ * make 
+ * \endcode 
+ *  
+ * \section usage Usage 
+ * \code 
+ * ./alphatorrent-cli torrent-file.torrent 
+ * \endcode 
+ *  
+ *  
+ */

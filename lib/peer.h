@@ -37,7 +37,6 @@ extern int active_peer;
 extern boost::mutex mtx_peer_num;
 
 
-
 inline void add_active_peer();
 inline void rm_active_peer();
 
@@ -49,7 +48,7 @@ namespace pwp{
 
     using namespace boost::asio;
 
-    
+
 
     typedef struct{
         bool am_choking = true;
@@ -118,6 +117,7 @@ struct bInt{
 
 typedef struct bInt bInt;
 
+extern pwp::PeerList active_peer_list;
 
 
 

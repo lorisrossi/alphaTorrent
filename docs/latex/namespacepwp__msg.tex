@@ -24,7 +24,7 @@ enum \hyperlink{namespacepwp__msg_a0b9a29508f00a30e5138d2b78f4b1daf}{msg\+\_\+id
 void \hyperlink{namespacepwp__msg_a9a577f5a53b823d83bb4694f1ebf141e}{send\+\_\+keep\+\_\+alive} (const \hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+c, boost\+::asio\+::deadline\+\_\+timer \&timer)
 \item 
 void \hyperlink{namespacepwp__msg_a30c14bc06a8bb851ca79781cb9686b4f}{enable\+\_\+keep\+\_\+alive\+\_\+message} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+c)
-\item 
+\begin{DoxyCompactList}\small\item\em Starts Keep-\/\+Alive request loop Start the timer that each K\+E\+E\+P\+\_\+\+A\+L\+I\+V\+E\+\_\+\+T\+I\+ME send a Keep-\/alive request. \end{DoxyCompactList}\item 
 int \hyperlink{namespacepwp__msg_aca807c6281879abef952f8feecccb6e8}{send\+\_\+msg} (\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&peer\+\_\+c, std\+::vector$<$ uint8\+\_\+t $>$ msg)
 \begin{DoxyCompactList}\small\item\em Send {\ttfamily msg} to the peer specified in {\ttfamily peer\+\_\+c} \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{namespacepwp__msg_a529a3db7938ccfaab85579d58e24061e}\label{namespacepwp__msg_a529a3db7938ccfaab85579d58e24061e}} 
@@ -98,7 +98,9 @@ request&Request a piece \\
 \subsubsection{\texorpdfstring{enable\+\_\+keep\+\_\+alive\+\_\+message()}{enable\_keep\_alive\_message()}}
 {\footnotesize\ttfamily void pwp\+\_\+msg\+::enable\+\_\+keep\+\_\+alive\+\_\+message (\begin{DoxyParamCaption}\item[{\hyperlink{structpwp_1_1peer__connection}{pwp\+::peer\+\_\+connection} \&}]{peer\+\_\+c }\end{DoxyParamCaption})}
 
-Start the timer that each K\+E\+E\+P\+\_\+\+A\+L\+I\+V\+E\+\_\+\+T\+I\+ME send a Keep-\/alive request
+
+
+Starts Keep-\/\+Alive request loop Start the timer that each K\+E\+E\+P\+\_\+\+A\+L\+I\+V\+E\+\_\+\+T\+I\+ME send a Keep-\/alive request. 
 
 
 \begin{DoxyParams}{Parameters}

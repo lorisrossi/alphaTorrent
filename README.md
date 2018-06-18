@@ -1,6 +1,8 @@
 # αTorrent
 A simple BitTorrent Client.
 
+For detailed documentation check https://lorisrossi.github.io/alphaTorrent/ 
+
 Project for the Computer Networks course held by A. Mancini at Univpm
 
 ### Dependencies

@@ -20,6 +20,7 @@ using namespace torr;
 boost::asio::io_service _io_service;    /*!< Global IO-Service */
 
 int active_peer =0;
+pwp::PeerList active_peer_list = make_shared<vector<pwp::peer>>();  /*!< List of active peers (Actually unused) */
 boost::mutex mtx_peer_num;              /*!< Mutex for the alive peers number */
 
 
@@ -58,6 +59,9 @@ namespace pwp{
     /**
      * @brief Find invalid peers and remove it
      * 
+     * \bug It does not check for already active peer 
+     * 
+     * 
      * @param peer_list 
      */
 
@@ -75,6 +79,30 @@ namespace pwp{
                 LOG(WARNING) << "Peer eliminated"; 
             }
         }
+
+
+        //Check for already active peers
+
+        /*
+        vector<pwp::peer>::iterator it_active;
+
+        it =  peer_list->begin();
+        it_active = active_peer_list->begin();
+
+        for(; it != peer_list->end(); ++it){
+
+            for(it_active = active_peer_list->begin(); it != active_peer_list->end(); ++it_active){
+
+                if(*it == *it_active){
+                    peer_list->erase(it);
+                }
+
+            }
+
+        }
+        */
+
+
     }
 
 
@@ -175,7 +203,7 @@ namespace pwp{
             boost::dynamic_bitset<>(),
             nullptr,                    //Socket pointer
         };
-
+        
         int error_code = create_socket(peer_conn);
 
         if(error_code < 0){
@@ -184,7 +212,7 @@ namespace pwp{
         }
 
         assert(peer_conn.socket != nullptr);
-
+        DLOG(INFO) << "Sending handshake...";
         int result = send_handshake(peer_conn, handshake, response);
 
         if(result < 0){
@@ -205,6 +233,7 @@ namespace pwp{
         cout << peer_.addr.to_string() << rang::fg::green <<  " handshake done succesfully" << rang::fg::reset << endl;
 
         add_active_peer();  //The current peer is valid
+        cout << endl << "Added an ACTIVE PEER : " << active_peer << endl;
 
         if(pwp_msg::send_msg(peer_conn, pwp_msg::interested_msg) < 0)
             LOG(ERROR) << "Error sending interested_msg";
@@ -245,13 +274,13 @@ namespace pwp{
             int old_begin = -1; // used to not send the same request multiple times
 
             while(!dead_peer) {
-
+                /*
                 if(_io_service.stopped()){
                     cout << endl << "IO-Service stopped, resetting" << endl;
                     _io_service.reset();
                     _io_service.run();
                 }
-
+                */
                 if(pwp_msg::sender(peer_conn, torrent, old_begin) < 0) {
                     dead_peer = true;
                 }
@@ -274,7 +303,7 @@ namespace pwp{
 
 
     /**
-     *  Create the handshake for a file
+     *  @brief Create the handshake for a file
      *  
      *  @param info_hash the info_hash of the file
      *  @param handshake the destination array for the handshake
@@ -420,6 +449,8 @@ namespace pwp{
      * 
      *  \warning The comparison of the *peer-ID* often fail so it's skipped (no return -4)
      *   
+     *  \bug     peer-ID is checked but nothing is done in case of failing
+     * 
      *  @param handshake : the handshake to check 
      *  @param t_peer    : the peer who sended the handshake
      *  @param info_hash : the info_hash of the file

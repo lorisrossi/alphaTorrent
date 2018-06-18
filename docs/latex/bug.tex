@@ -1,15 +1,21 @@
 
 \begin{DoxyRefList}
-\item[\label{bug__bug000001}%
-\Hypertarget{bug__bug000001}%
-Member \hyperlink{namespacepwp_a62060bdcdc80541b0892e26fbeab1e91}{pwp\+:\+:pwp\+\_\+protocol\+\_\+manager} (\hyperlink{structpwp_1_1peer}{pwp\+::peer} peer\+\_\+, const std\+::vector$<$ uint8\+\_\+t $>$ \&handshake, const char $\ast$info\+\_\+hash, Torrent \&torrent)]No timeout control is performed so if there is a dead peer that does not respond the software blocks until the default SO timeout is reacher (tipically 2 minutes). 
-\item[\label{bug__bug000004}%
-\Hypertarget{bug__bug000004}%
-Member \hyperlink{namespacet__udp_a5e968355a7c45dae0749b80e1be8308a}{t\+\_\+udp\+:\+:get\+\_\+announce\+\_\+req} (std\+::vector$<$ uint8\+\_\+t $>$ \&req, const \hyperlink{structtracker_1_1TParameter}{tracker\+::\+T\+Parameter} \&param, std\+::vector$<$ uint8\+\_\+t $>$ \&conn\+\_\+id\+\_\+v)]Actually a hardcoded key and port is used.  
-\item[\label{bug__bug000003}%
-\Hypertarget{bug__bug000003}%
-Member \hyperlink{namespacet__udp_af6b2788d8ce8ab98f367838a7e3b7b09}{t\+\_\+udp\+:\+:verify\+\_\+connect\+\_\+resp} (const std\+::vector$<$ uint8\+\_\+t $>$ \&resp, uint32\+\_\+t \&trans\+\_\+id, uint64\+\_\+t \&conn\+\_\+id, std\+::vector$<$ uint8\+\_\+t $>$ \&conn\+\_\+id\+\_\+v)]In reality no checking is done, to be fixed soon 
 \item[\label{bug__bug000002}%
 \Hypertarget{bug__bug000002}%
+Member \hyperlink{namespacepwp_a62060bdcdc80541b0892e26fbeab1e91}{pwp\+:\+:pwp\+\_\+protocol\+\_\+manager} (\hyperlink{structpwp_1_1peer}{pwp\+::peer} peer\+\_\+, const std\+::vector$<$ uint8\+\_\+t $>$ \&handshake, const char $\ast$info\+\_\+hash, Torrent \&torrent)]No timeout control is performed so if there is a dead peer that does not respond the software blocks until the default SO timeout is reacher (tipically 2 minutes). 
+\item[\label{bug__bug000001}%
+\Hypertarget{bug__bug000001}%
+Member \hyperlink{namespacepwp_ae8331eb5e3c98deddc6022dad92352f6}{pwp\+:\+:remove\+\_\+invalid\+\_\+peer} (\hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} peer\+\_\+list)]It does not check for already active peer  
+\item[\label{bug__bug000003}%
+\Hypertarget{bug__bug000003}%
+Member \hyperlink{namespacepwp_a58c780495f2139a56b95662dc7c0345f}{pwp\+:\+:verify\+\_\+handshake} (const vector$<$ uint8\+\_\+t $>$ handshake, size\+\_\+t len, const \hyperlink{structpwp_1_1peer}{pwp\+::peer} t\+\_\+peer, const char $\ast$info\+\_\+hash)]peer-\/\+ID is checked but nothing is done in case of failing 
+\item[\label{bug__bug000006}%
+\Hypertarget{bug__bug000006}%
+Member \hyperlink{namespacet__udp_a5e968355a7c45dae0749b80e1be8308a}{t\+\_\+udp\+:\+:get\+\_\+announce\+\_\+req} (std\+::vector$<$ uint8\+\_\+t $>$ \&req, const \hyperlink{structtracker_1_1TParameter}{tracker\+::\+T\+Parameter} \&param, std\+::vector$<$ uint8\+\_\+t $>$ \&conn\+\_\+id\+\_\+v)]Actually a hardcoded key and port is used.  
+\item[\label{bug__bug000005}%
+\Hypertarget{bug__bug000005}%
+Member \hyperlink{namespacet__udp_af6b2788d8ce8ab98f367838a7e3b7b09}{t\+\_\+udp\+:\+:verify\+\_\+connect\+\_\+resp} (const std\+::vector$<$ uint8\+\_\+t $>$ \&resp, uint32\+\_\+t \&trans\+\_\+id, uint64\+\_\+t \&conn\+\_\+id, std\+::vector$<$ uint8\+\_\+t $>$ \&conn\+\_\+id\+\_\+v)]In reality no checking is done, to be fixed soon 
+\item[\label{bug__bug000004}%
+\Hypertarget{bug__bug000004}%
 Member \hyperlink{namespacetracker_a38d52cf6dd86f2a26a719e285097c805}{tracker\+:\+:parse\+\_\+dict\+\_\+peer} (\hyperlink{structbe__node}{be\+\_\+node} $\ast$node, \hyperlink{namespacepwp_ad07fa6df116b205302ad5ec172277184}{pwp\+::\+Peer\+List} peer\+\_\+list)]The address of the peer could be of three types \+: I\+Pv6, D\+NS and I\+Pv6. Currently just I\+Pv4 is supported. 
 \end{DoxyRefList}

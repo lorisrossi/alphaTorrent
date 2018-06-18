@@ -63,13 +63,17 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><dl class="reflist">
-<dt><a class="anchor" id="_bug000001"></a>Member <a class="el" href="namespacepwp.html#a62060bdcdc80541b0892e26fbeab1e91">pwp::pwp_protocol_manager</a>  (<a class="el" href="structpwp_1_1peer.html">pwp::peer</a> peer_, const std::vector&lt; uint8_t &gt; &amp;handshake, const char *info_hash, Torrent &amp;torrent)</dt>
+<dt><a class="anchor" id="_bug000002"></a>Member <a class="el" href="namespacepwp.html#a62060bdcdc80541b0892e26fbeab1e91">pwp::pwp_protocol_manager</a>  (<a class="el" href="structpwp_1_1peer.html">pwp::peer</a> peer_, const std::vector&lt; uint8_t &gt; &amp;handshake, const char *info_hash, Torrent &amp;torrent)</dt>
 <dd>No timeout control is performed so if there is a dead peer that does not respond the software blocks until the default SO timeout is reacher (tipically 2 minutes). </dd>
-<dt><a class="anchor" id="_bug000004"></a>Member <a class="el" href="namespacet__udp.html#a5e968355a7c45dae0749b80e1be8308a">t_udp::get_announce_req</a>  (std::vector&lt; uint8_t &gt; &amp;req, const <a class="el" href="structtracker_1_1TParameter.html" title="Struct contains all param to send to the tracker. ">tracker::TParameter</a> &amp;param, std::vector&lt; uint8_t &gt; &amp;conn_id_v)</dt>
+<dt><a class="anchor" id="_bug000001"></a>Member <a class="el" href="namespacepwp.html#ae8331eb5e3c98deddc6022dad92352f6">pwp::remove_invalid_peer</a>  (<a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a> peer_list)</dt>
+<dd>It does not check for already active peer  </dd>
+<dt><a class="anchor" id="_bug000003"></a>Member <a class="el" href="namespacepwp.html#a58c780495f2139a56b95662dc7c0345f">pwp::verify_handshake</a>  (const vector&lt; uint8_t &gt; handshake, size_t len, const <a class="el" href="structpwp_1_1peer.html">pwp::peer</a> t_peer, const char *info_hash)</dt>
+<dd>peer-ID is checked but nothing is done in case of failing </dd>
+<dt><a class="anchor" id="_bug000006"></a>Member <a class="el" href="namespacet__udp.html#a5e968355a7c45dae0749b80e1be8308a">t_udp::get_announce_req</a>  (std::vector&lt; uint8_t &gt; &amp;req, const <a class="el" href="structtracker_1_1TParameter.html" title="Struct contains all param to send to the tracker. ">tracker::TParameter</a> &amp;param, std::vector&lt; uint8_t &gt; &amp;conn_id_v)</dt>
 <dd>Actually a hardcoded key and port is used.  </dd>
-<dt><a class="anchor" id="_bug000003"></a>Member <a class="el" href="namespacet__udp.html#af6b2788d8ce8ab98f367838a7e3b7b09">t_udp::verify_connect_resp</a>  (const std::vector&lt; uint8_t &gt; &amp;resp, uint32_t &amp;trans_id, uint64_t &amp;conn_id, std::vector&lt; uint8_t &gt; &amp;conn_id_v)</dt>
+<dt><a class="anchor" id="_bug000005"></a>Member <a class="el" href="namespacet__udp.html#af6b2788d8ce8ab98f367838a7e3b7b09">t_udp::verify_connect_resp</a>  (const std::vector&lt; uint8_t &gt; &amp;resp, uint32_t &amp;trans_id, uint64_t &amp;conn_id, std::vector&lt; uint8_t &gt; &amp;conn_id_v)</dt>
 <dd>In reality no checking is done, to be fixed soon </dd>
-<dt><a class="anchor" id="_bug000002"></a>Member <a class="el" href="namespacetracker.html#a38d52cf6dd86f2a26a719e285097c805">tracker::parse_dict_peer</a>  (<a class="el" href="structbe__node.html">be_node</a> *node, <a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a> peer_list)</dt>
+<dt><a class="anchor" id="_bug000004"></a>Member <a class="el" href="namespacetracker.html#a38d52cf6dd86f2a26a719e285097c805">tracker::parse_dict_peer</a>  (<a class="el" href="structbe__node.html">be_node</a> *node, <a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a> peer_list)</dt>
 <dd>The address of the peer could be of three types : IPv6, DNS and IPv6. Currently just IPv4 is supported. </dd>
 </dl>
 </div></div><!-- contents -->

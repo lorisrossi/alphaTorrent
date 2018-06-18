@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>alphaTorrent: Application workflow</title>
+<title>alphaTorrent: Application Workflow</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -59,39 +59,43 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">Application workflow </div>  </div>
+<div class="title">Application Workflow </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>This page contains the application workflow.</p>
-<div class="image">
-<object type="image/svg+xml" data="alphatorrent_flowchart.svg">alphatorrent_flowchart.svg</object>
-</div>
- <dl class="section note"><dt>Note</dt><dd>The official and detailed bittorrent procotol specification could be found here <a href="http://www.bittorrent.org/beps/bep_0003.html">http://www.bittorrent.org/beps/bep_0003.html</a></dd></dl>
-<h1>Main </h1>
-<h2>Argument Parsing </h2>
-<p>The only supported program argument is a path containing the .torrent file. By using the GLog logging library you could pass several flags to influence the output (See the Glog docs for details). Output verbosity could be specified for example by using the flag "minloglevel", where the numbers of severity levels INFO, WARNING, ERROR, and FATAL are 0, 1, 2, and 3, respectively.</p>
-<h2>Metainfo Parsing (.torrent) </h2>
-<p>The file is opened and the decoding procedure starts. The Metainfo file (also know as .torrent) is encoded with a bencoded tecnique (<a href="https://en.wikipedia.org/wiki/Bencode">https://en.wikipedia.org/wiki/Bencode</a>). The file structure could be summarized in two parts:</p><ol type="1">
-<li>Announce : Contains the trackers url</li>
-<li>Info : A dictionary bencoded data</li>
-</ol>
-<p>The Info parts is divided into </p><table class="doxtable">
-<tr>
-<th>Name </th><th>Description  </th></tr>
-<tr>
-<td>piece length </td><td>number of bytes in each piece (integer) </td></tr>
-<tr>
-<td>pieces </td><td>string consisting of the concatenation of all 20-byte SHA1 hash values, one per piece (byte string, i.e. not urlencoded) </td></tr>
-</table>
-<p>The data is parsed using the bencode library (<a href="https://sourceforge.net/p/funzix/code/ci/master/tree/bencode/">https://sourceforge.net/p/funzix/code/ci/master/tree/bencode/</a>)</p>
-<h1>Tracker </h1>
-<p>After the Metainfo file is parsed and the peer extracted the tracker procedure is called.</p>
-<h2>Initialization </h2>
-<p>A peer list (<a class="el" href="namespacepwp.html#ad07fa6df116b205302ad5ec172277184">pwp::PeerList</a>) is created (and allocated) inside the "Main" to contains the peers sended from the tracker. At the start of tracker request routine a param (<a class="el" href="structtracker_1_1TParameter.html">tracker::TParameter</a>) structure is filled with configuration parameters (to be implemented).</p>
-<h2>Announce request </h2>
-<p>A function then differentiate the tracker based on the protocol (UDP or HTTP) and call the appropriate function inside a thread. For detailed description of the tracker protocol manager see <a class="el" href="udp_protocol.html">UDP Protocol Specification</a> and . After the peer list is populated the duplicates and invalid peers are removed and thet the PWP protocol starts.</p>
-<h1>PWP </h1>
+<div class="textblock"><h1>PWP </h1>
+<h2>Introduction </h2>
+<p>The procotol works by exchanging messages with other peer and by mantaining a <em>state</em> describing the peer connection state.</p>
+<p>For each peer connection, the client should know -am_chocking : If the client is chocking the peer -am_interested : If the client is interested in the peer -peer_choking : If the peer is chocking the client -peer_interested : If the peer is interested</p>
+<p>During the protocol execution, all integers in the peer wire protocol are encoded as four byte big-endian values.</p>
 <h2>Handshaking </h2>
+<p>After enstablishing a connection, the first thing to do according to the protocol is the handshake procedure. The handshake is crafted referring to this table</p>
+<table class="doxtable">
+<tr>
+<th>Name </th><th>Size </th><th>Description  </th></tr>
+<tr>
+<td>pstrlen </td><td>1 </td><td>string length of &lt;pstr&gt;, as a single raw byte (19) </td></tr>
+<tr>
+<td>pstr </td><td>19 </td><td>the string "BitTorrent protocol" </td></tr>
+<tr>
+<td>reserved </td><td>8 </td><td>eight (8) reserved bytes. </td></tr>
+<tr>
+<td>info_hash </td><td>20 </td><td>20-byte SHA1 hash of the info key in the metainfo file. </td></tr>
+<tr>
+<td>peer_id </td><td>20 </td><td>Peer-ID string </td></tr>
+</table>
+<p>The reserved bytes is tipically used to communicate that the client is capable of managing a non-standard protocol by setting a specific bit to 1 alphaTorrent simply print a warning in case of a non-standard client is communicating.</p>
+<p>So after sending the handshake request, the client listen for a response, and when arrives, it start the <a class="el" href="namespacepwp.html#a58c780495f2139a56b95662dc7c0345f">pwp::verify_handshake</a> routing, which basically check if all element of the table is valid (according to the protocol).</p>
+<dl class="section note"><dt>Note</dt><dd>Because peer-ID matching often fail during live test, in case of a non matching id nothing is done (excepting print a warning).</dd></dl>
+<h2>Pre-Loop phase </h2>
+<p>After the handshake procedure is completed, the peer is flagged as "active_peer" and some messages are exchanged before starting donwload/upload pieces.</p>
+<p>First of all, the client should check if a bitfiled was sended by the peer. This part is optional so it must be properly handled. Then an "interested" and "unchocked" message are sended in order to enable piece downloading from the peer. A timer which call the <a class="el" href="namespacepwp__msg.html#a9a577f5a53b823d83bb4694f1ebf141e">pwp_msg::send_keep_alive</a> is started in order to avoid a connection closing.</p>
+<h2>PWP Loop </h2>
+<p>The PWP loop consist in two parts :</p><ul>
+<li>Async Receive</li>
+<li>Sync Send</li>
+</ul>
+<p>The <b>async handler</b>(pwp::read_msg_handler) is called when 4 bytes are received. After checking that the msg_len is greater than zero, a new byte (the msg_id[<a class="el" href="namespacepwp__msg.html#a0b9a29508f00a30e5138d2b78f4b1daf">pwp_msg::msg_id</a>]) is readed. The message is then switched based on its id. If a message like "(not) interested" and "(un)chocked" is received then the conresponding structure inside the <a class="el" href="structpwp_1_1peer__connection.html">pwp::peer_connection</a> is updated (client_state and peer_state). </p><dl class="section note"><dt>Note</dt><dd>REQUEST, PORT and CANCEL message are ignored since seeding is not supported. When a PIECE message arrives the response is passeto to the <a class="el" href="namespacefileio.html#acc37418d350d6d36c3f691c99de9cf39">fileio::save_block</a> function wich is responsible of putting the piece in the right position inside the file. After finishing the procedure, another async read is started in order to continually parse received data.</dd></dl>
+<p>The <b>Sync Sender</b> insted is placed inside a loop that exit only if the send fails (dead peer). The <a class="el" href="namespacepwp__msg.html#ab578b213d293636d33efc24382f16b25">pwp_msg::sender</a> simply compare the bitfiled of the peer with the client ones and send a REQUEST message to the peer referring to the client's missing pieces. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
