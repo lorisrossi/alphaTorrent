@@ -83,7 +83,10 @@ namespace pwp{
 
         //Check for already active peers
 
-        /*
+        if(active_peer_list->empty())
+            return;
+
+
         vector<pwp::peer>::iterator it_active;
 
         it =  peer_list->begin();
@@ -91,16 +94,17 @@ namespace pwp{
 
         for(; it != peer_list->end(); ++it){
 
+
             for(it_active = active_peer_list->begin(); it != active_peer_list->end(); ++it_active){
 
                 if(*it == *it_active){
-                    peer_list->erase(it);
+                    it->addr = inv_address;
                 }
 
             }
 
         }
-        */
+        
 
 
     }
@@ -233,6 +237,8 @@ namespace pwp{
         cout << peer_.addr.to_string() << rang::fg::green <<  " handshake done succesfully" << rang::fg::reset << endl;
 
         add_active_peer();  //The current peer is valid
+        active_peer_list->push_back(peer_);
+
         cout << endl << "Added an ACTIVE PEER : " << active_peer << endl;
 
         if(pwp_msg::send_msg(peer_conn, pwp_msg::interested_msg) < 0)
@@ -285,7 +291,7 @@ namespace pwp{
                     dead_peer = true;
                 }
                 
-                boost::this_thread::sleep_for(boost::chrono::milliseconds(500));  // Sleep for 0.5 seconds
+                boost::this_thread::sleep_for(boost::chrono::milliseconds(200));  // Sleep for 0.2 seconds
             }
 
         }catch(std::exception& e){

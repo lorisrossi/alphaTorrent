@@ -1,3 +1,55 @@
+
+ /*! \mainpage alphaTorrent Documentation 
+ * 
+ * \section intro_sec Introduction 
+ * 
+ * alphaTorrent is a CLI program that allow to download files by passing a .torrent file. 
+ * For a detailed explaination of the application workflow see @ref workflow. 
+ * \section install_sec Installation 
+ * 
+ * \subsection step1 Step 1: Clone the repository 
+ * \code 
+ * git clone https://github.com/lorisrossi/alphaTorrent.git 
+ * \endcode 
+ *  
+ *  
+ * \subsection step21 Step2: Install dependencies (Linux) 
+ * This command will install the openssl, boost and glog libraries 
+ * \code 
+ * sudo apt-get install libssl-dev libboost-all-dev libgoogle-glog-dev 
+ * \endcode 
+ *  
+  * \subsection step22 Step2: Install dependencies (Mac OS X) 
+ * This command will install the openssl 
+ * \code 
+ * brew install openssl 
+ * cd /usr/local/include 
+ * ln -s ../opt/openssl/include/openssl . 
+ * \endcode 
+ * Boost 
+ * \code 
+ * brew install boost 
+ * \endcode 
+ * Glog 
+ * \code 
+ * brew install glog 
+ * \endcode 
+ *  
+ * \subsection compiling Compiling 
+ * Go to the main folder and execute 
+ * \code 
+ * make 
+ * \endcode 
+ *  
+ * \section usage Usage 
+ * \code 
+ * ./alphatorrent-cli torrent-file.torrent 
+ * \endcode 
+ *  
+ *  
+ */
+
+
 #include <iostream>
 #include <string>
 #include <string.h>
@@ -16,7 +68,7 @@ using namespace torr;
 using namespace fileio;
 using namespace rang;
 
-#define PEER_TREESHOLD 3
+#define PEER_TREESHOLD 3  /*!< Number of peer after make another tracker request */
 
 tracker::TParameter set_parameter(const string& torrent_str, const Torrent& torr){
     tracker::TParameter param;
@@ -127,7 +179,7 @@ int main(int argc, char* argv[]) {
         }
 
         boost::this_thread::sleep_for(boost::chrono::seconds(10));  //Sleep for 10 seconds
-    };
+    }
 
     cout << endl << "Having enought active peers (" << active_peer << "), recheck after 10 seconds... " << endl;
     boost::this_thread::sleep_for(boost::chrono::seconds(10));

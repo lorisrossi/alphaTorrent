@@ -476,7 +476,7 @@ namespace pwp_msg{
 
                 if (request.begin != std::string::npos) {
                     vector<uint8_t> msg = make_request_msg(request);
-                    // cout << peer_conn.peer_.addr << " sending REQUEST: " << string_to_hex(msg) << std::endl;
+                    cout << peer_conn.peer_.addr << " sending REQUEST: " << string_to_hex(msg) << std::endl;
                     return send_msg(peer_conn, msg);                    
                 }
             }
